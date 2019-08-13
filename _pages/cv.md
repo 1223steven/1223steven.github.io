@@ -13,6 +13,8 @@ Education
 ======
 * B.S. in Mathematics, Hefei Normal University, 2016
 * Ph.D Candidate in Mathematics, Soochow University, 2021 (expected)
+  * Supervisor: Professor Jingrun Chen
+  * Research Topic: Semi-implicit projection methods for Landau-Lifshitz equation
 
 Work experience
 ======
