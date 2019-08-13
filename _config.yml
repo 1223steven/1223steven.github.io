@@ -218,7 +218,8 @@ font:
 social:
   GitHub: https://github.com/1223steven
   Twitter: https://twitter.com/stevencjxie
-  zhihu: https://www.zhihu.com/people/xie-chang-jian
+  Zhihu: https://www.zhihu.com/people/xie-chang-jian
+  Researchgate: https://www.researchgate.net/profile/Xie_Changjian
   #LinkLabel: Link
 
 
@@ -234,6 +235,7 @@ social_icons:
   GitHub: github
   Twitter: twitter
   Zhihu: zhihu
+  Researchgate: researchgate
   Weibo: weibo
 
 
