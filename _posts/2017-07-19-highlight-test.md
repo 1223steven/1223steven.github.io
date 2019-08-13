@@ -1,11 +1,11 @@
 ---
-title: Highlight Test
+title: Discontinuous Galerkin Methods
 categories:
  - Test
 tags:
 ---
 
-This is a highlight test.
+This is a note for Discontinuous Galerkin Methods.
 
 # Normal block
 
