@@ -4,10 +4,10 @@
 # ---------------------------------------------------------------
 
 # Site
-title: NexT
-subtitle:
-description:
-author: John Doe
+title: Mathematical Modeling and Simulation
+subtitle: Material science
+description: As far as the laws of mathematics refer to reality, they are not certain, and as far as they are certain, they do not refer to reality.
+author: Changjian Xie
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: en
 date_format: '%Y-%m-%d'
