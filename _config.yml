@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Hexo Configuration
 ## Docs: https://hexo.io/docs/configuration.html
 ## Source: https://github.com/hexojs/hexo/
@@ -85,3 +86,6 @@ deploy:
 search:
   path: search.xml
   field: post
+=======
+theme: jekyll-theme-leap-day
+>>>>>>> 67fb86f530e8394009689642d0820c748cbd883e
