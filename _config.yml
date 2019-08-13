@@ -235,7 +235,7 @@ social_icons:
   GitHub: github
   Twitter: twitter
   Zhihu: zhihu
-  Researchgate: researchgate
+  Researchgate: <i class="fab fa-researchgate"></i>
   Weibo: weibo
 
 
