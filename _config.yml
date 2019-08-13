@@ -11,9 +11,9 @@ title                    : "ChangJian Xie / Mathematical Modeling and Simulation
 title_separator          : "-"
 name                     : &name "Changjian Xie"
 description              : &description "As far as the laws of mathematics refer to reality, they are not certain, and as far as they are certain, they do not refer to reality."
-url                      : https://academicpages.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : https://1223steven.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "academicpages/academicpages.github.io"
+repository               : "1223steven/1223steven.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
