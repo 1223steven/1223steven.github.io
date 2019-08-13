@@ -81,7 +81,7 @@ analytics:
 # Site Author
 author:
   name             : "Changjian Xie"
-  avatar           : "/images/bio-photo-2.jpg"
+  avatar           : "profile.png"
   bio              : "My biography"
   location         : "Location"
   employer         :
