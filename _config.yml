@@ -38,6 +38,7 @@ urls:
     - text: XML Feed
       url: /feed.xml
 
+<<<<<<< HEAD
 url: "https://agusmakmun.github.io"
 baseurl: ""
 paginate: 20
@@ -54,3 +55,9 @@ compress_html:
   endings: all
   ignore:
     envs: ['development']
+=======
+plugins:
+  - jekyll-seo-tag
+#  - jekyll-feed
+theme: jekyll-theme-leap-day
+>>>>>>> 45f6373dcccb5fdce30c54173cfcbb32a1b7d52d
