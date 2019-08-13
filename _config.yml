@@ -220,6 +220,7 @@ social:
   Twitter: https://twitter.com/stevencjxie
   Zhihu: https://www.zhihu.com/people/xie-chang-jian
   Researchgate: https://www.researchgate.net/profile/Xie_Changjian
+  Linkedin: https://www.linkedin.com/in/%E9%95%BF%E5%81%A5-%E8%B0%A2-12350115b/
   #LinkLabel: Link
 
 
@@ -235,7 +236,8 @@ social_icons:
   GitHub: github
   Twitter: twitter
   Zhihu: zhihu
-  Researchgate: <i class="fab fa-researchgate"></i>
+  Researchgate: 
+  Linkedin: linkedin
   Weibo: weibo
 
 
