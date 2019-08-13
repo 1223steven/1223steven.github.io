@@ -11,21 +11,20 @@ redirect_from:
 
 Education
 ======
-* B.S. in GitHub, GitHub University, 2012
-* M.S. in Jekyll, GitHub University, 2014
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
+* B.S. in Mathematics, Hefei Normal University, 2016
+* Ph.D Candidate in Mathematics, Soochow University, 2021 (expected)
 
 Work experience
 ======
-* Summer 2015: Research Assistant
-  * Github University
+* Spring 2019: Instructor
+  * Soochow University
   * Duties included: Tagging issues
-  * Supervisor: Professor Git
+  * Supervisor: Professor Jingrun Chen
 
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
+* 25th, April, 2019: Visitor
+  * Macau University
+  * AFEPack application for demagnetization calculation
+  * Supervisor: Professor Guanghui Hu
   
 Skills
 ======
