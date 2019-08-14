@@ -32,7 +32,7 @@ Also, I have always focused the field of machine learning and prefered the appli
 Research Papers:
 ======
 1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
-1. Changjian Xie, Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, ArXiv 1907.02358, https://arxiv.org/pdf/1907.02358.pdf.
+1. Changjian Xie,Calos J. Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, ArXiv 1907.02358, https://arxiv.org/pdf/1907.02358.pdf.
 1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, ArXiv 1907.11853, https://arxiv.org/pdf/1907.11853.pdf.
 
 Site-wide configuration
