@@ -33,6 +33,11 @@ Research Papers:
 ======
 1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
 1. Changjian Xie,Calos J. Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
+
+[NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+
+![benchmark1](/images/problem1_v1.png) 
+
 ![BDF_long_mx](/images/BDF_long_mx.png) 
 ![BDF_long_my](/images/BDF_long_my.png)
 1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
