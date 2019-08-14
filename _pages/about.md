@@ -46,5 +46,5 @@ Useful Links
   * [google scholar](https://scholar.google.com/)
   * [damuchong](http://www.4243.net/)
 * personal pages
-  * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/)
+  * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/) [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
   
