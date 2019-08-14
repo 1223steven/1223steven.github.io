@@ -37,4 +37,6 @@ Research Papers:
 
 Useful Links
 ------
-[NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+* [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+* [MathSciNet](https://mathscinet.ams.org/mathscinet/)
+* [Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)
