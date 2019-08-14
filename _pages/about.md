@@ -33,18 +33,8 @@ Research Papers:
 ======
 1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
 1. Changjian Xie,Calos J. Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
-
-[comment] [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
-
-[comment] ![benchmark1](/images/problem1_v1.png) 
-
-[comment] ![BDF_long_mx](/images/BDF_long_mx.png) 
-[comment] ![BDF_long_my](/images/BDF_long_my.png)
 1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
-
-[comment] Example: editing a markdown file for a talk
-[comment] ![Editing a markdown file for a talk](/images/editing-talk.png)
 
 Useful Links
 ------
-More info about configuring academicpages can be found in [the guide](https://academicpages.github.io/markdown/). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful.
+[NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
