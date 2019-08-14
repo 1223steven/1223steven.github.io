@@ -26,17 +26,14 @@ Biosketch
 ======
 I am a Ph.D. student of Soochow university [School of Mathematics and Sciences](http://math.suda.edu.cn/), majoring computing mathematics and materials advised by Prof. [Jingrun Chen](http://web.suda.edu.cn/jingrunchen/).
 I will be a visiting scholar at Penn State under the supervision of Prof. [Xiantao Li](http://personal.psu.edu/xxl12/), expected 2019-2020, working on the topics of molecular dynimics simulations. 
-I'm now a research grant for the Postgraduate Research and Practice Innovation Programe of Jiangsu Province via number KYCX19_1947 working on the algorithms and analysis of magnetic materials.
+I have a research grant for the Postgraduate Research and Practice Innovation Program of Jiangsu Province via number KYCX19_1947 working on the algorithms and analysis of magnetic materials.
 Also, I have always focused the field of machine learning and prefered the applications to high dimensional PDEs, quantum physics and chemstry.  
 
-Publications
+Research Papers:
 ======
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Fork [this repository](https://github.com/academicpages/academicpages.github.io) by clicking the "fork" button in the top right. 
-1. Go to the repository's settings (rightmost item in the tabs that start with "Code", should be below "Unwatch"). Rename the repository "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and create content & metadata (see below -- also see [this set of diffs](http://archive.is/3TPas) showing what files were changed to set up [an example site](https://getorg-testacct.github.io) for a user with the username "getorg-testacct")
-1. Upload any files (like PDFs, .zip files, etc.) to the files/ directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.  
-1. Check status by going to the repository settings, in the "GitHub pages" section
+1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, ArXiv 1902.09740, https://arxiv.org/pdf/1902.09740.pdf.
+1. Changjian Xie, Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, ArXiv 1907.02358, https://arxiv.org/pdf/1907.02358.pdf.
+1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, ArXiv 1907.11853, https://arxiv.org/pdf/1907.11853.pdf.
 
 Site-wide configuration
 ------
