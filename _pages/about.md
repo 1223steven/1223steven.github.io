@@ -16,6 +16,7 @@ My research initerests
 * Magnetics simulation, modeling and algorithmic analysis
 * Numerical analysis on PDEs
 * Molecular dynamics
+* electronic structure calculation
 * Algorithms and analysis on machine learning for PDEs
 * Quantum machine learning 
 * Asympototics analysis
@@ -24,6 +25,9 @@ My research initerests
 Biosketch
 ======
 I am a Ph.D. student of Soochow university [School of Mathematics and Sciences](http://math.suda.edu.cn/), majoring computing mathematics and materials advised by Prof. [Jingrun Chen](http://web.suda.edu.cn/jingrunchen/).
+I will be a visiting scholar at Penn State under the supervision of Prof. [Xiantao Li](http://personal.psu.edu/xxl12/), expected 2019-2020, working on the topics of molecular dynimics simulations. 
+I'm now a research grant for the Postgraduate Research and Practice Innovation Programe of Jiangsu Province via number KYCX19_1947 working on the algorithms and analysis of magnetic materials.
+Also, I have always focused the field of machine learning and prefered the applications to high dimensional PDEs, quantum physics and chemstry.  
 
 Publications
 ======
