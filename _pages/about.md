@@ -40,3 +40,10 @@ Useful Links
 * [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
 * [MathSciNet](https://mathscinet.ams.org/mathscinet/)
 * [Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)
+* Download ebooks:
+  * [libgen](https://libgen.is/)
+  * [scihub](https://sci-hub.tw/)
+  * [google scholar](https://scholar.google.com/)
+  * [damuchong](http://www.4243.net/)
+* personal pages
+  
