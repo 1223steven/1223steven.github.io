@@ -11,7 +11,7 @@ Traditionally, the formal modeling of systems has been via a mathematical model,
 A computer simulation or a computer model is a computer program that attempts to simulate an abstract model of a particular system. Computer simulations have become a useful part of mathematical modelling of many natural systems in physics, chemistry and biology, human systems in economics, psychology, and social science and in the process of engineering new technology, to gain insight into the operation of those systems.
 Computer simulations build on, and are a useful adjunct to purely mathematical models in science, technology and entertainment. The reliability and the trust people put in computer simulations depends on the validity of the simulation model. (from Wikipedia)
 
-My research initerests
+My Research Initerests
 ======
 * Magnetics simulation, modeling and algorithmic analysis
 * Numerical analysis on PDEs
@@ -34,17 +34,17 @@ Research Papers:
 1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
 1. Changjian Xie,Calos J. Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
 
-[NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+[comment] [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
 
-![benchmark1](/images/problem1_v1.png) 
+[comment] ![benchmark1](/images/problem1_v1.png) 
 
-![BDF_long_mx](/images/BDF_long_mx.png) 
-![BDF_long_my](/images/BDF_long_my.png)
+[comment] ![BDF_long_mx](/images/BDF_long_mx.png) 
+[comment] ![BDF_long_my](/images/BDF_long_my.png)
 1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
 
-Example: editing a markdown file for a talk
-![Editing a markdown file for a talk](/images/editing-talk.png)
+[comment] Example: editing a markdown file for a talk
+[comment] ![Editing a markdown file for a talk](/images/editing-talk.png)
 
-For more info
+Useful Links
 ------
 More info about configuring academicpages can be found in [the guide](https://academicpages.github.io/markdown/). The [guides for the Minimal Mistakes theme](https://mmistakes.github.io/minimal-mistakes/docs/configuration/) (which this theme was forked from) might also be helpful.
