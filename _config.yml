@@ -7,9 +7,9 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Lantao Yu"
+title                    : "Changjian Xie"
 title_separator          : "-"
-name                     : &name "Lantao Yu"
+name                     : &name "Changjian Xie"
 description              : &description "Ph.D. student, Computer Science Department, Stanford University"
 url                      : https://lantaoyu.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
