@@ -7,19 +7,16 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "ChangJian Xie / Mathematical Modeling and Simulation"
+title                    : "Lantao Yu"
 title_separator          : "-"
-name                     : &name "Changjian Xie"
-description              : &description "As far as the laws of mathematics refer to reality, they are not certain, and as far as they are certain, they do not refer to reality."
-url                      : https://1223steven.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+name                     : &name "Lantao Yu"
+description              : &description "Ph.D. student, Computer Science Department, Stanford University"
+url                      : https://lantaoyu.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
-repository               : "1223steven/1223steven.github.io"
+repository               : "LantaoYu/lantaoyu.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 breadcrumbs              : false # true, false (default)
 words_per_minute         : 160
-future                   : true
-read_more                : "disabled" # if enabled, adds "Read more" links to excerpts
-talkmap_link             : false #change to true to add link to talkmap on talks page
 comments:
   provider               : # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
   disqus:
@@ -50,16 +47,16 @@ atom_feed:
   path                   : # blank (default) uses feed.xml
 
 # SEO Related
-google_site_verification :
+google_site_verification : 
 bing_site_verification   :
 alexa_site_verification  :
 yandex_site_verification :
 
 # Social Sharing
 twitter:
-  username               : &twitter
+  username               : 
 facebook:
-  username               :
+  username               : 
   app_id                 :
   publisher              :
 og_image                 :  # Open Graph/Twitter default site image
@@ -75,47 +72,44 @@ social:
 analytics:
   provider               :  "google-universal" # false (default), "google", "google-universal", "custom"
   google:
-    tracking_id          :
+    tracking_id          : 
 
 
 # Site Author
 author:
-  name             : "Changjian Xie"
-  avatar           : "blogLogo.jpg"
-  bio              : "My biography"
-  location         : "Location"
-  employer         :
-  pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
-  googlescholar    : "https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ"
-  email            : "20184007005@stu.suda.edu.cn"
-  researchgate     : "https://www.researchgate.net/profile/Xie_Changjian"
-  uri              :
+  name             : "Lantao Yu"
+  avatar           : "lantaoyu.jpg"
+  bio              : "Ph.D. student, Computer Science Department, Stanford University"
+  location         : "Stanford, California"
+  employer         : 
+  googlescholar    : "https://scholar.google.com/citations?user=Ixg9n-EAAAAJ&hl=en"
+  email            : "lantaoyu@cs.stanford.edu"
+  uri              : 
   bitbucket        :
   codepen          :
   dribbble         :
   flickr           :
-  facebook         :
+  facebook         : 
   foursquare       :
-  github           : "1223steven"
+  github           : "LantaoYu"
   google_plus      :
   keybase          :
-  instagram        :
-  impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
+  instagram        : 
   lastfm           :
-  linkedin         : "%E9%95%BF%E5%81%A5-%E8%B0%A2-12350115b/"
-  orcid            : "http://orcid.org/yourorcidurl"
+  linkedin         :
+  orcid            : 
   pinterest        :
   soundcloud       :
   stackoverflow    : # http://stackoverflow.com/users/123456/username
   steam            :
   tumblr           :
-  twitter          : stevencjxie
+  twitter          : 
   vine             :
   weibo            :
   xing             :
   youtube          :
-  wikipedia        :
-  zhihu            : "https://www.zhihu.com/people/xie-chang-jian"
+  wikipedia        : 
+
 
 # Reading Files
 include:
@@ -129,23 +123,22 @@ exclude:
   - .bundle
   - .jekyll-assets-cache
   - .sass-cache
-  - CHANGELOG
+  - assets/js/plugins
+  - assets/js/_main.js
+  - assets/js/vendor
   - Capfile
+  - CHANGELOG
+  - config
   - Gemfile
   - Gruntfile.js
-  - LICENSE
-  - README
-  - Rakefile
-  - assets/js/_main.js
-  - assets/js/plugins
-  - assets/js/vendor
-  - config
   - gulpfile.js
+  - LICENSE
   - log
   - node_modules
   - package.json
+  - Rakefile
+  - README
   - tmp
-  - vendor
 keep_files:
   - .git
   - .svn
@@ -227,10 +220,10 @@ defaults:
       author_profile: true
       share: true
       comments: true
-  # _projects
+  # _portfolio
   - scope:
       path: ""
-      type: projects
+      type: portfolio
     values:
       layout: single
       author_profile: true
@@ -244,7 +237,7 @@ defaults:
       layout: talk
       author_profile: true
       share: true
-
+      
 # Sass/SCSS
 sass:
   sass_dir: _sass
@@ -259,16 +252,16 @@ timezone: America/Los_Angeles # http://en.wikipedia.org/wiki/List_of_tz_database
 
 
 # Plugins
-plugins:
+gems:
   - jekyll-paginate
-  - jekyll-sitemap
+  # - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
   - jekyll-redirect-from
 # mimic GitHub Pages with --safe
 whitelist:
   - jekyll-paginate
-  - jekyll-sitemap
+  # - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
   - jemoji
@@ -309,3 +302,5 @@ compress_html:
   clippings: all
   ignore:
     envs: development
+
+theme: jekyll-theme-merlot

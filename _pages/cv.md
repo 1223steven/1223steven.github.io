@@ -1,6 +1,6 @@
 ---
-layout: archive
-title: "CV"
+<!-- layout: archive -->
+title: "Lantao Yu (于澜涛)"
 permalink: /cv/
 author_profile: true
 redirect_from:
@@ -9,47 +9,6 @@ redirect_from:
 
 {% include base_path %}
 
-Education
-======
-* B.S. in Mathematics, Hefei Normal University, 2016
-* Ph.D Candidate in Mathematics, Soochow University, 2021 (expected)
-  * Supervisor: Professor Jingrun Chen
-  * Research Topic: Semi-implicit projection methods for Landau-Lifshitz equation
+[Click to View My Up-to-date Curriculum Vitae [PDF]](http://lantaoyu.github.io/files/lantaoyu_cv.pdf)
 
-Work experience
-======
-* Spring 2019: Instructor
-  * Soochow University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Jingrun Chen
-
-* 25th, April, 2019: Visitor
-  * Macau University
-  * AFEPack application for demagnetization calculation
-  * Supervisor: Professor Guanghui Hu
-  
-Skills
-======
-* Programming: Linux, C, C++, Fortran, Matlab, Python
-
-Publications
-======
-  <ul>{% for post in site.publications %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Talks
-======
-  <ul>{% for post in site.talks %}
-    {% include archive-single-talk-cv.html %}
-  {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-[comment]: Service and leadership
-[comment]: ======
-[comment]: * Currently signed in to 43 different slack teams
+<!-- <embed src="http://lantaoyu.com/files/lantaoyu_cv.pdf" width="650" height="1800" type='application/pdf'> -->
