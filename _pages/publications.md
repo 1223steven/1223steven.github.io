@@ -6,9 +6,9 @@ author_profile: true
 
 ## Numerical analysis on PDEs
 
-<b>[Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation](http://lantaoyu.com/publications/MAAIRL)</b> <br> 
-<b>Lantao Yu</b>, Jiaming Song, Stefano Ermon.
-<i>The 36th International Conference on Machine Learning <span style="color:red">(Long Talk)</span></i>. <b>ICML 2019 </b>.
+<b>[Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation](http://stevencjxie8.com/publications/MAAIRL)</b> <br> 
+<b>Jingrun Chen, Cheng Wang, Changjian Xie</b>.
+<i>Applied Numerical Mathematics <span style="color:red">(Submitted)</span></i>. <b>2019 </b>.
 
 <b>[CoT: Cooperative Training for Generative Modeling of Discrete Data](http://lantaoyu.com/publications/CoT)</b> <br>
 Sidi Lu, <b>Lantao Yu</b>, Siyuan Feng, Yaoming Zhu, Weinan Zhang, Yong Yu.
