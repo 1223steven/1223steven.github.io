@@ -41,3 +41,15 @@ redirect_from:
 * April 11, 2017. A paper titled "IRGAN: A Minimax Game for Unifying Generative and Discriminative Information Retrieval Models" was accepted at [SIGIR 2017](http://sigir.org/sigir2017/).
 * February 4 - February 9, 2017. I attended the Thirty-First AAAI Conference on Artificial Intelligence held in San Francisco, California, US and gave a [talk](http://lantaoyu.com/files/2017-02-07-aaai-seqgan.pdf) on applying adversarial training for generating sequential data.
 * November 11, 2016. A paper titled "SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient" was accepted at [AAAI 2017](http://www.aaai.org/Conferences/AAAI/aaai17.php).
+
+# Useful Links
+* [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+* [MathSciNet](https://mathscinet.ams.org/mathscinet/)
+* [Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)
+* Download ebooks:
+  * [libgen](https://libgen.is/)
+  * [scihub](https://sci-hub.tw/)
+  * [google scholar](https://scholar.google.com/)
+  * [damuchong](http://www.4243.net/)
+* personal pages
+  * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/) , [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
