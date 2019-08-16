@@ -23,3 +23,8 @@ remarkably relax restrictions of temporal step-size compared to the implicit
 schemes. And also, the unique solvability of the numerical solution without
 any assumptions for the step size in both time and space is theoretically justified, which turns out to be the first such result for the micromagnetics model.
 All these theoretical properties are verified by numerical examples in both oneand three- dimensional spaces.
+
+## Best Paper Award Honorable Mention
+<p align="center">
+  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpg?raw=true" alt="Photo" style="width: 850px;"/>
+</p>
