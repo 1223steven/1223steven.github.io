@@ -1,12 +1,12 @@
 ---
-title: "Publications [(Google Scholar Profile)](https://scholar.google.com/citations?user=Ixg9n-EAAAAJ&hl=en)"
+title: "Publications [(Google Scholar Profile)](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ)"
 permalink: /publications/
 author_profile: true
 ---
 
-## Deep Learning
+## Numerical analysis on PDEs
 
-<b>[Multi-Agent Adversarial Inverse Reinforcement Learning](http://lantaoyu.com/publications/MAAIRL)</b> <br> 
+<b>[Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation](http://lantaoyu.com/publications/MAAIRL)</b> <br> 
 <b>Lantao Yu</b>, Jiaming Song, Stefano Ermon.
 <i>The 36th International Conference on Machine Learning <span style="color:red">(Long Talk)</span></i>. <b>ICML 2019 </b>.
 
@@ -36,7 +36,7 @@ Jun Wang, <b>Lantao Yu</b>, Weinan Zhang, Yu Gong, Yinghui Xu, Benyou Wang, Peng
 <b>Lantao Yu\*</b>, Xuejian Wang\*, Kan Ren, Guanyu Tao, Weinan Zhang, Yong Yu, Jun Wang.
 <i>The 23rd SIGKDD Conference on Knowledge Discovery and Data Mining.</i> <b>KDD 2017</b>.
 
-## Multi-Agent Systems & Computational Sustainability
+## Micromagnetics simulations
 
 <b>[Deep Reinforcement Learning for Green Security Games with Real-Time Information](http://lantaoyu.com/publications/RLSGAAAI19)</b><br>
 Yufei Wang, Zheyuan Ryan Shi, <b>Lantao Yu</b>, Yi Wu, Rohit Singh, Lucas Joppa, Fei Fang.
