@@ -7,7 +7,7 @@ author_profile: true
 ## Numerical analysis on PDEs
 
 <b>[Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation](http://stevencjxie8.com/publications/MAAIRL)</b> <br> 
-<b>Jingrun Chen, Cheng Wang, Changjian Xie</b>.
+Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.
 <i>Applied Numerical Mathematics <span style="color:red">(Submitted)</span></i>. <b>2019 </b>.
 
 <b>[CoT: Cooperative Training for Generative Modeling of Discrete Data](http://lantaoyu.com/publications/CoT)</b> <br>
