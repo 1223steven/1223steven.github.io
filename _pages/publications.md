@@ -16,3 +16,7 @@ Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.
 <b>[Second-order semi-implicit projection methods for micromagnetics simulations](http://stevencjxie8.com/publications/IRGAN)</b><br>
 <b>Changjian Xie</b>, Carlos J. García-Cervera, Cheng Wang, Zhennan Zhou and Jingrun Chen.
 <i>submitted to Journal of Computational Physics.</i> <b>2019</b>.
+
+<b>[Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation](http://stevencjxie8.com/publications/TWOIMPROVED)</b><br>
+Panchi Li, <b>Changjian Xie</b>, Rui Du, Jingrun Chen and Xiaoping Wang.
+<i>submitted to Journal of Computational Physics.</i> <b>2019</b>.
