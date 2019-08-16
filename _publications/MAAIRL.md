@@ -26,5 +26,5 @@ All these theoretical properties are verified by numerical examples in both onea
 
 ## Best Paper Award Honorable Mention
 <p align="center">
-  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpg?raw=true" alt="Photo" style="width: 850px;"/>
+  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpeg?raw=true" alt="Photo" style="width: 850px;"/>
 </p>
