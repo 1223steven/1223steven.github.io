@@ -3,7 +3,7 @@ title: "Second-order semi-implicit projection methods for micromagnetics simulat
 collection: publications
 permalink: /publications/IRGAN
 venue: "submitted to Journal of Computational Physics (2019)"
-date: 2017-04-11
+date: 2019-06-09
 citation: '<b>Changjian Xie</b>, Carlos J. García-Cervera, Cheng Wang, Zhennan Zhou and Jingrun Chen. <i>Journal of Computational Physics.</i> <b>2019.</b>'
 ---  
 [[ArXiv]](https://arxiv.org/pdf/1907.02358.pdf)  [[Code]](https://github.com/geek-ai/irgan)

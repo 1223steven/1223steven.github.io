@@ -3,7 +3,7 @@ title: "Convergence analysis of a second-order semi-implicit projection method f
 collection: publications
 permalink: /publications/MAAIRL
 venue: "Submitted to Applied Numerical Mathematics (2019)"
-date: 2018-4-12
+date: 2019-05-15
 citation: 'Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>. <i>submitted to Applied Numerical Mathematics</i>. <b>2019</b>.'
 ---
 [[ArXiv]](https://arxiv.org/pdf/1902.09740.pdf)
