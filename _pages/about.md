@@ -45,3 +45,4 @@ redirect_from:
   * [damuchong](http://www.4243.net/)
 * personal pages
   * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/) , [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
+  * Deep Learning: [Lantao Yu(Stanford)](http://lantaoyu.com/)
