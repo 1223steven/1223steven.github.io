@@ -4,7 +4,7 @@ title: "Contact"
 permalink: /contact/
 author_profile: true
 ---
-Computer Science Department, Stanford University<br>
-Gates 158, 353 Serra Mall, Stanford, CA 94305<br>
-Email: lantaoyu [at] cs.stanford.edu
+School of Mathematical Sciences, Soochow University<br>
+No.1 Shizi Street, Suzhou, Jiangsu Province, China<br>
+Email: 20184007005 [at] stu.suda.edu.cn
 
