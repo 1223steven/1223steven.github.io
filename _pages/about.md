@@ -15,7 +15,13 @@ redirect_from:
 * I am a Ph.D. student in the [School of Mathematics and Sciences](http://math.suda.edu.cn/) at [Soochow University](http://www.suda.edu.cn/), advised by Prof. [Jingrun Chen](http://web.suda.edu.cn/jingrunchen/). [[Curriculum Vitae](http://stevencjxie8.com/files/cjxie_cv.pdf)] [[Google Scholar](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ)]
 * My research interests lie in the general area of mathematical modeling and simulation of materials, particularly in micromagnetics simulations, numerical PDEs, multiscale modeling and molecular dynamics simulations, as well as their applications in the emerging fields of machine learning, especially deep learning to construct neural network approximation framework to solve high dimensional PDEs, solving all-electron Schrödinger equation for example.
 * I received my Bachelor’s Degree in [Hefei Normal University](http://www.hfnu.edu.cn/). 
+* I will be a visiting scholar at Penn State under the supervision of Prof. [Xiantao Li](http://personal.psu.edu/xxl12/), expected 2019-2020, working on the topics of molecular dynimics simulations. 
+* I have a research grant for the Postgraduate Research and Practice Innovation Program of Jiangsu Province via number KYCX19_1947 working on the algorithms and analysis of magnetic materials.
 
+# Research Papers:
+1. Jingrun Chen, Cheng Wang, Changjian Xie, 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
+1. Changjian Xie,Calos J. Garcia-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
+1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
 
 
 # Recent News
