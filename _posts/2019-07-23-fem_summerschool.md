@@ -1,5 +1,5 @@
 ---
-title: '[Minicourse--Notes for Finite Element Method and its Applications](https://tianyuan.scu.edu.cn/portal/article/index/id/367/pid/16/cid/5.html)'
+title: 'Minicourse--Notes for Finite Element Method and its Applications'
 date: 2019-07-23
 venue: 'Chengdu, Sichuan'
 permalink: /posts/2019/07/fem-summer-school/
