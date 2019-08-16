@@ -20,8 +20,8 @@ redirect_from:
 
 # Research Papers
 1. [Jingrun Chen](https://www.researchgate.net/profile/Jingrun_Chen), [Cheng Wang](https://scholar.google.com/citations?user=Nn6esL8AAAAJ&hl=en), [Changjian Xie](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ), 2019, Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation, [ArXiv 1902.09740](https://arxiv.org/pdf/1902.09740.pdf)
-1. Changjian Xie, Carlos J. García-Cervera, Cheng Wang, Zhennan Zhou, and Jingrun Chen, 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
-1. Panchi Li, Changjian Xie, Rui Du, Jingrun Chen, Xiaoping Wang, 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
+1. [Changjian Xie](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ), [Carlos J. García-Cervera](http://web.math.ucsb.edu/~cgarcia/), [Cheng Wang](https://scholar.google.com/citations?user=Nn6esL8AAAAJ&hl=en), [Zhennan Zhou](http://bicmr.pku.edu.cn/~zhennan/), and [Jingrun Chen](https://www.researchgate.net/profile/Jingrun_Chen), 2019, Second-order semi-implicit projection methods for micromagnetics simulations, [ArXiv 1907.02358](https://arxiv.org/pdf/1907.02358.pdf)
+1. Panchi Li, [Changjian Xie](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ), [Rui Du](http://math.suda.edu.cn/d5/86/c11113a251270/page.htm), [Jingrun Chen](https://www.researchgate.net/profile/Jingrun_Chen), [Xiaoping Wang](https://www.math.ust.hk/~mawang/), 2019, Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation, [ArXiv 1907.11853](https://arxiv.org/pdf/1907.11853.pdf)
 
 
 # Recent News
