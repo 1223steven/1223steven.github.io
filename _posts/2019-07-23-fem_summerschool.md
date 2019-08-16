@@ -1,6 +1,7 @@
 ---
 title: 'Notes for Finite Element Method and its Applications'
 date: 2019-07-23
+venue: 'Chengdu, Sichuan'
 permalink: /posts/2019/07/fem-summer-school/
 <!-- tags:
   - cool posts
