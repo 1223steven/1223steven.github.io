@@ -26,9 +26,9 @@ redirect_from:
 
 # Recent News
 * September 19-21, 2019. Contributed paper submitted to CSIAM 2019.
-* June 9, 2019. The paper entitled [Second-order semi-implicit projection methods for micromagnetics simulations](http://lantaoyu.com/publications/RLSGAAAI19) submitted to Journal of Computational Physics.
-* May 26, 2019. The paper entitled [Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation](http://lantaoyu.com/publications/RLSGAAAI19) submitted to Journal of Computational Physics.
-* May 15, 2019. The paper entitled [Convergence Analysis of A Second-order Semi-implicit Projection Method for Landau-Lifshitz Equation](http://lantaoyu.com/publications/RLSGAAAI19) submitted to Applied Numerical Mathematics.
+* June 9, 2019. The paper entitled [Second-order semi-implicit projection methods for micromagnetics simulations](https://stevencjxie8.com/publications/IRGAN) submitted to Journal of Computational Physics.
+* May 26, 2019. The paper entitled [Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation](https://stevencjxie8.com/publications/TWOIMPROVED) submitted to Journal of Computational Physics.
+* May 15, 2019. The paper entitled [Convergence Analysis of A Second-order Semi-implicit Projection Method for Landau-Lifshitz Equation](https://stevencjxie8.com/publications/MAAIRL) submitted to Applied Numerical Mathematics.
 * June 10 - June 16, 2019. I attended the [Workshop on Mathematical and Numerical Analysis of Electronic Structure Models](http://lsec.cc.ac.cn/~mnaesm19/) held in Suzhou, China.
 * December 7, 2018. I won the [Outstanding winner](https://1223steven.github.io/files/JSIAM2018-award.jpeg) at [JSIAM 2018](http://www.jsiam.js.cn/).
 * June 4 - June 8, 2018. I attended the [International Workshop on Computational Mathematics 2018](http://lsec.cc.ac.cn/~iwcm18/) held in Suzhou, China.
