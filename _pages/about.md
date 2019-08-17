@@ -46,3 +46,5 @@ redirect_from:
 * personal pages
   * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/) , [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
   * Deep Learning: [Lantao Yu(Stanford)](http://lantaoyu.com/)
+* Research topic or forum
+  * [Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)  
