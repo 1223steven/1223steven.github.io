@@ -8,9 +8,9 @@ redirect_from:
 ---
 
 {% include base_path %}
-</center>
+
 ![Panda](https://img-blog.csdn.net/20151109165400641)
-</center>
+
 
 [Click to View My Up-to-date Curriculum Vitae [PDF]](http://1223steven.github.io/files/cjxie_cv.pdf)
 
