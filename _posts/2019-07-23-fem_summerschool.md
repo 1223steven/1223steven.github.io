@@ -14,15 +14,16 @@ permalink: /posts/2019/07/fem-summer-school/
 </p>
 
 # Speaker
-[Xiaobing Feng (The University of Tennessee )](https://www.math.utk.edu/~xfeng/)
-[Chiwang Shu (Brown University)](http://www.dam.brown.edu/people/shu/)
-[Jie Shen (Purdue University)](http://www.math.purdue.edu/~shen/) 
+* [Xiaobing Feng (The University of Tennessee )](https://www.math.utk.edu/~xfeng/)
+* [Chiwang Shu (Brown University)](http://www.dam.brown.edu/people/shu/)
+* [Jie Shen (Purdue University)](http://www.math.purdue.edu/~shen/) 
 
 # Links
 * [Course page](https://tianyuan.scu.edu.cn/portal/article/index/id/366.html)
 * [Workshop on the theory and numerics of PDEs](https://tianyuan.scu.edu.cn/portal/article/index/id/370/pid/16/cid/29.html)
   * LIST OF SPEAKERS:
-     1. Direct and inverse time-harmonic wave scattering problems
+     * [Guanghui Hu](https://www.csrc.ac.cn/en/people/faculty/169.html) : Direct and inverse time-harmonic wave scattering problems
+	 * {Buyang Li}(http://www.mypolyuweb.hk/~bygli/LI_Buyang.htm) : A convergent evolving finite element algorithm for mean curvature flow of closed surfaces
    
 
 # Abstract
