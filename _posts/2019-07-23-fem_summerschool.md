@@ -15,6 +15,15 @@ permalink: /posts/2019/07/fem-summer-school/
 
 # Speaker
 [Xiaobing Feng (The University of Tennessee )](https://www.math.utk.edu/~xfeng/)
+[Chiwang Shu (Brown University)](http://www.dam.brown.edu/people/shu/)
+[Jie Shen (Purdue University)](http://www.math.purdue.edu/~shen/) 
+
+# Links
+* [Course page](https://tianyuan.scu.edu.cn/portal/article/index/id/366.html)
+* [Workshop on the theory and numerics of PDEs](https://tianyuan.scu.edu.cn/portal/article/index/id/370/pid/16/cid/29.html)
+  * LIST OF SPEAKERS:
+     1. Direct and inverse time-harmonic wave scattering problems
+   
 
 # Abstract
 This mini-course intends to present a holistic introduction to the finite element method (FEM), 
