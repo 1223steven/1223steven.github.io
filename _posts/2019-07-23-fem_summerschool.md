@@ -23,7 +23,7 @@ permalink: /posts/2019/07/fem-summer-school/
 * [Workshop on the theory and numerics of PDEs](https://tianyuan.scu.edu.cn/portal/article/index/id/370/pid/16/cid/29.html)
   * LIST OF SPEAKERS:
      * [Guanghui Hu](https://www.csrc.ac.cn/en/people/faculty/169.html) : Direct and inverse time-harmonic wave scattering problems
-	 * {Buyang Li}(http://www.mypolyuweb.hk/~bygli/LI_Buyang.htm) : A convergent evolving finite element algorithm for mean curvature flow of closed surfaces
+	 * [Buyang Li](http://www.mypolyuweb.hk/~bygli/LI_Buyang.htm) : A convergent evolving finite element algorithm for mean curvature flow of closed surfaces
    
 
 # Abstract
