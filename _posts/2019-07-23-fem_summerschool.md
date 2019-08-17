@@ -22,8 +22,14 @@ permalink: /posts/2019/07/fem-summer-school/
 * [Course page](https://tianyuan.scu.edu.cn/portal/article/index/id/366.html)
 * [Workshop on the theory and numerics of PDEs](https://tianyuan.scu.edu.cn/portal/article/index/id/370/pid/16/cid/29.html)
   * LIST OF SPEAKERS:
-     * [Guanghui Hu](https://www.csrc.ac.cn/en/people/faculty/169.html) : Direct and inverse time-harmonic wave scattering problems
+     * [Guanghui Hu (BCSRC)](https://www.csrc.ac.cn/en/people/faculty/169.html) : Direct and inverse time-harmonic wave scattering problems
 	 * [Buyang Li](http://www.mypolyuweb.hk/~bygli/LI_Buyang.htm) : A convergent evolving finite element algorithm for mean curvature flow of closed surfaces
+	 * [Liang Li](http://www.math.uestc.edu.cn/plus/list.php?tid=228) : Solution of parametric electromagnetic radiation problems using a residual based POD reduced order method
+	 * [Yibao Li](http://gr.xjtu.edu.cn/web/yibaoli) : Direct discretization method for t he Cahn Hilliard equation on surfaces
+	 * [Junliang Lv](https://teachers.jlu.edu.cn/Lvjunliang/zh_CN/index.htm) : Numerical methods for scattering problems in unbounded domain
+	 * [Qinglin Tang](https://scholar.google.com.sg/citations?user=Sx2DG9YAAAAJ&hl=en) : An efficient numerical method to compute the ground state of rotating dipolar Bose Einstein Condensates
+	 * [Hao Wu](http://math.tongji.edu.cn/Data/View/4276) : Variational approach for learning Markov processes from time series data
+	 * [Kuan Xu](https://math.ustc.edu.cn/new/teachersinfo1.php?id=181) : Computing convolutions, the story so far
    
 
 # Abstract
