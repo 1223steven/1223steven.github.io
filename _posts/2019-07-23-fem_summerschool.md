@@ -30,6 +30,8 @@ permalink: /posts/2019/07/fem-summer-school/
 	 * [Qinglin Tang](https://scholar.google.com.sg/citations?user=Sx2DG9YAAAAJ&hl=en) : An efficient numerical method to compute the ground state of rotating dipolar Bose Einstein Condensates
 	 * [Hao Wu](http://math.tongji.edu.cn/Data/View/4276) : Variational approach for learning Markov processes from time series data
 	 * [Kuan Xu](https://math.ustc.edu.cn/new/teachersinfo1.php?id=181) : Computing convolutions, the story so far
+	 * [Qinghai Zhang](https://person.zju.edu.cn/qinghai) : GePUP: A Fourth order Projec tion Method for Solving the Incompressible Navier Stokes Equations
+	 * [Zhennan Zhou (BICMR)](http://bicmr.pku.edu.cn/~zhennan/) :Towards a mathematical understanding of surface hopping methods
    
 
 # Abstract
