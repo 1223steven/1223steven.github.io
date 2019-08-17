@@ -1,5 +1,5 @@
 ---
-title: 'Minicourse--Notes for Finite Element Method and its Applications'
+title: 'Minicourse--Notes for The 3rd Summer School on The Theory and Numerics of PDEs'
 date: 2019-07-23
 venue: 'Chengdu, Sichuan'
 permalink: /posts/2019/07/fem-summer-school/
@@ -8,7 +8,7 @@ permalink: /posts/2019/07/fem-summer-school/
   - category1
   - category2 -->
 ---
-# 第三届“偏微分方程数值方法与理论暑期学校”
+# Group Photo
 <p align="center">
   <img src="https://1223steven.github.io/files/summer-school/PDEs.jpg?raw=true" alt="Photo" style="width: 650px;"/>
 </p>
