@@ -1,10 +1,33 @@
 # jemdoc: menu{MENU}{software.html}
 = Software
 
-== Mobile Application
+== Solver to Linear Systems of Equations
 
-- [https://www.youtube.com/watch?v=9u3S-D_Wha4 UCIntegrity App]
+- [https://computing.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/software Hypre]
+- [http://mumps.enseeiht.fr/ MUMPS]
+- [https://people.sc.fsu.edu/~jburkardt%20/cpp_src/superlu/superlu.html SuperLU]
+- [https://www.mcs.anl.gov/petsc/ Petsc]
+- [https://public.lanl.gov/hall/Linear_Algebra_Software_mn.html Other Solvers]
 
-- [https://www.youtube.com/watch?v=KLRFoHk9IHY iCONCUR]
+== Machine Learning
+- [https://www.tensorflow.org/ Tensorflow]
+- [https://pytorch.org/ Pytorch]
+- [https://scikit-learn.org/stable/ Scikit-learn]
 
+== FEM Library
+- [https://www.math.uci.edu/~chenlong/programming.html IFEM]
+
+== Micromagnetics Simulations
+=== Based on Finite Difference
+- [https://math.nist.gov/oommf/ OOMMF]
+- [https://math.nist.gov/oommf/contrib/simulmag/ SimulMag]
+- [https://mumax.github.io/ Mumax]
+- [http://www.micromagus.de/home.html MicroMagus]
+- [https://computationalmodelling.github.io/fidimag/ Fidimag]
+
+=== Based on Finite Element
+- [http://nmag.soton.ac.uk/nmag/ Nmag]
+- [http://micromagnum.informatik.uni-hamburg.de/downloads Magnum]
+- [http://www.magpar.net/DownloadPage Magpar]
+- [http://www.soton.ac.uk/~fangohr/software/index.html Other Links]
 
