@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Changjian Xie"
 title_separator          : "-"
 name                     : &name "Changjian Xie"
-description              : &description "Ph.D. student, School of Mathematics and Sciences, Soochow University"
+description              : &description "Ph.D. student, School of Mathematical Sciences, Soochow University"
 url                      : https://1223steven.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "1223steven/1223steven.github.io"
@@ -79,7 +79,7 @@ analytics:
 author:
   name             : "Changjian Xie"
   avatar           : "changjianxie.jpg"
-  bio              : "Ph.D. student, School of Mathematics and Sciences, Soochow University"
+  bio              : "Ph.D. student, School of Mathematical Sciences, Soochow University"
   location         : "Suzhou, China"
   employer         : 
   googlescholar    : "https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ"

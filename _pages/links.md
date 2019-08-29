@@ -21,13 +21,13 @@ author_profile: true
 * ADMM cf. * <b> <span style="color:green">[Wotao Yin](https://www.math.ucla.edu/~wotaoyin/)</span> </b> 
  
 
-### <b> <span style="color:blue">Download ebooks</span> </b>
+### <b> <span style="color:blue">Download Ebooks</span> </b>
 * <b> <span style="color:red">[libgen](https://libgen.is/)</span> </b>
 * <b> <span style="color:red">[scihub](https://sci-hub.tw/)</span> </b>
 * <b> <span style="color:red">[google scholar](https://scholar.google.com/)</span> </b>
 * <b> <span style="color:red">[damuchong](http://www.4243.net/)</span> </b>
 
-### <b> <span style="color:blue">Research topics or forums</span> </b>
+### <b> <span style="color:blue">Research Topics or Forums</span> </b>
 * <b> <span style="color:green">[Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)</span> </b> 
 
 ### <b> <span style="color:blue">Home Services</span> </b>

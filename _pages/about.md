@@ -32,19 +32,3 @@ redirect_from:
 * June 10 - June 16, 2019. I attended the [Workshop on Mathematical and Numerical Analysis of Electronic Structure Models](http://lsec.cc.ac.cn/~mnaesm19/) held in Suzhou, China.
 * December 7, 2018. I won the [Outstanding winner](https://1223steven.github.io/files/JSIAM2018-award.jpeg) at [JSIAM 2018](http://www.jsiam.js.cn/).
 * June 4 - June 8, 2018. I attended the [International Workshop on Computational Mathematics 2018](http://lsec.cc.ac.cn/~iwcm18/) held in Suzhou, China.
-
-
-# Useful Links
-* [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
-* [MathSciNet](https://mathscinet.ams.org/mathscinet/)
-* [Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)
-* Download ebooks:
-  * [libgen](https://libgen.is/)
-  * [scihub](https://sci-hub.tw/)
-  * [google scholar](https://scholar.google.com/)
-  * [damuchong](http://www.4243.net/)
-* personal pages
-  * Numerical PDEs: [Xinbo Qi](https://qixinbo.info/sources/) , [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
-  * Deep Learning: [Lantao Yu(Stanford)](http://lantaoyu.com/)
-* Research topics or forums
-  * [Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)  
