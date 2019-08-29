@@ -18,7 +18,8 @@ author_profile: true
 ### <b> <span style="color:blue">Analysis (PDEs)</span> </b>
 
 ### <b> <span style="color:blue">Optimization</span> </b>
-* cf. 
+* ADMM cf. * <b> <span style="color:green">[Wotao Yin](https://www.math.ucla.edu/~wotaoyin/)</span> </b> 
+ 
 
 ### <b> <span style="color:blue">Download ebooks</span> </b>
 * <b> <span style="color:red">[libgen](https://libgen.is/)</span> </b>
@@ -29,8 +30,19 @@ author_profile: true
 ### <b> <span style="color:blue">Research topics or forums</span> </b>
 * <b> <span style="color:green">[Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)</span> </b> 
 
+### <b> <span style="color:blue">Home Services</span> </b>
+* <b> <span style="color:red">[CSC Application](http://apply.csc.edu.cn/csc/main/person/login/index.jsf)</span> </b> 
+* <b> <span style="color:red">[CSC Management](https://s.csc.edu.cn/)</span> </b> 
+
+### <b> <span style="color:blue">Abroad Services</span> </b>
+* <b> <span style="color:green">[Department of Mathematics (Penn State)](https://math.psu.edu/)</span> </b>
+* <b> <span style="color:green">[istart (Penn State)](https://istart.gp.psu.edu/istart/controllers/start/start.cfm)</span> </b>
+* <b> <span style="color:green">[EPPIC J-1 Scholar Member Program (Penn State)](https://eppic.la.psu.edu/j-1-scholars/eppic-scholar-memberships-join-now)</span> </b>
+ 
+
+
 ### <b> <span style="color:blue">Others</span> </b>
-* <b> <span style="color:red">[MathSciNet](https://mathscinet.ams.org/mathscinet/)</span> </b> 
-* <b> <span style="color:red">[Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)</span> </b> 
+* <b> <span style="color:green">[MathSciNet](https://mathscinet.ams.org/mathscinet/)</span> </b> 
+* <b> <span style="color:green">[Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)</span> </b> 
 
    
