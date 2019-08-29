@@ -18,8 +18,12 @@ author_profile: true
 ### <b> <span style="color:blue">Analysis (PDEs)</span> </b>
 
 ### <b> <span style="color:blue">Optimization</span> </b>
-* ADMM cf. * <b> <span style="color:green">[Wotao Yin](https://www.math.ucla.edu/~wotaoyin/)</span> </b> 
+* ADMM cf. <b> <span style="color:green">[Wotao Yin](https://www.math.ucla.edu/~wotaoyin/)</span> </b> 
  
+### <b> <span style="color:blue">Electronic structure calculations</span> </b>
+
+* cf. <b> <span style="color:green">[Yvon MADAY](https://www.ljll.math.upmc.fr/~maday/) , [Eric CANCES](https://cermics.enpc.fr/~cances/) , [Aihui Zhou](http://lsec.cc.ac.cn/~azhou/) , [Jianfeng Lu](https://math.duke.edu/people/jianfeng-lu) , [Lin Lin](https://math.berkeley.edu/~linlin/) , [Huajie Chen](http://math0.bnu.edu.cn/~chenhuajie/)</span> </b> 
+
 
 ### <b> <span style="color:blue">Download Ebooks</span> </b>
 * <b> <span style="color:red">[libgen](https://libgen.is/)</span> </b>
@@ -56,6 +60,7 @@ author_profile: true
 ### <b> <span style="color:blue">Institutes and Centers Abroad</span> </b>
 * <b> <span style="color:green">[The International Council for Industrial and Applied Mathematics (ICIAM)](http://www.iciam.org/)</span> </b>
 * <b> <span style="color:green">[Other Mathematics Institutes](https://www.polyu.edu.hk/ama/CAM/cam-net/others.html)</span> </b>
+* <b> <span style="color:green">[The European Magnetism Association (EMA)](http://magnetism.eu/)</span> </b>
 
 
 ### <b> <span style="color:blue">Others</span> </b>
