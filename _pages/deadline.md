@@ -1,7 +1,7 @@
 ---
 layout: archive
-title: "Teaching"
-permalink: /teaching/
+title: "Deadline"
+permalink: /deadline/
 author_profile: true
 ---
 ## At Soochow University
