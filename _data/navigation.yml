@@ -21,6 +21,9 @@ main:
   - title: "Blogs"
     url: /year-archive/
     
+  - title: "Conference Deadline"
+    url: /category-archive/
+    
   - title: "Contact"
     url: /contact/  
     
