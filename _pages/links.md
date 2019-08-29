@@ -6,14 +6,15 @@ author_profile: true
 ---
 
 ### <b> <span style="color:blue">Micomagnetics</span> </b>
-* [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
+* <b> <span style="color:green">[NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)</span> </b>
 
 ### <b> <span style="color:blue">Machine Learning</span> </b>
-* Numerical PDEs Beyond ML, cf. [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
+* Numerical PDEs Beyond ML, cf. <b> <span style="color:red">[Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)</span> </b>
 * Applications of Deep Learning, cf. [Lantao Yu(Stanford)](http://lantaoyu.com/) 
 
 ### <b> <span style="color:blue">Numerics (PDEs)</span> </b>
-* [Xinbo Qi](https://qixinbo.info/sources/) , 
+* [Xinbo Qi](https://qixinbo.info/sources/) 
+
 ### <b> <span style="color:blue">Analysis (PDEs)</span> </b>
 
 ### <b> <span style="color:blue">Optimization</span> </b>
