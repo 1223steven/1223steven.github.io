@@ -61,6 +61,7 @@ author_profile: true
 * <b> <span style="color:green">[The International Council for Industrial and Applied Mathematics (ICIAM)](http://www.iciam.org/)</span> </b>
 * <b> <span style="color:green">[Other Mathematics Institutes](https://www.polyu.edu.hk/ama/CAM/cam-net/others.html)</span> </b>
 * <b> <span style="color:green">[The European Magnetism Association (EMA)](http://magnetism.eu/)</span> </b>
+* <b> <span style="color:green">[American Institute of Mathematics (AIM)](https://aimath.org/workshops/upcoming/)</span> </b>
 
 
 ### <b> <span style="color:blue">Others</span> </b>
