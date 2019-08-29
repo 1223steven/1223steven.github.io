@@ -12,8 +12,8 @@ main:
   - title: "Talks"
     url: /talks/    
 
-  # - title: "Teaching"
-  #   url: /teaching/    
+  - title: "Teaching"
+    url: /teaching/    
     
   # - title: "Portfolio"
   #   url: /portfolio/
@@ -21,8 +21,8 @@ main:
   - title: "Blogs"
     url: /year-archive/
     
-  - title: "Conference Deadline"
-    url: /category-archive/
+  - title: "Deadline"
+    url: /portfolio/
     
   - title: "Contact"
     url: /contact/  
