@@ -29,6 +29,7 @@ author_profile: true
 
 ### <b> <span style="color:blue">Research Topics or Forums</span> </b>
 * <b> <span style="color:green">[Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)</span> </b> 
+* <b> <span style="color:green">[ScienceDirect Research](https://www.sciencedirect.com/search)</span> </b>
 
 ### <b> <span style="color:blue">Home Services</span> </b>
 * <b> <span style="color:red">[CSC Application](http://apply.csc.edu.cn/csc/main/person/login/index.jsf)</span> </b> 
@@ -41,10 +42,11 @@ author_profile: true
 * <b> <span style="color:green">[EPPIC J-1 Scholar Member Program (Penn State)](https://eppic.la.psu.edu/j-1-scholars/eppic-scholar-memberships-join-now)</span> </b>
 * <b> <span style="color:green">[Events (Penn State)](https://www.events.psu.edu/)</span> </b>
 * <b> <span style="color:green">[Campuses (Penn State)](https://www.psu.edu/academics/campuses)</span> </b>
- 
+
 
 ### <b> <span style="color:blue">Others</span> </b>
 * <b> <span style="color:green">[MathSciNet](https://mathscinet.ams.org/mathscinet/)</span> </b> 
 * <b> <span style="color:green">[Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)</span> </b> 
+
 
    
