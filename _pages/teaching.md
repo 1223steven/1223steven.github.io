@@ -4,6 +4,6 @@ title: "Teaching"
 permalink: /teaching/
 author_profile: true
 ---
-# Teaching Assistant
+=== Teaching Assistant
 * September 1
 
