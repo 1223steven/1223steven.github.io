@@ -4,14 +4,32 @@ title: "Useful Links"
 permalink: /links/
 author_profile: true
 ---
-## At Soochow University
 
-### <b> <span style="color:blue">Teaching Assistant</span> </b>
-* Applied Mathematics Topics: Using Mathematical Languages to Study Practical Problems (Spring 2018), TA
-* Numerical PDEs (Spring 2018), TA, <b> <span style="color:red">[Exam](http://stevencjxie8.com/files/exam.pdf)</span> </b>
-* Anlytical Geometry (Fall, 2018), TA
+### <b> <span style="color:blue">Micomagnetics</span> </b>
+* [NIST micro benchmark problem](https://www.ctcms.nist.gov/~rdm/mumag.org.html)
 
-### <b> <span style="color:blue">Instructor</span> </b>
-* Advanced Mathematics (Summer, 2019)
+### <b> <span style="color:blue">Machine Learning</span> </b>
+* Numerical PDEs Beyond ML, cf. [Yiping Lu(PKU and Stanford)](https://web.stanford.edu/~yplu/)
+* Applications of Deep Learning, cf. [Lantao Yu(Stanford)](http://lantaoyu.com/) 
 
+### <b> <span style="color:blue">Numerics (PDEs)</span> </b>
+* [Xinbo Qi](https://qixinbo.info/sources/) , 
+### <b> <span style="color:blue">Analysis (PDEs)</span> </b>
 
+### <b> <span style="color:blue">Optimization</span> </b>
+* cf. 
+
+### <b> <span style="color:blue">Download ebooks</span> </b>
+* [libgen](https://libgen.is/)
+* [scihub](https://sci-hub.tw/)
+* [google scholar](https://scholar.google.com/)
+* [damuchong](http://www.4243.net/)
+
+### <b> <span style="color:blue">Research topics or forums</span> </b>
+* [Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=) 
+
+### <b> <span style="color:blue">Others</span> </b>
+* [MathSciNet](https://mathscinet.ams.org/mathscinet/)
+* [Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)
+
+   
