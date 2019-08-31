@@ -35,6 +35,8 @@ author_profile: true
 ### <b> <span style="color:blue">Research Topics or Forums</span> </b>
 * <b> <span style="color:green">[Researchgate Searching](https://www.researchgate.net/search.Search.html?type=publication&query=)</span> </b> 
 * <b> <span style="color:green">[ScienceDirect Research](https://www.sciencedirect.com/search)</span> </b>
+* <b> <span style="color:green">[Science Scholar Searching](https://so.sciencesoft.cn/)</span> </b>
+
 
 ### <b> <span style="color:blue">Home Services</span> </b>
 * <b> <span style="color:red">[CSC Application](http://apply.csc.edu.cn/csc/main/person/login/index.jsf)</span> </b> 
