@@ -148,13 +148,13 @@ ol li
   padding: 0px 0 0 0;} 
 
 ul#menu
-{ float: left;}
+{ float: right;}
 
 ul#menu li
 { float: left;
   padding: 0 0 0px 0px;
   list-style: none;
-  margin: 4px 0 0 0;
+  margin: 2px 0 0 0;
   background: transparent;}
 
 ul#menu li a
