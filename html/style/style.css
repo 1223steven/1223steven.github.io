@@ -112,7 +112,7 @@ ol li
   left: 0;}
 
 #logo h1, #logo h2
-{ font: normal 350% 'Yanone Kaffeesatz', arial, sans-serif;
+{ font: normal 250% 'Yanone Kaffeesatz', arial, sans-serif;
   padding: 5px 0 0 17px;
   color: #555;
   border-bottom: 0;
@@ -129,7 +129,7 @@ ol li
 { color: #ECEF01;}
 
 #logo_text h2
-{ font-size: 120%;
+{ font-size: 100%;
   padding: 4px 0 0 0;
   color: #A8AA94;}
 
