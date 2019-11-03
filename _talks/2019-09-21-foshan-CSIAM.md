@@ -4,7 +4,7 @@ subtitle: "Second-order Semi-implicit Projection Methods for Landau-Lifshitz Equ
 collection: talks
 type: "Talk"
 permalink: /talks/2018-12-08-nanjing-JSIAM
-venue: "JSIAM"
+venue: "CSIAM"
 date: 2019-09-21
 location: "foshan, China"
 ---
@@ -23,4 +23,4 @@ stepsize in time is proportional to the gridsize in space. Examples in 1D and 3D
 verify the analysis results. A benchmark problem from National Institute of Standards and
 Technology is also tested to verify the applicability of these schemes. <br>
 
-[[Slide]](http://1223steven.github.io/files/cjxie_nanjing_JISAM_2018.pdf)
+[[Slide]](http://1223steven.github.io/files/Xie_CSIAM2019.pdf)
