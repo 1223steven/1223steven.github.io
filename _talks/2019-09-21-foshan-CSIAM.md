@@ -3,7 +3,7 @@ title: "2019 CSIAM Contributed paper"
 subtitle: "Second-order Semi-implicit Projection Methods for Landau-Lifshitz Equation"
 collection: talks
 type: "Talk"
-permalink: /talks/2018-12-08-nanjing-JSIAM
+permalink: /talks/2019-09-21-foshan-CSIAM
 venue: "CSIAM"
 date: 2019-09-21
 location: "foshan, China"
