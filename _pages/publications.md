@@ -19,4 +19,4 @@ Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.
 
 <b>[Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert equation](http://stevencjxie8.com/publications/TWOIMPROVED)</b><br>
 Panchi Li, <b>Changjian Xie</b>, Rui Du, Jingrun Chen and Xiaoping Wang.
-<i>Journal of Computational Physics <span style="color:red">(Submitted)</span></i>. <b>2019</b>.
+<i>Journal of Computational Physics <span style="color:red">(Accepted)</span></i>. <b>2019</b>.
