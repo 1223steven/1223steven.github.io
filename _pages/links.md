@@ -66,6 +66,12 @@ author_profile: true
 * <b> <span style="color:green">[Other Mathematics Institutes](https://www.polyu.edu.hk/ama/CAM/cam-net/others.html)</span> </b>
 * <b> <span style="color:green">[The European Magnetism Association (EMA)](http://magnetism.eu/)</span> </b>
 * <b> <span style="color:green">[American Institute of Mathematics (AIM)](https://aimath.org/workshops/upcoming/)</span> </b>
+* <b> <span style="color:green">[Department of Mathematics (Princeton)](https://www.math.princeton.edu/)</span> </b>
+* <b> <span style="color:green">[Max-Planck-Institute for Mathematics in the Sciences](https://www.mis.mpg.de/)</span> </b>
+* <b> <span style="color:green">[Institute of Advanced Study](https://www.math.ias.edu/)</span> </b>
+* <b> <span style="color:green">[Institute for Pure and Applied Mathematics (UCLA)](http://www.ipam.ucla.edu/)</span> </b>
+* <b> <span style="color:green">[Institute for Mathematics and its Applications (UMN)](http://www.ima.umn.edu/)</span> </b>
+* <b> <span style="color:green">[Courant Institute of Mathematical Sciences (NYU)](https://cims.nyu.edu/)</span> </b>
 
 
 ### <b> <span style="color:blue">Others</span> </b>
