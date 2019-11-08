@@ -45,6 +45,7 @@ author_profile: true
 ### <b> <span style="color:blue">Abroad Services</span> </b>
 * <b> <span style="color:green">[Penn State University](https://www.psu.edu/)</span> </b>
 * <b> <span style="color:green">[Department of Mathematics (Penn State)](https://math.psu.edu/)</span> </b>
+* <b> <span style="color:green">[Department of Materials Science and Engineering (PSU)](https://www.matse.psu.edu/)</span> </b>
 * <b> <span style="color:green">[istart (Penn State)](https://istart.gp.psu.edu/istart/controllers/start/start.cfm)</span> </b>
 * <b> <span style="color:green">[EPPIC J-1 Scholar Member Program (Penn State)](https://eppic.la.psu.edu/j-1-scholars/eppic-scholar-memberships-join-now)</span> </b>
 * <b> <span style="color:green">[Events (Penn State)](https://www.events.psu.edu/)</span> </b>
@@ -70,6 +71,9 @@ author_profile: true
 ### <b> <span style="color:blue">Others</span> </b>
 * <b> <span style="color:green">[MathSciNet](https://mathscinet.ams.org/mathscinet/)</span> </b> 
 * <b> <span style="color:green">[Mathematics Genealogy](https://genealogy.math.ndsu.nodak.edu/)</span> </b> 
-
-
+* <b> <span style="color:green">[Mathematical tool](https://www.mathcad.com/en/capabilities)</span> </b>
+* <b> <span style="color:green">[Physical constant](https://physics.nist.gov/cuu/Constants/)</span> </b>
+* <b> <span style="color:green">[Unit Conversion](http://www.unitconversion.org/)</span> </b>
+* <b> <span style="color:green">[ArXiv](https://arxiv.org/)</span> </b>
+* <b> <span style="color:green">[Other Cards](https://dzone.com/refcardz)</span> </b>
    
