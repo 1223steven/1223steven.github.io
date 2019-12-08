@@ -25,6 +25,8 @@ author_profile: true
 
 * cf. <b> <span style="color:green">[Yvon MADAY](https://www.ljll.math.upmc.fr/~maday/) , [Eric CANCES](https://cermics.enpc.fr/~cances/) , [Aihui Zhou](http://lsec.cc.ac.cn/~azhou/) , [Jianfeng Lu](https://math.duke.edu/people/jianfeng-lu) , [Lin Lin](https://math.berkeley.edu/~linlin/) , [Huajie Chen](http://math0.bnu.edu.cn/~chenhuajie/)</span> </b> 
 
+### <b> <span style="color:blue">Non-equilibrium statistical mechanics, homogenization theory</span> </b>
+* <b> <span style="color:green">[Grigorios A. Pavliotis](http://wwwf.imperial.ac.uk/~pavl/)</span> </b>
 
 ### <b> <span style="color:blue">Download Ebooks</span> </b>
 * <b> <span style="color:red">[libgen](https://libgen.is/)</span> </b>
