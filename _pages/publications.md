@@ -31,4 +31,4 @@ Panchi Li, <b>Changjian Xie</b>, Rui Du, Jingrun Chen and Xiaoping Wang.
 ## Absorbing boundry condition for wave equations
 <b>[A machine-learning method for time-dependent wave equations over unbounded domains](http://stevencjxie8.com/publications/ABC_wave)</b><br>
 <b>Changjian Xie</b>, Xiantao Li and Jingrun Chen.
-<i>ArXiv:2101.05807</span></i>, <b>2022</b>.
+<i>ArXiv:2101.05807</i>, <b>2022</b>.
