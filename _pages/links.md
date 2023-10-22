@@ -52,6 +52,9 @@ author_profile: true
 * <b> <span style="color:green">[EPPIC J-1 Scholar Member Program (Penn State)](https://eppic.la.psu.edu/j-1-scholars/eppic-scholar-memberships-join-now)</span> </b>
 * <b> <span style="color:green">[Events (Penn State)](https://www.events.psu.edu/)</span> </b>
 * <b> <span style="color:green">[Campuses (Penn State)](https://www.psu.edu/academics/campuses)</span> </b>
+* <b> <span style="color:green">[Department of Mathematics (NUS)](https://www.math.nus.edu.sg/)</span> </b>
+* <b> <span style="color:green">[Institute for Mathematical Science (NUS)](https://ims.nus.edu.sg/)</span> </b>
+* <b> <span style="color:green">[Department of Mathematics, HKUST](https://www.math.hkust.edu.hk/)</span> </b>
 
 ### <b> <span style="color:blue">Institutes and Centers in China</span> </b>
 * <b> <span style="color:red">[China Society for Computational Mathematics (CSCM)](http://cscm.cc.ac.cn/index.html)</span> </b>
@@ -75,6 +78,8 @@ author_profile: true
 * <b> <span style="color:green">[Institute for Mathematics and its Applications (UMN)](http://www.ima.umn.edu/)</span> </b>
 * <b> <span style="color:green">[Courant Institute of Mathematical Sciences (NYU)](https://cims.nyu.edu/)</span> </b>
 * <b> <span style="color:green">[Material (UCSB)](https://www.materials.ucsb.edu/)</span> </b>
+* <b> <span style="color:green">[The Hong Kong Mathematical Society](https://www.polyu.edu.hk/ama/hkms/)</span> </b>
+* <b> <span style="color:green">[HKSIAM](https://www.hksiam.org.hk/about)</span> </b>
 
 
 ### <b> <span style="color:blue">Others</span> </b>
