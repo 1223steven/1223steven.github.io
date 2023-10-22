@@ -3,10 +3,11 @@ title: "Two improved Gauss-Seidel projection methods for Landau-Lifshitz-Gilbert
 collection: publications
 permalink: /publications/TWOIMPROVED
 venue: "Journal of Computational Physics"
-date: 2019-05-26
-citation: 'Panchi Li, <b>Changjian Xie</b>, Rui Du, Jingrun Chen and Xiaoping Wang. <i>Journal of Computational Physics.</i> <b>2019.</b>'
+date: 2019
+citation: 'Panchi Li, <b>Changjian Xie</b>, Rui Du, Jingrun Chen and Xiaoping Wang.'
 ---  
-[[ArXiv: 1907.11853]](https://arxiv.org/pdf/1907.11853.pdf), [[doi: 10.1016/j.jcp.2019.109046]](https://doi.org/10.1016/j.jcp.2019.109046)
+[[ArXiv: 1907.11853]](https://arxiv.org/pdf/1907.11853.pdf)
+[[doi: 10.1016/j.jcp.2019.109046]](https://doi.org/10.1016/j.jcp.2019.109046)
 
 
 ## Abstract

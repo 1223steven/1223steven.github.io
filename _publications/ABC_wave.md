@@ -1,30 +1,24 @@
 ---
-title: "Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation"
+title: "A machine-learning method for time-dependent wave equations over unbounded domains"
 collection: publications
-permalink: /publications/MAAIRL
-venue: "Submitted to Applied Numerical Mathematics (2019)"
-date: 2019-05-15
-citation: 'Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>. <i>submitted to Applied Numerical Mathematics</i>. <b>2019</b>.'
+permalink: /publications/ABC_wave
+venue: "ArXiv:2101.05807"
+date: 2022
+citation: '<b>Changjian Xie</b>, Xiantao Li and Jingrun Chen.'
 ---
-[[ArXiv]](https://arxiv.org/pdf/1902.09740.pdf)
+[[ArXiv]](https://arxiv.org/abs/2101.05807)
 
 
 ## Abstract
-The numerical approximation for the Landau-Lifshitz equation,
-the dynamics of magnetization in a ferromagnetic material, is taken into consideration. This highly nonlinear equation, with a non-convex constraint, has
-several equivalent forms, and involves solving an auxiliary problem in the infinite domain. All these features have posed interesting challenges in developing
-numerical methods. In this paper, we first present a fully discrete semi-implicit
-method for solving the Landau-Lifshitz equation based on the second-order
-backward differentiation formula and the one-sided extrapolation (using previous time-step numerical values). A projection step is further used to preserve
-the length of the magnetization. Subsequently, we provide a rigorous convergence analysis for the fully discrete numerical solution by introducing two sets
-of approximated solutions to preceed estimation alternatively, with unconditional stability and second-order accuracy in both time and space, provided
-that the spatial step-size is the same order as the temporal step-size, which
-remarkably relax restrictions of temporal step-size compared to the implicit
-schemes. And also, the unique solvability of the numerical solution without
-any assumptions for the step size in both time and space is theoretically justified, which turns out to be the first such result for the micromagnetics model.
-All these theoretical properties are verified by numerical examples in both oneand three- dimensional spaces.
-
-## Best Paper Award Honorable Mention
-<p align="center">
-  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpeg?raw=true" alt="Photo" style="width: 650px;"/>
-</p>
+Time-dependent wave equations represent an important class of partial differential equations (PDE) 
+for describing wave propagation phenomena, which are often formulated over unbounded domains. 
+Given a compactly supported initial condition, classical numerical methods reduce such problems 
+to bounded domains using artificial boundary condition (ABC). In this work, we present a machine-learning method 
+to solve this type of equations as an alternative to ABCs. Specifically, the mapping from the initial conditions to 
+the PDE solution is represented by a neural network, trained using wave packets that are parameterized by their band width 
+and wave numbers. The accuracy is tested for both the second-order wave equation and the Schrodinger equation, 
+including the nonlinear Schrodinger equation. We examine the accuracy from both interpolations and extrapolations. 
+For initial conditions lying in the training set, the learned map has good interpolation accuracy, 
+due to the approximation property of deep neural networks. The learned map also exhibits some good extrapolation accuracy. 
+We also demonstrate the effectiveness of the method for problems in irregular domains. 
+Overall, the proposed method provides an interesting alternative for finite-time simulation of wave propagation.

@@ -1,30 +1,24 @@
 ---
-title: "Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation"
+title: "A second-order numerical method for Landau-Lifshitz-Gilbert equation with large damping parameters"
 collection: publications
-permalink: /publications/MAAIRL
-venue: "Submitted to Applied Numerical Mathematics (2019)"
-date: 2019-05-15
-citation: 'Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>. <i>submitted to Applied Numerical Mathematics</i>. <b>2019</b>.'
+permalink: /publications/LargeDampSIMU
+venue: "Journal of Computational Physics"
+date: 2022
+citation: 'Yongyong Cai, Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.'
 ---
-[[ArXiv]](https://arxiv.org/pdf/1902.09740.pdf)
-
+[[ArXiv]](https://arxiv.org/abs/2105.03576)
+[[doi]](https://doi.org/10.1016/j.jcp.2021.110831)
 
 ## Abstract
-The numerical approximation for the Landau-Lifshitz equation,
-the dynamics of magnetization in a ferromagnetic material, is taken into consideration. This highly nonlinear equation, with a non-convex constraint, has
-several equivalent forms, and involves solving an auxiliary problem in the infinite domain. All these features have posed interesting challenges in developing
-numerical methods. In this paper, we first present a fully discrete semi-implicit
-method for solving the Landau-Lifshitz equation based on the second-order
-backward differentiation formula and the one-sided extrapolation (using previous time-step numerical values). A projection step is further used to preserve
-the length of the magnetization. Subsequently, we provide a rigorous convergence analysis for the fully discrete numerical solution by introducing two sets
-of approximated solutions to preceed estimation alternatively, with unconditional stability and second-order accuracy in both time and space, provided
-that the spatial step-size is the same order as the temporal step-size, which
-remarkably relax restrictions of temporal step-size compared to the implicit
-schemes. And also, the unique solvability of the numerical solution without
-any assumptions for the step size in both time and space is theoretically justified, which turns out to be the first such result for the micromagnetics model.
-All these theoretical properties are verified by numerical examples in both oneand three- dimensional spaces.
+A second order accurate numerical scheme is proposed and implemented for the Landau-Lifshitz-Gilbert 
+equation, which models magnetization dynamics in ferromagnetic materials, with large damping parameters. 
+The main advantages of this method are associated with the following features: (1) It only solves linear systems 
+of equations with coefficient matrices independent of the magnetization, and fast solvers are available, 
+so that the numerical efficiency has been greatly improved, in comparison with the existing Gauss-Seidel project method. 
+(2) The second-order accuracy in time is achieved, and it is unconditionally stable for large damping parameters. 
+Moreover, both the second-order accuracy and the great efficiency improvement will be verified by several numerical 
+examples in the 1D and 3D simulations. In the presence of large damping parameters, it is observed that this method 
+is unconditionally stable and finds physically reasonable structures while many existing methods have failed. 
+For the domain wall dynamics, the linear dependence of wall velocity with respect to the damping parameter and 
+the external magnetic field will be obtained through the reported simulations.
 
-## Best Paper Award Honorable Mention
-<p align="center">
-  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpeg?raw=true" alt="Photo" style="width: 650px;"/>
-</p>

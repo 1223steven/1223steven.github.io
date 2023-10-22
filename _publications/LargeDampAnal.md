@@ -1,12 +1,12 @@
 ---
 title: "Error analysis of a linear numerical scheme for the Landau-Lifshitz equation with large damping parameters"
 collection: publications
-permalink: /publications/MAAIRL
+permalink: /publications/LargeDampAnal
 venue: "Mathematical Methods in the Applied Sciences"
 date: 2023
 citation: 'Yongyong Cai, Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.'
 ---
-[[ArXiv]](https://arxiv.org/pdf/1902.09740.pdf)
+[[ArXiv]](https://arxiv.org/pdf/2111.07537.pdf)
 [[doi]]( https://doi.org/10.1002/mma.9601)
 
 
