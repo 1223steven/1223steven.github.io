@@ -10,6 +10,7 @@ redirect_from:
 
 <p align="center">
   <img src="https://1223steven.github.io/files/suda.jpg?raw=true" alt="Photo" style="width: 300px;"/> 
+  <img src="https://1223steven.github.io/files/cjxie.jpg?raw=true" alt="Photo" style="width: 300px;"/> 
 </p>
 
 * I am a Ph.D. student in the [School of Mathematical Sciences](http://math.suda.edu.cn/) at [Soochow University](http://www.suda.edu.cn/), advised by Prof. [Jingrun Chen](http://web.suda.edu.cn/jingrunchen/). [[Curriculum Vitae](http://stevencjxie8.com/files/cjxie_cv.pdf)] [[Google Scholar](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ)]
