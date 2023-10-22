@@ -9,7 +9,7 @@ redirect_from:
 ---
 
 <p align="center">
-  <img src="https://1223steven.github.io/files/xcj_pro_2.png?raw=true" alt="Photo" style="width: 200px;"/> 
+  <img src="https://1223steven.github.io/files/xcj_pro_2.jpg?raw=true" alt="Photo" style="width: 200px;"/> 
 </p>
 
 * [CV (English)](http://stevencjxie8.com/files/xcj_cv_2023.pdf), [CV (Chinese)](http://stevencjxie8.com/files/cjxie_cv_2023_CH.pdf), [Google Scholar](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ).
