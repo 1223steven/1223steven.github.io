@@ -9,9 +9,12 @@ redirect_from:
 
 {% include base_path %}
 
-![Panda](https://img-blog.csdn.net/20151109165400641)
+<p align="center">
+  <img src="https://1223steven.github.io/files/panda.jpg?raw=true" alt="Photo" style="width: 100px;"/> 
+</p>
 
+[Up-to-date CV (English) [PDF]](http://1223steven.github.io/files/xcj_cv_2023.pdf)
 
-[Click to View My Up-to-date Curriculum Vitae [PDF]](http://1223steven.github.io/files/cjxie_cv.pdf)
+[Up-to-date CV (Chinese) [PDF]](http://1223steven.github.io/files/cjxie_cv_2023_CH.pdf)
 
 <!-- <embed src="http://1223steven.com/files/cjxie_cv.pdf" width="650" height="1800" type='application/pdf'> -->
