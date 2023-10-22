@@ -4,9 +4,9 @@ title: "Contact"
 permalink: /contact/
 author_profile: true
 ---
-School of Mathematical Sciences, Soochow University<br>
-No.1 Shizi Street, Suzhou, Jiangsu Province, China<br>
-Email: 20184007005 [at] stu.suda.edu.cn
+Department of Mathematics, National University of Singapore<br>
+Block S17, 10 Lower Kent Ridge Road, Singapore, 119076<br>
+Email: macjxie [at] nus.edu.sg
 
 <b> <span style="color:green">[Welcome to my new page1](https://1223steven.github.io/files/cjxie/index.html)</span> </b>
 

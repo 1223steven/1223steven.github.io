@@ -4,6 +4,9 @@ title: "Teaching"
 permalink: /teaching/
 author_profile: true
 ---
+## At HKUST
+* Calculus, MATH 1014 (Lecture and Tutorial) (2022 Spring), Instructor
+
 ## At Soochow University
 
 ### <b> <span style="color:blue">Teaching Assistant</span> </b>
