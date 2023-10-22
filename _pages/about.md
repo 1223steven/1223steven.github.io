@@ -9,12 +9,16 @@ redirect_from:
 ---
 
 <p align="center">
-  <img src="https://1223steven.github.io/files/suda.jpg?raw=true" alt="Photo" style="width: 200px;"/> 
+  <img src="https://1223steven.github.io/files/suda.jpg?raw=true" alt="Photo" style="width: 150px;"/> 
   <img src="https://1223steven.github.io/files/cjxie.jpg?raw=true" alt="Photo" style="width: 400px;"/> 
 </p>
 
 * I received my Doctoral Degree of Philosophy in the [School of Mathematical Sciences](http://math.suda.edu.cn/) at [Soochow University](http://www.suda.edu.cn/), advised by Prof. [Jingrun Chen](http://web.suda.edu.cn/jingrunchen/). [[Curriculum Vitae](http://stevencjxie8.com/files/cjxie_cv.pdf)] [[Google Scholar](https://scholar.google.com/citations?hl=zh-CN&user=BOlwunsAAAAJ)]
-* My research interests lie in the general area of mathematical modeling and simulation of materials, particularly in micromagnetics simulations, numerical PDEs, multiscale modeling and molecular dynamics simulations, as well as their applications in the emerging fields of machine learning, especially deep learning to construct neural network approximation framework to solve high dimensional PDEs, solving all-electron Schrödinger equation for example.
+* My research interests lie in the area of mathematical modeling and simulation of materials, 
+** Numerical methods and analysis for micromagnetics simulations;
+** Molecular and spin dynamics modeling;
+** Modeling and simulation for free boundary and interface problems;
+** Machine learning methods and applications to scientific computing;
 * I received my Bachelor’s Degree in [Hefei Normal University](http://www.hfnu.edu.cn/). 
 * I will be a visiting scholar at Penn State under the supervision of Prof. [Xiantao Li](http://personal.psu.edu/xxl12/), expected 2019-2020, working on the topics of molecular dynimics simulations. 
 * I have a research grant for the Postgraduate Research and Practice Innovation Program of Jiangsu Province via number KYCX19_1947 working on the algorithms and analysis of magnetic materials.
