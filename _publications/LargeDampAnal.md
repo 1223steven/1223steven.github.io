@@ -1,30 +1,26 @@
 ---
-title: "Convergence analysis of a second-order semi-implicit projection method for Landau-Lifshitz equation"
+title: "Error analysis of a linear numerical scheme for the Landau-Lifshitz equation with large damping parameters"
 collection: publications
 permalink: /publications/MAAIRL
-venue: "Submitted to Applied Numerical Mathematics (2019)"
-date: 2019-05-15
-citation: 'Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>. <i>submitted to Applied Numerical Mathematics</i>. <b>2019</b>.'
+venue: "Mathematical Methods in the Applied Sciences"
+date: 2023
+citation: 'Yongyong Cai, Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.'
 ---
 [[ArXiv]](https://arxiv.org/pdf/1902.09740.pdf)
+[[doi]]( https://doi.org/10.1002/mma.9601)
 
 
 ## Abstract
-The numerical approximation for the Landau-Lifshitz equation,
-the dynamics of magnetization in a ferromagnetic material, is taken into consideration. This highly nonlinear equation, with a non-convex constraint, has
-several equivalent forms, and involves solving an auxiliary problem in the infinite domain. All these features have posed interesting challenges in developing
-numerical methods. In this paper, we first present a fully discrete semi-implicit
-method for solving the Landau-Lifshitz equation based on the second-order
-backward differentiation formula and the one-sided extrapolation (using previous time-step numerical values). A projection step is further used to preserve
-the length of the magnetization. Subsequently, we provide a rigorous convergence analysis for the fully discrete numerical solution by introducing two sets
-of approximated solutions to preceed estimation alternatively, with unconditional stability and second-order accuracy in both time and space, provided
-that the spatial step-size is the same order as the temporal step-size, which
-remarkably relax restrictions of temporal step-size compared to the implicit
-schemes. And also, the unique solvability of the numerical solution without
-any assumptions for the step size in both time and space is theoretically justified, which turns out to be the first such result for the micromagnetics model.
-All these theoretical properties are verified by numerical examples in both oneand three- dimensional spaces.
-
-## Best Paper Award Honorable Mention
-<p align="center">
-  <img src="https://1223steven.github.io/files/JSIAM2018-award.jpeg?raw=true" alt="Photo" style="width: 650px;"/>
-</p>
+A second-order accurate, linear numerical method is analyzed for the Landau–Lifshitz equation with large damping parameters. 
+This equation describes the dynamics of magnetization, with a non-convexity constraint of unit length of the magnetization. 
+The numerical method is based on the second-order backward differentiation formula in time, combined with an implicit treatment for 
+the linear diffusion term from the harmonic mapping part and explicit extrapolation for the nonlinear terms. Afterward, a projection 
+step is applied to normalize the numerical solution at a point-wise level. This numerical scheme has shown extensive advantages in the 
+practical computations for the physical model with large damping parameters, which comes from the fact that only a linear system with 
+constant coefficients (independent of both time and the updated magnetization) needs to be solved at each time step, and has greatly
+improved the numerical efficiency. Meanwhile, a theoretical analysis for this linear numerical scheme has not been available. 
+In this paper, we provide a rigorous error estimate of the numerical scheme, in the discrete $\ell^{\infty}(0,T;\ell^2)\cap\ell^2(0,T;H^1_h)$ 
+norm, under suitable regularity assumptions and reasonable ratio between the time step size and the spatial mesh size. 
+In particular, the projection operation is nonlinear, and a stability estimate for the projection step turns out to be highly challenging. 
+Such a stability estimate is derived in details, which will play an essential role in the convergence analysis for the numerical scheme, 
+if the damping parameter is greater than $3$.
