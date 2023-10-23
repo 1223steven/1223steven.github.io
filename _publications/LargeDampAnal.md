@@ -3,11 +3,11 @@ title: "Error analysis of a linear numerical scheme for the Landau-Lifshitz equa
 collection: publications
 permalink: /publications/LargeDampAnal
 venue: "Mathematical Methods in the Applied Sciences"
-date: 2023
+date: 2023-09-06
 citation: 'Yongyong Cai, Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.'
 ---
 [[ArXiv]](https://arxiv.org/pdf/2111.07537.pdf)
-[[doi]]( https://doi.org/10.1002/mma.9601)
+[[doi]](https://doi.org/10.1002/mma.9601)
 
 
 ## Abstract

@@ -3,7 +3,7 @@ title: "A second-order numerical method for Landau-Lifshitz-Gilbert equation wit
 collection: publications
 permalink: /publications/LargeDampSIMU
 venue: "Journal of Computational Physics"
-date: 2022
+date: 2022-02-15
 citation: 'Yongyong Cai, Jingrun Chen, Cheng Wang, <b>Changjian Xie</b>.'
 ---
 [[ArXiv]](https://arxiv.org/abs/2105.03576)
