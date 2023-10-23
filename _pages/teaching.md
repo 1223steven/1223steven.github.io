@@ -8,7 +8,7 @@ author_profile: true
 
 ### <b> <span style="color:blue">Instructor</span> </b>
 * Calculus, MATH 1014 (Lecture and Tutorial) (2022 Spring)
-	-  Lecture note <b> <span style="color:green">[Exam](http://stevencjxie8.com/files/HKUST/Lecture_note1.pdf)</span> </b>
+	-  Lecture note: <b> <span style="color:green">[note 1](http://stevencjxie8.com/files/HKUST/Lecture_note1.pdf)</span> </b>, <b> <span style="color:green">[note 2](http://stevencjxie8.com/files/HKUST/Lecture_note2.pdf)</span> </b>
 
 ## At Soochow University
 
