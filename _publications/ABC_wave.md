@@ -3,7 +3,7 @@ title: "A machine-learning method for time-dependent wave equations over unbound
 collection: publications
 permalink: /publications/ABC_wave
 venue: "ArXiv:2101.05807"
-date: 2022
+date: 2021-01-14
 citation: '<b>Changjian Xie</b>, Xiantao Li and Jingrun Chen.'
 ---
 [[ArXiv]](https://arxiv.org/abs/2101.05807)
