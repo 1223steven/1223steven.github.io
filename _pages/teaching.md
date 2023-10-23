@@ -25,6 +25,8 @@ author_profile: true
 	<b> <span style="color:green">[note 23](http://stevencjxie8.com/files/HKUST/Lecture_note23.pdf)</span> </b>, <b> <span style="color:green">[note 24](http://stevencjxie8.com/files/HKUST/Lecture_note24.pdf)</span> </b>,
 	<b> <span style="color:green">[note 25](http://stevencjxie8.com/files/HKUST/Lecture_note25.pdf)</span> </b>
 	- <b> <span style="color:green">[Midterm Exam and solution](http://stevencjxie8.com/files/HKUST/Midterm_solution.pdf)</span> </b>
+
+
 ## At Soochow University
 
 ### <b> <span style="color:blue">Teaching Assistant</span> </b>
