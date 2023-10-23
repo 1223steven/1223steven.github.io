@@ -5,7 +5,10 @@ permalink: /teaching/
 author_profile: true
 ---
 ## At HKUST
-* Calculus, MATH 1014 (Lecture and Tutorial) (2022 Spring), Instructor
+
+### <b> <span style="color:blue">Instructor</span> </b>
+* Calculus, MATH 1014 (Lecture and Tutorial) (2022 Spring)
+	-  Lecture note <b> <span style="color:green">[Exam](http://stevencjxie8.com/files/HKUST/Lecture_note1.pdf)</span> </b>
 
 ## At Soochow University
 
