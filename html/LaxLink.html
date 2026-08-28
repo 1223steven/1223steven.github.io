@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaxLink | Computational‑Math Cross‑Research Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.hidden { display: none !important; }
+.tag { padding: 4px 12px; border-radius: 9999px; font-size: 12px; }
+.btn-primary {
+    @apply bg-slate-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:bg-slate-600 hover:shadow-lg active:scale-[0.98];
+}
+.btn-secondary {
+    @apply bg-white text-slate-700 border border-slate-300 px-4 py-2 rounded-lg transition-all duration-200 hover:bg-slate-100 hover:shadow-md active:scale-[0.98];
+}
+.btn-action {
+    @apply bg-slate-600 text-white px-3 py-1.5 rounded text-sm transition-all duration-200 hover:bg-slate-500 hover:shadow active:scale-[0.97];
+}
+.btn-accept {
+    @apply bg-emerald-600 text-white px-3 py-1.5 rounded text-sm hover:bg-emerald-500 hover:shadow active:scale-[0.97];
+}
+.btn-reject {
+    @apply bg-red-500 text-white px-3 py-1.5 rounded text-sm hover:bg-red-400 hover:shadow active:scale-[0.97];
+}
+.btn-like {
+    @apply bg-rose-50 text-rose-600 border border-rose-200 px-3 py-1.5 rounded text-sm hover:bg-rose-100 hover:shadow-sm active:scale-[0.97];
+}
+.btn-join {
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded text-sm hover:bg-emerald-100 hover:shadow-sm active:scale-[0.97];
+}
+.btn-chat {
+    @apply bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded text-sm hover:bg-blue-100 hover:shadow-sm active:scale-[0.97];
+}
+.btn-delete {
+    @apply bg-red-50 text-red-600 border border-red-200 px-3 py-1.5 rounded text-sm hover:bg-red-100 hover:shadow-sm active:scale-[0.97];
+}
+.nav-btn-active {
+    @apply bg-slate-700 text-white shadow-md;
+}
+.nav-btn-inactive {
+    @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:shadow-sm;
+}
+.auth-card {
+    @apply bg-white rounded-2xl shadow-xl border border-slate-100 p-8 w-full max-w-md;
+}
+.badge-active {
+    @apply bg-emerald-100 text-emerald-700;
+}
+.badge-offline {
+    @apply bg-slate-100 text-slate-600;
+}
+.badge-pending {
+    @apply bg-amber-100 text-amber-700;
+}
+.badge-accepted {
+    @apply bg-emerald-100 text-emerald-700;
+}
+.badge-rejected {
+    @apply bg-red-100 text-red-700;
+}
+.active-sidebar {
+    @apply sticky top-6 w-56 bg-white border border-slate-200 rounded-2xl shadow-lg z-20 max-h-[440px] overflow-y-auto p-4 shrink-0;
+}
+.page-container {
+    margin-left: 1cm;
+    @apply max-w-7xl pr-8 py-12 flex gap-10;
+}
+.main-content {
+    @apply flex-1 min-w-0;
+}
+.btn-code{
+    @apply bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm whitespace-nowrap hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all;
+}
+.req-item{
+    @apply border border-slate-100 bg-slate-50 rounded-xl p-4 mt-3 shadow-sm;
+}
+
+.card {
+    @apply bg-white border border-slate-100 rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg;
+}
+.card-content {
+    @apply px-1 py-2;
+}
+.section-title {
+    @apply text-2xl font-semibold mb-3 text-slate-800;
+}
+.section-description {
+    @apply text-slate-500 mb-8 max-w-3xl leading-relaxed;
+}
+
+.chat-message-area{
+    @apply px-5 py-4 h-[460px] overflow-y-auto bg-slate-50 flex flex-col gap-3 rounded-xl border border-slate-200;
+}
+.chat-input-area{
+    @apply mt-5 flex gap-3;
+}
+.msg-self{
+    @apply self-end bg-blue-500 text-white px-4 py-2 rounded-xl max-w-[70%] shadow-sm;
+}
+.msg-other{
+    @apply self-start bg-slate-200 text-slate-800 px-4 py-2 rounded-xl max-w-[70%] shadow-sm;
+}
+.msg-meta{
+    @apply text-[10px] opacity-70 mt-1;
+}
+.global-footer{
+    margin-left:1cm;
+    @apply text-xs text-slate-500 py-8 border-t border-slate-200 max-w-7xl pr-8;
+}
+input,textarea,select{
+    @apply focus:ring-2 focus:ring-slate-300 focus:border-slate-400 focus:outline-none transition-all duration-200;
+}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans">
+
+<div id="auth-screen" class="min-h-screen flex items-center justify-center px-4 py-8">
+    <div class="auth-card">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-semibold tracking-tight">LaxLink</h1>
+            <p class="text-slate-500 mt-3">Linking minds for computational‑mathematics cross‑research</p>
+        </div>
+
+        <div id="login-form">
+            <h2 class="text-xl font-medium mb-5">Sign In</h2>
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Student Email</label>
+                <input id="login-email" type="email" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="student@university.edu">
+            </div>
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
+                <input id="login-password" type="password" class="w-full border border-slate-300 rounded-xl px-4 py-2.5">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Invitation Code</label>
+                <input id="login-email-code" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Enter invitation code">
+            </div>
+            <div id="login-error" class="text-red-500 text-sm mb-5 hidden"></div>
+            <button onclick="handleLogin()" class="btn-primary w-full">Sign In</button>
+            <p class="text-sm text-slate-500 mt-5 text-center">
+                Don’t have an account?
+                <button onclick="showRegister()" class="text-slate-700 underline font-medium">Create Account</button>
+            </p>
+        </div>
+
+        <div id="register-form" class="hidden">
+            <h2 class="text-xl font-medium mb-5">Student Registration</h2>
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Student Email</label>
+                <input id="reg-email" type="email" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="student@university.edu">
+            </div>
+            <div class="mb-5">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Full Name / Student ID</label>
+                <input id="reg-name" class="w-full border border-slate-300 rounded-xl px-4 py-2.5">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
+                <input id="reg-password" type="password" class="w-full border border-slate-300 rounded-xl px-4 py-2.5">
+            </div>
+            <div id="reg-error" class="text-red-500 text-sm mb-5 hidden"></div>
+            <button onclick="handleRegister()" class="btn-primary w-full">Register</button>
+            <p class="text-sm text-slate-500 mt-5 text-center">
+                Already have an account?
+                <button onclick="showLogin()" class="text-slate-700 underline font-medium">Sign In</button>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="app-screen" class="hidden relative">
+
+<header class="bg-gradient-to-r from-slate-800 to-slate-700 text-white py-8">
+<div class="max-w-7xl mx-auto px-8 flex justify-between items-start flex-wrap gap-4">
+    <div>
+        <h1 class="text-3xl font-semibold tracking-tight">LaxLink</h1>
+        <p class="text-slate-300 mt-2 text-base">Cross‑research platform for computational & applied mathematics<br>
+        <i class="text-slate-400 text-sm">Linking minds for computational‑mathematics cross‑research</i></p>
+    </div>
+    <div class="text-sm">
+        <span id="display-user-email" class="text-slate-300"></span>
+        <button onclick="logout()" class="ml-3 btn-secondary text-xs py-1.5 px-4">Log Out</button>
+    </div>
+</div>
+</header>
+
+<nav class="bg-white shadow-md sticky top-0 z-10">
+<div class="max-w-7xl mx-auto px-8 py-4 flex flex-wrap gap-3">
+<button id="nav-square" onclick="goto('square')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-active">Project Square</button>
+<button id="nav-publish" onclick="goto('publish')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">New Project Proposal</button>
+<button id="nav-activeusers" onclick="goto('activeusers')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">Active Users</button>
+<button id="nav-collaborators" onclick="goto('collaborators')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">My Collaborators</button>
+<button id="nav-myprojects" onclick="goto('myprojects')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">My Published Projects</button>
+<button id="nav-joinrequests" onclick="goto('joinrequests')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">Join Requests</button>
+<button id="nav-profile" onclick="goto('profile')" class="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive">My Research Profile</button>
+</div>
+</nav>
+
+<div class="page-container">
+    <main class="main-content">
+        <div id="page-square" class="page">
+        <h2 class="section-title">Project Square</h2>
+        <p class="section-description">Browse open self‑proposed research topics, apply to join ongoing projects</p>
+        <div id="squareList" class="flex flex-col gap-6"></div>
+        </div>
+
+        <div id="page-publish" class="page hidden">
+        <h2 class="section-title">Submit New Research Proposal</h2>
+        <p class="section-description">Propose your mathematical / computational cross‑research topic and recruit teammates</p>
+        <div class="card">
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Project Title</label>
+        <input id="projTitle" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="e.g. Stability analysis of high‑order numerical schemes">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Project Abstract</label>
+        <textarea id="projAbstract" rows="5" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Describe research question, background and expected work"></textarea>
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Required Skills (comma separated)</label>
+        <input id="projReqSkills" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Numerical Analysis, MATLAB, PDE, Optimization">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Expected Team Size</label>
+        <input id="projTeamSize" type="number" value="3" class="w-full border border-slate-300 rounded-xl px-4 py-2.5">
+        </div>
+        <div class="mb-8">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Research Category</label>
+        <select id="projCategory" class="w-full border border-slate-300 rounded-xl px-4 py-2.5">
+        <option>Computational Mathematics</option>
+        <option>Applied Mathematics</option>
+        <option>Numerical PDE Simulation</option>
+        <option>Optimization & Data‑Driven Modelling</option>
+        <option>Interdisciplinary Mathematical Research</option>
+        </select>
+        </div>
+        <button onclick="submitProject()" class="btn-primary">Publish Proposal</button>
+        </div>
+        </div>
+
+        <div id="page-activeusers" class="page hidden">
+        <h2 class="section-title">Active Users</h2>
+        <p class="section-description">List all registered users, showing online‑activity status</p>
+        <div id="activeUserList" class="flex flex-col gap-6"></div>
+        </div>
+
+        <div id="page-collaborators" class="page hidden">
+        <h2 class="section-title">My Collaborators Pool</h2>
+        <p class="section-description">Discover potential partners with matching mathematical and technical backgrounds</p>
+        <div id="collabList" class="flex flex-col gap-6"></div>
+        </div>
+
+        <div id="page-myprojects" class="page hidden">
+        <h2 class="section-title">My Published Projects</h2>
+        <div id="myProjContainer"></div>
+        </div>
+
+        <div id="page-joinrequests" class="page hidden">
+            <h2 class="section-title">Join Project Requests</h2>
+            <p class="section-description">View all your join‑application status</p>
+            <div class="mb-8 flex gap-5 flex-wrap">
+                <div class="bg-white px-6 py-5 rounded-xl border border-slate-200 shadow-md">
+                    <div class="text-sm text-slate-500">Total Requests</div>
+                    <div id="stat-total-req" class="text-2xl font-semibold mt-1">0</div>
+                </div>
+                <div class="bg-white px-6 py-5 rounded-xl border border-slate-200 shadow-md">
+                    <div class="text-sm text-slate-500">Pending</div>
+                    <div id="stat-pending-req" class="text-2xl font-semibold text-amber-600 mt-1">0</div>
+                </div>
+                <div class="bg-white px-6 py-5 rounded-xl border border-slate-200 shadow-md">
+                    <div class="text-sm text-slate-500">Accepted</div>
+                    <div id="stat-accepted-req" class="text-2xl font-semibold text-emerald-600 mt-1">0</div>
+                </div>
+                <div class="bg-white px-6 py-5 rounded-xl border border-slate-200 shadow-md">
+                    <div class="text-sm text-slate-500">Rejected</div>
+                    <div id="stat-rejected-req" class="text-2xl font-semibold text-red-600 mt-1">0</div>
+                </div>
+            </div>
+            <div id="joinRequestList"></div>
+        </div>
+
+        <div id="page-profile" class="page hidden">
+        <h2 class="section-title">My Research Profile</h2>
+        <p class="section-description">Visible to other students for collaboration matching</p>
+        <div class="card">
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Name / Student ID</label>
+        <input id="fieldName" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Your identifier">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">University</label>
+        <input id="fieldUniversity" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="e.g. XJTLU">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Major & Academic Year</label>
+        <input id="fieldMajor" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="e.g. Applied Mathematics, Junior">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Main Research Interests</label>
+        <input id="fieldInterest" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="e.g. Computational methods, Iterative solvers, PDE">
+        </div>
+        <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Interested Project</label>
+        <input id="fieldInterestedProject" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Name of project you are interested in">
+        </div>
+        <div class="mb-8">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Skills & Tools</label>
+        <input id="fieldSkills" class="w-full border border-slate-300 rounded-xl px-4 py-2.5" placeholder="Python, MATLAB, Finite elements, Scientific writing">
+        </div>
+        <button onclick="saveProfile()" class="btn-primary">Save Profile</button>
+        <p id="profileMsg" class="mt-5 text-emerald-600 text-sm"></p>
+        </div>
+        </div>
+
+        <div id="page-project-chat" class="page hidden">
+            <button onclick="goto('square')" class="btn-secondary mb-5">← Back to Project Square</button>
+            <div class="card">
+                <h2 id="chatPageTitle" class="section-title"></h2>
+                <p id="chatPageSubtitle" class="text-slate-500 mb-6"></p>
+                <div id="chat-message-area" class="chat-message-area"></div>
+                <div class="chat-input-area">
+                    <input id="chat-input" class="flex‑1 border border‑slate‑300 rounded‑xl px‑4 py‑2.5 flex-1" placeholder="Type message..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+                    <button onclick="sendChatMessage()" class="btn-primary">Send</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <aside id="activeSidebar" class="active-sidebar hidden">
+        <h3 class="text-sm font-semibold mb-4 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+            Active Users
+        </h3>
+        <div id="activeSidebarList"></div>
+    </aside>
+</div>
+
+<div class="global-footer">
+    <span>Copyright © Changjian Xie | Page updated: <span id="pageUpdatedTime"></span></span>
+</div>
+
+</div>
+
+<script>
+const STORAGE_ACCOUNTS = "lx_accounts";
+const STORAGE_SESSION = "lx_session";
+const STORAGE_PROJECTS = "lx_projects";
+const STORAGE_ALL_USERS = "lx_all_users";
+const STORAGE_MYSELF = "lx_my_profile";
+const STORAGE_ACTIVITY = "lx_activity";
+const STORAGE_LIKES = "lx_project_likes";
+const STORAGE_JOIN_REQUESTS = "lx_join_requests";
+const STORAGE_CHAT_ROOMS = "lx_chat_rooms";
+const ACTIVE_THRESHOLD = 60 * 1000;
+const FIXED_INVITE_CODE = "laxlink";
+
+let currentChatProjectId = null;
+let currentChatProjectTitle = "";
+
+function updateFooterTime(){
+    document.getElementById("pageUpdatedTime").innerText = new Date().toLocaleString();
+}
+
+function deleteProject(pid){
+    const sess = getSession();
+    const projs = getProjects();
+    const targetProj = projs.find(p=>p.id === pid);
+    if(!targetProj) return;
+    if(targetProj.ownerEmail !== sess.email){
+        alert("You are not allowed to delete this project.");
+        return;
+    }
+    if(!confirm("Confirm to delete this project? All related chat messages, join requests and likes will also be removed.")){
+        return;
+    }
+    const updatedProjects = projs.filter(p=>p.id !== pid);
+    setProjects(updatedProjects);
+
+    const likes = getProjectLikes();
+    delete likes[String(pid)];
+    setProjectLikes(likes);
+
+    const chatRooms = getChatRooms();
+    delete chatRooms[String(pid)];
+    setChatRooms(chatRooms);
+
+    const joinReqs = getJoinRequests();
+    const filteredReqs = joinReqs.filter(r=> r.projectId !== pid);
+    setJoinRequests(filteredReqs);
+
+    goto("square");
+}
+
+function getChatRooms(){
+    const raw = localStorage.getItem(STORAGE_CHAT_ROOMS);
+    return raw ? JSON.parse(raw) : {};
+}
+function setChatRooms(obj){
+    localStorage.setItem(STORAGE_CHAT_ROOMS, JSON.stringify(obj));
+}
+
+function openProjectChatPage(projectId, title){
+    currentChatProjectId = String(projectId);
+    currentChatProjectTitle = title;
+    document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+    document.getElementById("page-project-chat").classList.remove("hidden");
+    document.getElementById("chatPageTitle").innerText = `Discussion Room: ${title}`;
+    document.getElementById("chatPageSubtitle").innerText = `Project ID: ${projectId}`;
+    renderChatMessages();
+    updateFooterTime();
+}
+
+function renderChatMessages(){
+    const box = document.getElementById("chat-message-area");
+    const rooms = getChatRooms();
+    const msgs = rooms[currentChatProjectId] || [];
+    const sess = getSession();
+    box.innerHTML = "";
+    if(msgs.length === 0){
+        box.innerHTML = `<p class="text-slate‑400 text‑sm text‑center mt‑10">No messages yet. Start the discussion.</p>`;
+        return;
+    }
+    msgs.forEach(m=>{
+        const div = document.createElement("div");
+        if(m.senderEmail === sess.email){
+            div.className = "msg-self";
+        }else{
+            div.className = "msg-other";
+        }
+        div.innerHTML = `
+            <div>${m.text}</div>
+            <div class="msg-meta">${m.senderEmail} · ${m.time}</div>
+        `;
+        box.appendChild(div);
+    });
+    box.scrollTop = box.scrollHeight;
+}
+function sendChatMessage(){
+    const inputEl = document.getElementById("chat-input");
+    const text = inputEl.value.trim();
+    if(!text || !currentChatProjectId) return;
+    const sess = getSession();
+    const rooms = getChatRooms();
+    if(!rooms[currentChatProjectId]) rooms[currentChatProjectId] = [];
+    rooms[currentChatProjectId].push({
+        senderEmail: sess.email,
+        text: text,
+        time: new Date().toLocaleString()
+    });
+    setChatRooms(rooms);
+    inputEl.value = "";
+    renderChatMessages();
+    updateFooterTime();
+}
+
+function getJoinRequests(){
+    const raw = localStorage.getItem(STORAGE_JOIN_REQUESTS);
+    return raw ? JSON.parse(raw) : [];
+}
+function setJoinRequests(arr){
+    localStorage.setItem(STORAGE_JOIN_REQUESTS, JSON.stringify(arr));
+}
+
+function acceptJoinRequest(reqId){
+    const list = getJoinRequests();
+    const idx = list.findIndex(r=> r.reqId === reqId);
+    if(idx>=0){
+        list[idx].status = "accepted";
+        setJoinRequests(list);
+    }
+    goto("myprojects");
+}
+function rejectJoinRequest(reqId){
+    const list = getJoinRequests();
+    const idx = list.findIndex(r=> r.reqId === reqId);
+    if(idx>=0){
+        list[idx].status = "rejected";
+        setJoinRequests(list);
+    }
+    goto("myprojects");
+}
+
+function formatAgo(timestamp){
+    const diffMs = Date.now() - timestamp;
+    const sec = Math.round(diffMs / 1000);
+    return `${sec}s ago`;
+}
+
+function getProjectLikes(){
+    const raw = localStorage.getItem(STORAGE_LIKES);
+    return raw ? JSON.parse(raw) : {};
+}
+function setProjectLikes(obj){
+    localStorage.setItem(STORAGE_LIKES, JSON.stringify(obj));
+}
+function toggleLike(projectId, userEmail){
+    const likes = getProjectLikes();
+    const pid = String(projectId);
+    if(!likes[pid]) likes[pid] = [];
+    const idx = likes[pid].indexOf(userEmail);
+    if(idx >=0){
+        likes[pid].splice(idx,1);
+    }else{
+        likes[pid].push(userEmail);
+    }
+    setProjectLikes(likes);
+}
+function getLikeCount(projectId){
+    const likes = getProjectLikes();
+    const pid = String(projectId);
+    return likes[pid] ? likes[pid].length : 0;
+}
+function userHasLiked(projectId, userEmail){
+    const likes = getProjectLikes();
+    const pid = String(projectId);
+    if(!likes[pid]) return false;
+    return likes[pid].includes(userEmail);
+}
+
+function getUserActivity(){
+    const raw = localStorage.getItem(STORAGE_ACTIVITY);
+    return raw ? JSON.parse(raw) : {};
+}
+function setUserActivity(obj){
+    localStorage.setItem(STORAGE_ACTIVITY, JSON.stringify(obj));
+}
+function markUserActive(email){
+    const act = getUserActivity();
+    act[email.toLowerCase()] = Date.now();
+    setUserActivity(act);
+}
+function markUserOffline(email){
+    const act = getUserActivity();
+    delete act[email.toLowerCase()];
+    setUserActivity(act);
+}
+function isUserActive(email){
+    const act = getUserActivity();
+    const ts = act[email.toLowerCase()];
+    if(!ts) return false;
+    return (Date.now() - ts) < ACTIVE_THRESHOLD;
+}
+
+function renderSidebarActiveUsers(){
+    const box = document.getElementById("activeSidebarList");
+    const accounts = getAccounts();
+    const sess = getSession();
+    if(!sess) return;
+    const actStore = getUserActivity();
+    const activeList = accounts.filter(a => isUserActive(a.email));
+    if(activeList.length === 0){
+        box.innerHTML = "<p class='text-xs text-slate-400'>No active users online</p>";
+        return;
+    }
+    box.innerHTML = "";
+    activeList.forEach(u=>{
+        const lastTs = actStore[u.email.toLowerCase()];
+        const agoStr = formatAgo(lastTs);
+        const div = document.createElement("div");
+        div.className = "py-3 border-b border-slate-100 last:border‑0";
+        div.innerHTML = `
+        <div class="text-sm font-medium truncate">${u.name||"‑"}</div>
+        <div class="text-xs text-slate-500 truncate">${u.email}</div>
+        <div class="text-[10px] text-emerald-600">${agoStr}</div>
+        <button onclick="alert('Invitation sent to ${u.email}')" class="btn-action mt-2">Invite</button>
+        `;
+        box.appendChild(div);
+    });
+}
+
+function getAccounts(){
+    const raw = localStorage.getItem(STORAGE_ACCOUNTS);
+    return raw ? JSON.parse(raw) : [];
+}
+function setAccounts(arr){
+    localStorage.setItem(STORAGE_ACCOUNTS, JSON.stringify(arr));
+}
+function getSession(){
+    const s = localStorage.getItem(STORAGE_SESSION);
+    return s ? JSON.parse(s) : null;
+}
+function setSession(obj){
+    if(obj) localStorage.setItem(STORAGE_SESSION, JSON.stringify(obj));
+    else localStorage.removeItem(STORAGE_SESSION);
+}
+
+function showLogin(){
+    document.getElementById("login-form").classList.remove("hidden");
+    document.getElementById("register-form").classList.add("hidden");
+    document.getElementById("login-error").classList.add("hidden");
+}
+function showRegister(){
+    document.getElementById("login-form").classList.add("hidden");
+    document.getElementById("register-form").classList.remove("hidden");
+    document.getElementById("reg-error").classList.add("hidden");
+}
+
+function handleRegister(){
+    const email = document.getElementById("reg-email").value.trim();
+    const name = document.getElementById("reg-name").value.trim();
+    const password = document.getElementById("reg-password").value;
+    const errEl = document.getElementById("reg-error");
+    errEl.classList.add("hidden");
+
+    if(!email || !name || !password){
+        errEl.innerText = "All fields are required.";
+        errEl.classList.remove("hidden");
+        return;
+    }
+    if(!email.includes("@")){
+        errEl.innerText = "Please input a valid student email address.";
+        errEl.classList.remove("hidden");
+        return;
+    }
+    const accounts = getAccounts();
+    const exist = accounts.find(a=>a.email.toLowerCase()===email.toLowerCase());
+    if(exist){
+        errEl.innerText = "This email is already registered.";
+        errEl.classList.remove("hidden");
+        return;
+    }
+    const newAcc = { email: email.toLowerCase(), name, password };
+    accounts.push(newAcc);
+    setAccounts(accounts);
+    setSession({email: newAcc.email, name: newAcc.name});
+    markUserActive(newAcc.email);
+    enterApp();
+}
+
+function handleLogin(){
+    const email = document.getElementById("login-email").value.trim().toLowerCase();
+    const password = document.getElementById("login-password").value;
+    const inviteCodeInput = document.getElementById("login-email-code").value.trim().toLowerCase();
+    const errEl = document.getElementById("login-error");
+    errEl.classList.add("hidden");
+    errEl.className = "text-red-500 text-sm mb-5";
+
+    if(inviteCodeInput !== FIXED_INVITE_CODE){
+        errEl.innerText = "Wrong invitation code.";
+        errEl.classList.remove("hidden");
+        return;
+    }
+
+    const accounts = getAccounts();
+    const user = accounts.find(a=>a.email === email);
+    if(!user || user.password !== password){
+        errEl.innerText = "Invalid email or password.";
+        errEl.classList.remove("hidden");
+        return;
+    }
+    setSession({email: user.email, name: user.name});
+    markUserActive(user.email);
+    enterApp();
+}
+
+function logout(){
+    const sess = getSession();
+    if(sess) markUserOffline(sess.email);
+    setSession(null);
+    document.getElementById("auth-screen").classList.remove("hidden");
+    document.getElementById("app-screen").classList.add("hidden");
+    document.getElementById("activeSidebar").classList.add("hidden");
+    currentChatProjectId=null;
+    showLogin();
+}
+
+function enterApp(){
+    const sess = getSession();
+    if(!sess) return;
+    document.getElementById("auth-screen").classList.add("hidden");
+    document.getElementById("app-screen").classList.remove("hidden");
+    document.getElementById("activeSidebar").classList.remove("hidden");
+    document.getElementById("display-user-email").innerText = sess.email;
+    goto("square");
+    loadMyProfile();
+    renderSidebarActiveUsers();
+    updateFooterTime();
+}
+
+function goto(pageId){
+    document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+    const targetPage = document.getElementById("page-"+pageId);
+    if(targetPage) targetPage.classList.remove("hidden");
+
+    const navIds = ["square","publish","activeusers","collaborators","myprojects","joinrequests","profile"];
+    navIds.forEach(nid=>{
+        const el = document.getElementById("nav-"+nid);
+        if(nid === pageId){
+            el.className="px-4 py-2.5 rounded-xl text-sm nav-btn-active";
+        }else{
+            el.className="px-4 py-2.5 rounded-xl text-sm nav-btn-inactive";
+        }
+    });
+
+    if(pageId==="square") renderSquare();
+    if(pageId==="activeusers") renderActiveUsers();
+    if(pageId==="collaborators") renderCollaborators();
+    if(pageId==="myprojects") renderMyProjects();
+    if(pageId==="joinrequests") renderJoinRequests();
+    if(pageId==="profile") loadMyProfile();
+    updateFooterTime();
+}
+
+function renderJoinRequests(){
+    const sess = getSession();
+    const allReq = getJoinRequests();
+    const myReq = allReq.filter(r=> r.applicantEmail === sess.email);
+    const box = document.getElementById("joinRequestList");
+
+    const total = myReq.length;
+    const pending = myReq.filter(x=>x.status==="pending").length;
+    const accepted = myReq.filter(x=>x.status==="accepted").length;
+    const rejected = myReq.filter(x=>x.status==="rejected").length;
+
+    document.getElementById("stat-total-req").innerText = total;
+    document.getElementById("stat-pending-req").innerText = pending;
+    document.getElementById("stat-accepted-req").innerText = accepted;
+    document.getElementById("stat-rejected-req").innerText = rejected;
+
+    if(myReq.length === 0){
+        box.innerHTML = `<p class="text-slate-400">You have not submitted any join‑project requests.</p>`;
+        return;
+    }
+    box.innerHTML = "";
+    myReq.forEach(req=>{
+        const card = document.createElement("div");
+        card.className="card mb-4";
+        let badgeClass = "badge-pending";
+        if(req.status === "accepted") badgeClass="badge-accepted";
+        if(req.status === "rejected") badgeClass="badge-rejected";
+        card.innerHTML=`
+            <div class="flex justify-between items-start">
+                <div>
+                    <h4 class="font-semibold text-slate-800">${req.projectTitle}</h4>
+                    <div class="text-sm text-slate-500 mt-1">Project ID: ${req.projectId}</div>
+                </div>
+                <span class="tag ${badgeClass}">${req.status}</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-3">Submitted: ${req.createdAt}</div>
+        `;
+        box.appendChild(card);
+    });
+}
+
+function renderActiveUsers(){
+    const accounts = getAccounts();
+    const actStore = getUserActivity();
+    const box = document.getElementById("activeUserList");
+    if(accounts.length === 0){
+        box.innerHTML = "<p class='text-slate-400'>No registered users yet.</p>";
+        return;
+    }
+    box.innerHTML = "";
+    accounts.forEach(acc=>{
+        const active = isUserActive(acc.email);
+        const statusClass = active ? "badge-active" : "badge-offline";
+        const statusText = active ? "Active" : "Offline";
+        let agoText = "";
+        if(active){
+            agoText = formatAgo(actStore[acc.email.toLowerCase()]);
+        }
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+        <div class="flex justify-between items-start">
+            <h3 class="font-semibold text-lg text-slate-800">${acc.name||"‑"}</h3>
+            <span class="tag ${statusClass}">${statusText}</span>
+        </div>
+        <p class="text-sm text-slate-600 mt-3"><strong>Email:</strong> ${acc.email}</p>
+        ${active ? `<p class="text-xs text-emerald-600 mt-1">Last seen: ${agoText}</p>` : ""}
+        <button onclick="alert('Collaboration invitation sent to ${acc.email}')" class="btn-action mt-4">Send Invitation</button>
+        `;
+        box.appendChild(card);
+    });
+}
+
+function getProjects(){
+    const raw = localStorage.getItem(STORAGE_PROJECTS);
+    return raw ? JSON.parse(raw) : [];
+}
+function setProjects(arr){
+    localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(arr));
+}
+
+function submitProject(){
+    const title = document.getElementById("projTitle").value.trim();
+    const abstract = document.getElementById("projAbstract").value.trim();
+    const reqSkills = document.getElementById("projReqSkills").value.trim();
+    const teamSize = parseInt(document.getElementById("projTeamSize").value);
+    const category = document.getElementById("projCategory").value;
+    if(!title || !abstract){
+        alert("Please fill project title and abstract.");
+        return;
+    }
+    const arr = getProjects();
+    arr.push({
+        id: Date.now(),
+        title, abstract, reqSkills, teamSize, category,
+        created: new Date().toLocaleString(),
+        ownerEmail: getSession().email
+    });
+    setProjects(arr);
+    alert("Project proposal published.");
+    goto("square");
+}
+
+function renderSquare(){
+    const data = getProjects();
+    const sess = getSession();
+    const box = document.getElementById("squareList");
+    if(data.length===0){
+        box.innerHTML = "<p class='text-slate-400'>No proposals yet. Submit your first research topic.</p>";
+        return;
+    }
+    box.innerHTML = "";
+    data.forEach(p=>{
+        const likeCnt = getLikeCount(p.id);
+        const liked = userHasLiked(p.id, sess.email);
+        const deleteBtnHtml = (p.ownerEmail === sess.email) ? `<button onclick="deleteProject(${p.id})" class="btn-delete">Delete Project</button>` : "";
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML = `
+        <span class="tag bg-slate-100 text-slate-700">${p.category}</span>
+        <h3 class="text-xl font-semibold mt-4 text-slate-800">${p.title}</h3>
+        <p class="text-sm text-slate-600 my-4 leading-relaxed">${p.abstract}</p>
+        <div class="grid grid-cols‑2 gap‑3 text‑sm text‑slate‑600">
+            <p><strong>Required:</strong> ${p.reqSkills||"‑"}</p>
+            <p><strong>Team:</strong> ${p.teamSize} members</p>
+        </div>
+        <p class="text-xs text-slate-400 mt-3">${p.created}</p>
+        <div class="flex gap-3 mt-5 flex-wrap">
+            <button onclick="handleLike(${p.id})" class="btn-like">${liked?"❤️ Liked":"🤍 Like"} (${likeCnt})</button>
+            <button onclick="handleJoinProject(${p.id})" class="btn-join">Join Project</button>
+            <button onclick="openProjectChatPage(${p.id}, '${p.title.replace(/'/g,"\\'")}')" class="btn-chat">Enter Discussion Room</button>
+            ${deleteBtnHtml}
+        </div>
+        `;
+        box.appendChild(card);
+    });
+    updateFooterTime();
+}
+
+function handleLike(pid){
+    const sess = getSession();
+    toggleLike(pid, sess.email);
+    renderSquare();
+}
+
+function handleJoinProject(pid){
+    const sess = getSession();
+    const projs = getProjects();
+    const proj = projs.find(x=>x.id === pid);
+    if(!proj) return;
+    const reqs = getJoinRequests();
+    const exist = reqs.find(r=> r.projectId===pid && r.applicantEmail === sess.email && r.status==="pending");
+    if(exist){
+        alert("You already have a pending request for this project.");
+        return;
+    }
+    const newReq = {
+        reqId: Date.now(),
+        projectId: pid,
+        projectTitle: proj.title,
+        applicantEmail: sess.email,
+        status:"pending",
+        createdAt: new Date().toLocaleString()
+    };
+    reqs.push(newReq);
+    setJoinRequests(reqs);
+    alert("✅ Join request submitted, check Join‑Requests page for status.");
+}
+
+function renderMyProjects(){
+    const sess = getSession();
+    const data = getProjects().filter(p=> p.ownerEmail === sess.email);
+    const allReqs = getJoinRequests();
+    const box = document.getElementById("myProjContainer");
+    if(data.length===0){
+        box.innerHTML="<p class='text-slate-400'>You have not published any project proposals.</p>";
+        return;
+    }
+    box.innerHTML="";
+    data.forEach(p=>{
+        const likeCnt = getLikeCount(p.id);
+        const projReqs = allReqs.filter(r=> r.projectId === p.id);
+
+        const div = document.createElement("div");
+        div.className="card mb-6";
+
+        let reqHtml = "";
+        if(projReqs.length>0){
+            reqHtml += `<div class="mt-6"><h4 class="text-sm font-semibold mb-4">Incoming Join Requests (${projReqs.length})</h4>`;
+            projReqs.forEach(r=>{
+                let badgeClass = "badge-pending";
+                if(r.status === "accepted") badgeClass="badge-accepted";
+                if(r.status === "rejected") badgeClass="badge-rejected";
+
+                reqHtml += `
+                <div class="req-item">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-sm">Applicant: ${r.applicantEmail}</span>
+                            <span class="tag ${badgeClass} ml-2">${r.status}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            ${r.status==="pending" ? `
+                                <button onclick="acceptJoinRequest(${r.reqId})" class="btn-accept">Accept</button>
+                                <button onclick="rejectJoinRequest(${r.reqId})" class="btn-reject">Reject</button>
+                            `:""}
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-400 mt-2">Submitted: ${r.createdAt}</div>
+                </div>
+                `;
+            });
+            reqHtml += `</div>`;
+        }else{
+            reqHtml = `<p class="text-xs text-slate-400 mt-5">No join requests for this project yet.</p>`;
+        }
+
+        div.innerHTML=`
+        <h3 class="font-semibold text-slate-800 text-xl">${p.title}</h3>
+        <p class="text-sm text-slate-600 mt-3 leading-relaxed">${p.abstract}</p>
+        <p class="text-xs text-slate-500 mt-2">Category: ${p.category} | Expected size: ${p.teamSize}</p>
+        <p class="text-xs text-rose-600 mt-2">Total likes: ${likeCnt}</p>
+        <div class="mt‑5 flex gap-3 flex-wrap">
+            <button onclick="openProjectChatPage(${p.id}, '${p.title.replace(/'/g,"\\'")}')" class="btn-chat">Enter Discussion Room</button>
+            <button onclick="deleteProject(${p.id})" class="btn-delete">Delete Project</button>
+        </div>
+        ${reqHtml}
+        `;
+        box.appendChild(div);
+    });
+    updateFooterTime();
+}
+
+function saveProfile(){
+    const me = {
+        name: document.getElementById("fieldName").value.trim(),
+        university: document.getElementById("fieldUniversity").value.trim(),
+        major: document.getElementById("fieldMajor").value.trim(),
+        interestedProject: document.getElementById("fieldInterestedProject").value.trim(),
+        interest: document.getElementById("fieldInterest").value.trim(),
+        skills: document.getElementById("fieldSkills").value.trim(),
+        uid: Date.now()
+    };
+    localStorage.setItem(STORAGE_MYSELF, JSON.stringify(me));
+    let allUsers = getAllUsers();
+    const idx = allUsers.findIndex(u=>u.uid);
+    if(idx>=0) allUsers[idx] = me; else allUsers.push(me);
+    setAllUsers(allUsers);
+    document.getElementById("profileMsg").innerText = "✅ Profile saved, visible to potential collaborators.";
+    updateFooterTime();
+}
+
+function loadMyProfile(){
+    const raw = localStorage.getItem(STORAGE_MYSELF);
+    if(!raw) return;
+    const obj = JSON.parse(raw);
+    document.getElementById("fieldName").value = obj.name||"";
+    document.getElementById("fieldUniversity").value = obj.university||"";
+    document.getElementById("fieldMajor").value = obj.major||"";
+    document.getElementById("fieldInterestedProject").value = obj.interestedProject||"";
+    document.getElementById("fieldInterest").value = obj.interest||"";
+    document.getElementById("fieldSkills").value = obj.skills||"";
+    updateFooterTime();
+}
+
+function getAllUsers(){
+    const d = localStorage.getItem(STORAGE_ALL_USERS);
+    return d ? JSON.parse(d) : [];
+}
+function setAllUsers(arr){
+    localStorage.setItem(STORAGE_ALL_USERS, JSON.stringify(arr));
+}
+
+function renderCollaborators(){
+    const users = getAllUsers();
+    const box = document.getElementById("collabList");
+    if(users.length===0){
+        box.innerHTML="<p class='text-slate-400'>No collaborator profiles available. Complete your profile first.</p>";
+        return;
+    }
+    box.innerHTML="";
+    users.forEach(u=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+        <h3 class="font-semibold text-xl text-slate-800">${u.name||"Anonymous Researcher"}</h3>
+        <p class="text-sm text-slate-600 mt-2"><strong>University:</strong> ${u.university||"‑"}</p>
+        <p class="text-sm text-slate-600 mt-2"><strong>Major:</strong> ${u.major||"‑"}</p>
+        <p class="text-sm text-slate-600 mt-2"><strong>Interested Project:</strong> ${u.interestedProject||"‑"}</p>
+        <p class="text-sm text-slate-600 mt-2"><strong>Interests:</strong> ${u.interest||"‑"}</p>
+        <p class="text-sm text-slate-600 mt-2"><strong>Skills:</strong> ${u.skills||"‑"}</p>
+        <button onclick="alert('Collaboration invitation has been sent.')" class="btn-action mt-4">Send Invitation</button>
+        `;
+        box.appendChild(card);
+    });
+    updateFooterTime();
+}
+
+function heartbeat(){
+    const sess = getSession();
+    if(sess){
+        markUserActive(sess.email);
+        renderSidebarActiveUsers();
+    }
+}
+window.setInterval(heartbeat, 20000);
+
+window.addEventListener("beforeunload", ()=>{
+    const sess = getSession();
+    if(sess) markUserOffline(sess.email);
+});
+
+window.onload = function(){
+    const sess = getSession();
+    if(sess){
+        markUserActive(sess.email);
+        enterApp();
+    }else{
+        document.getElementById("auth-screen").classList.remove("hidden");
+        document.getElementById("app-screen").classList.add("hidden");
+        showLogin();
+    }
+}
+</script>
+</div>
