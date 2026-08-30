@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XingzhiLink | Course Project Collaboration Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1d4ed8',
+                        secondary: '#4338ca',
+                        admin: '#0891b2',
+                        student: '#059669',
+                        neutral: '#1e293b',
+                        warn: '#d97706',
+                        danger: '#dc2626'
+                    },
+                    fontFamily:{
+                        sans:['Inter','system-ui','sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body { @apply bg-slate-50 text-neutral min-h-screen; }
+        .card-shadow { box-shadow: 0 4px 20px rgba(15,23,42,0.07); }
+        .tab-active { @apply border-b-2 border-primary text-primary font-semibold; }
+        .form-input { @apply w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-200; }
+        .btn-primary{ @apply bg-primary hover:bg-primary/90 active:bg-primary/80 text-white rounded-xl px-5 py-2.5 transition-all shadow-sm hover:shadow; }
+        .btn-secondary{ @apply bg-secondary hover:bg-secondary/90 active:bg-secondary/80 text-white rounded-xl px-5 py-2.5 transition-all shadow-sm hover:shadow; }
+        .btn-admin{ @apply bg-admin hover:bg-admin/90 active:bg-admin/80 text-white rounded-xl px-5 py-2.5 transition-all shadow-sm hover:shadow; }
+        .btn-student{ @apply bg-student hover:bg-student/90 active:bg-student/80 text-white rounded-xl px-5 py-2.5 transition-all shadow-sm hover:shadow; }
+        .btn-outline{ @apply border border-slate-300 hover:bg-slate-100 rounded-xl px-4 py-2 transition-all; }
+        .btn-sm{ @apply px-3 py-1.5 text-sm rounded-lg; }
+        .alert-note{ @apply text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-4; }
+        .role-badge{ @apply inline-block text-xs px-2.5 py-1 rounded-full text-white; }
+        .empty-tip{ @apply text-slate-400 text-center py-10 text-sm; }
+        .badge-pending{@apply bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded;}
+        .badge-approve{@apply bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded;}
+        .badge-reject{@apply bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded;}
+
+        /* Toast 弹窗 */
+        .toast-container{ position:fixed; top:16px; right:16px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+        .toast{ @apply px-4 py-3 rounded-xl shadow-lg text-white text-sm animate-fade-in; min-width:240px; }
+        @keyframes fade-in { from {opacity:0;transform:translateY(-10px);} to {opacity:1;transform:translateY(0);} }
+        .animate-fade-in { animation: fade-in 0.25s ease forwards; }
+
+        /* Modal */
+        .modal-mask{ position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9990; display:flex; align-items:center; justify-content:center; padding:1rem; }
+        .modal-box{ @apply bg-white rounded-2xl p-6 max-w-md w-full card-shadow; }
+
+        /* 分组折叠面板 */
+        .group-detail{ max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
+        .group-detail.open{ max-height:600px; }
+
+        /* 登录页专属样式 */
+        .auth-page-wrap{ min-height: calc(100vh - 4rem); display:flex; flex-direction:column; justify-content:center; }
+        .brand-title{ @apply text-[clamp(1.8rem,3vw,2.6rem)] font-bold text-primary; }
+        .brand-desc{ @apply text-slate-500 mt-2 text-base; }
+    </style>
+</head>
+<body>
+<div id="app" class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Header Navigation -->
+    <header class="mb-10">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h1 class="text-[clamp(1.6rem,3vw,2.4rem)] font-bold text-primary">XingzhiLink</h1>
+                <p class="text-slate-500 mt-1">Local‑First Course Project & Group‑Work Management Platform</p>
+            </div>
+            <div id="auth-area"></div>
+        </div>
+        <nav id="main-nav" class="mt-8 border-b border-slate-200 hidden">
+            <div class="flex gap-8 text-sm overflow-x-auto pb-1 nav-scroll">
+                <button data-tab="dashboard" class="py-3 tab-btn whitespace-nowrap">Dashboard</button>
+                <button data-tab="courses" class="py-3 tab-btn whitespace-nowrap">Course Management</button>
+                <button data-tab="students" class="py-3 tab-btn whitespace-nowrap">Student Roster</button>
+                <button data-tab="groups" class="py-3 tab-btn whitespace-nowrap">Group Module</button>
+                <button data-tab="qa" class="py-3 tab-btn whitespace-nowrap">Q&A Discussion Board</button>
+                <button data-tab="projects" class="py-3 tab-btn whitespace-nowrap">Project Collection</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 登录页面：优化版本，logout退回此页面，强制邮箱+密码 -->
+    <div id="auth-view">
+        <div class="auth-page-wrap">
+            <div class="text-center mb-10">
+                <h2 class="brand-title">XingzhiLink</h2>
+                <p class="brand-desc">课程项目与小组协作本地管理平台<br>请使用邮箱与密码完成登录或注册</p>
+            </div>
+            <div class="alert-note mb-6 text-center max-w‑3xl mx-auto">
+                <i class="fa fa-info-circle mr-1"></i>
+                所有数据保存在浏览器本地 localStorage，清除浏览器缓存会丢失全部数据，无需后端服务器。
+            </div>
+            <div class="grid md:grid-cols-2 gap-10 max-w‑5xl mx-auto">
+                <!-- 登录卡片 -->
+                <div class="bg-white p-8 rounded-2xl card-shadow">
+                    <h2 class="text‑2xl font‑semibold mb‑2">账号登录</h2>
+                    <p class="text‑sm text‑slate‑500 mb‑6">选择身份，输入邮箱与密码登录系统</p>
+                    <div class="flex gap‑3 mb‑6">
+                        <button id="tab-login-admin" onclick="switchLoginRole('admin')" class="btn-admin flex‑1">讲师 / TA</button>
+                        <button id="tab-login-student" onclick="switchLoginRole('student')" class="btn-outline flex‑1">学生</button>
+                    </div>
+                    <div id="login-form-admin">
+                        <div class="space‑y‑5">
+                            <div>
+                                <label class="block text‑sm text‑slate‑600 mb‑1.5">邮箱</label>
+                                <input id="login-admin-email" class="form-input" placeholder="instructor@university.edu">
+                                <div class="text‑xs text‑slate‑400 mt‑1">请使用注册时填写的邮箱地址</div>
+                            </div>
+                            <div>
+                                <label class="block text‑sm text‑slate‑600 mb‑1.5">登录密码</label>
+                                <input id="login-admin-pwd" type="password" class="form-input" placeholder="输入账号密码">
+                            </div>
+                            <button onclick="loginUser('admin')" class="btn-admin w‑full mt‑2">以讲师 / TA 身份登录</button>
+                        </div>
+                    </div>
+                    <div id="login-form-student" class="hidden">
+                        <div class="space‑y‑5">
+                            <div>
+                                <label class="block text‑sm text‑slate‑600 mb‑1.5">学生邮箱</label>
+                                <input id="login-stu-email" class="form-input" placeholder="student@university.edu">
+                                <div class="text‑xs text‑slate‑400 mt‑1">建议使用学校官方学生邮箱注册登录</div>
+                            </div>
+                            <div>
+                                <label class="block text‑sm text‑slate‑600 mb‑1.5">登录密码</label>
+                                <input id="login-stu-pwd" type="password" class="form-input" placeholder="输入账号密码">
+                            </div>
+                            <button onclick="loginUser('student')" class="btn-student w‑full mt‑2">以学生身份登录</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 注册卡片：优化学生注册信息，增加学生ID字段 -->
+                <div class="bg-white p‑8 rounded‑2xl card‑shadow">
+                    <h2 class="text‑2xl font‑semibold mb‑2">新建账号注册</h2>
+                    <p class="text‑sm text‑slate‑500 mb‑6">填写信息完成账号注册，学生请务必填写学生ID</p>
+                    <div class="space‑y‑5">
+                        <div>
+                            <label class="block text‑sm text‑slate‑600 mb‑1.5">姓名</label>
+                            <input id="reg-name" class="form-input" placeholder="填写真实姓名">
+                        </div>
+                        <div>
+                            <label class="block text‑sm text‑slate‑600 mb‑1.5">邮箱 <span class="text‑danger">*</span></label>
+                            <input id="reg-email" type="email" class="form-input" placeholder="学生请优先填写学校邮箱">
+                        </div>
+                        <div>
+                            <label class="block text‑sm text‑slate‑600 mb‑1.5">登录密码 <span class="text‑danger">*</span></label>
+                            <input id="reg-pwd" type="password" class="form-input">
+                        </div>
+                        <div>
+                            <label class="block text‑sm text‑slate‑600 mb‑1.5">账号角色</label>
+                            <select id="reg-role" class="form-input">
+                                <option value="student">学生 Student</option>
+                                <option value="ta">助教 TA‑Admin</option>
+                                <option value="instructor">授课教师 Instructor</option>
+                            </select>
+                        </div>
+                        <div id="reg‑student‑id‑wrap">
+                            <label class="block text‑sm text‑slate‑600 mb‑1.5">学生学号 <span class="text‑danger">*</span></label>
+                            <input id="reg‑student‑id" class="form-input" placeholder="学生角色必填，教师/TA可留空">
+                            <div class="text‑xs text‑slate‑400 mt‑1">学号用于课程选课、小组分组识别</div>
+                        </div>
+                        <button onclick="registerUser()" class="btn‑primary w‑full mt‑2">创建账号</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 登录后主应用视图 -->
+    <div id="app-views" class="hidden">
+        <!-- Dashboard -->
+        <div data-view="dashboard" class="view-panel">
+            <h2 class="text‑2xl font‑semibold mb‑6">Dashboard Overview</h2>
+            <div class="grid sm:grid‑cols‑2 lg:grid‑cols‑4 gap‑5 mb‑8">
+                <div class="bg‑white p‑6 rounded‑2xl card‑shadow">
+                    <div class="text‑3xl text‑primary mb‑3"><i class="fa fa‑book"></i></div>
+                    <div id="stat‑courses" class="text‑3xl font‑bold">0</div>
+                    <div class="text‑sm text‑slate‑500 mt‑1">Total Courses</div>
+                </div>
+                <div class="bg‑white p‑6 rounded‑2xl card‑shadow">
+                    <div class="text‑3xl text‑primary mb‑3"><i class="fa fa‑users"></i></div>
+                    <div id="stat‑students" class="text‑3xl font‑bold">0</div>
+                    <div class="text‑sm text‑slate‑500 mt‑1">Enrolled Students</div>
+                </div>
+                <div class="bg‑white p‑6 rounded‑2xl card‑shadow">
+                    <div class="text‑3xl text‑primary mb‑3"><i class="fa fa‑users‑circle"></i></div>
+                    <div id="stat‑groups" class="text‑3xl font‑bold">0</div>
+                    <div class="text‑sm text‑slate‑500 mt‑1">Project Groups</div>
+                </div>
+                <div class="bg‑white p‑6 rounded‑2xl card‑shadow">
+                    <div class="text‑3xl text‑primary mb‑3"><i class="fa fa‑question‑circle"></i></div>
+                    <div id="stat‑qa" class="text‑3xl font‑bold">0</div>
+                    <div class="text‑sm text‑slate‑500 mt‑1">Q&A Threads</div>
+                </div>
+            </div>
+            <div id="dashboard‑role‑hint" class="alert‑note"></div>
+        </div>
+
+        <!-- Courses -->
+        <div data‑view="courses" class="view‑panel hidden">
+            <h2 class="text‑2xl font‑semibold mb‑6">Course Management</h2>
+            <div id="course‑create‑wrap" class="bg‑white p‑7 rounded‑2xl card‑shadow mb‑8">
+                <h3 class="font‑semibold text‑lg mb‑5">Create New Course</h3>
+                <div class="grid md:grid‑cols‑2 gap‑5">
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Course Code</label>
+                        <input id="course‑code" class="form‑input" placeholder="e.g. MATH304">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Course Full Name</label>
+                        <input id="course‑name" class="form‑input" placeholder="Complex Function Theory">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Academic Semester</label>
+                        <input id="course‑semester" class="form‑input" placeholder="2026‑2027 Semester 1">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Default Max Group Size</label>
+                        <input id="course‑groupsize" type="number" value="4" class="form‑input">
+                    </div>
+                </div>
+                <button onclick="addCourse()" class="btn‑primary mt‑6">Add New Course</button>
+            </div>
+            <div id="course‑list"></div>
+        </div>
+
+        <!-- Students -->
+        <div data‑view="students" class="view‑panel hidden">
+            <h2 class="text‑2xl font‑semibold mb‑6">Student Roster Management</h2>
+            <div id="enroll‑wrap" class="bg‑white p‑7 rounded‑2xl card‑shadow mb‑8">
+                <h3 class="font‑semibold text‑lg mb‑5">Enroll Student to Course</h3>
+                <div class="grid md:grid‑cols‑3 gap‑5">
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Select Course</label>
+                        <select id="enroll‑course" class="form‑input"></select>
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Student Full Name</label>
+                        <input id="stu‑name" class="form‑input" placeholder="Student name">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Student ID</label>
+                        <input id="stu‑id" class="form‑input" placeholder="Student ID number">
+                    </div>
+                </div>
+                <button onclick="enrollStudent()" class="btn‑primary mt‑6">Enroll Student</button>
+            </div>
+            <div id="student‑roster"></div>
+        </div>
+
+        <!-- Groups -->
+        <div data‑view="groups" class="view‑panel hidden">
+            <h2 class="text‑2xl font‑semibold mb‑6">Group Module</h2>
+            <div id="group‑gen‑wrap" class="bg‑white p‑7 rounded‑2xl card‑shadow mb‑8">
+                <div class="grid md:grid‑cols‑2 gap‑5 mb‑5">
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Select Target Course</label>
+                        <select id="group‑course‑sel" class="form‑input"></select>
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Members per Group</label>
+                        <input id="group‑target‑size" type="number" value="4" class="form‑input">
+                    </div>
+                </div>
+
+                <!-- Student submit self‑team (student view) -->
+                <div id="student‑selfteam‑submit" class="border border‑slate‑200 rounded‑xl p‑4 mb‑5 bg‑slate‑50">
+                    <h4 class="font‑medium mb‑2">Submit Self‑Selected Team</h4>
+                    <p class="text‑xs text‑slate‑500 mb‑3">Input teammates' email addresses, comma‑separated. You must be enrolled in this course.</p>
+                    <div class="flex gap‑3 flex‑wrap">
+                        <input id="teammate‑emails" class="form‑input flex‑1 min‑w‑[260px]" placeholder="teammate1@xxx.edu,teammate2@xxx.edu">
+                        <button onclick="submitStudentSelfTeamRequest()" class="btn‑student">Submit Team Request</button>
+                    </div>
+                </div>
+
+                <!-- TA/Instructor manage self‑team requests -->
+                <div id="admin‑team‑manage" class="border border‑slate‑200 rounded‑xl p‑4 mb‑5 bg‑slate‑50">
+                    <h4 class="font‑medium mb‑2">Student Self‑Team Requests (Admin Review)</h4>
+                    <div id="team‑request‑list" class="text‑sm"></div>
+                </div>
+
+                <div class="flex gap‑3 mt‑2 flex‑wrap">
+                    <button onclick="autoGenerateGroups()" class="btn‑secondary">Generate Groups (Approved self‑team first, rest random)</button>
+                    <button onclick="exportAllGroupsCSV()" class="btn‑outline">Export All Groups (CSV‑Excel)</button>
+                </div>
+            </div>
+            <div id="group‑result"></div>
+        </div>
+
+        <!-- Q&A -->
+        <div data‑view="qa" class="view‑panel hidden">
+            <h2 class="text‑2xl font‑semibold mb‑6">Course Q&A Discussion Board</h2>
+            <div class="bg‑white p‑7 rounded‑2xl card‑shadow mb‑8">
+                <h3 class="font‑semibold text‑lg mb‑5">Post New Question</h3>
+                <div class="space‑y‑5">
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Related Course</label>
+                        <select id="qa‑course‑sel" class="form‑input"></select>
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Question Title</label>
+                        <input id="qa‑title" class="form‑input" placeholder="Short summary for your question">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Question Content</label>
+                        <textarea id="qa‑content" rows="4" class="form‑input" placeholder="Describe coursework or project‑group issues"></textarea>
+                    </div>
+                    <button onclick="postQA()" class="btn‑primary">Submit Question</button>
+                </div>
+            </div>
+            <div id="qa‑thread‑list"></div>
+        </div>
+
+        <!-- Projects -->
+        <div data‑view="projects" class="view‑panel hidden">
+            <h2 class="text‑2xl font‑semibold mb‑6">Team Project Information Collection</h2>
+            <div class="bg‑white p‑7 rounded‑2xl card‑shadow mb‑8">
+                <div class="space‑y‑5">
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Select Project Group</label>
+                        <select id="proj‑group‑sel" class="form‑input"></select>
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Project Title</label>
+                        <input id="proj‑title" class="form‑input" placeholder="Project title">
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Brief Description</label>
+                        <textarea id="proj‑desc" rows="3" class="form‑input" placeholder="Project overview"></textarea>
+                    </div>
+                    <div>
+                        <label class="text‑sm text‑slate‑600 block mb‑1.5">Repository / URL</label>
+                        <input id="proj‑repo" class="form‑input" placeholder="GitHub link or other resource">
+                    </div>
+                    <button onclick="saveProjectRecord()" class="btn‑secondary">Save Team Project Record</button>
+                </div>
+            </div>
+            <div id="project‑list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast容器 -->
+<div class="toast‑container" id="toast‑container"></div>
+
+<script>
+const STORAGE_KEYS = {
+    users: "xingzhilink_users",
+    courses: "xingzhilink_courses",
+    enrollments: "xingzhilink_enrollments",
+    groups: "xingzhilink_groups",
+    selfTeamRequests:"xingzhilink_selfTeamRequests",
+    qa: "xingzhilink_qa",
+    projects: "xingzhilink_projects",
+    session: "xingzhilink_session"
+};
+
+// Toast 消息提示
+function showToast(msg, type="success"){
+    const container = document.getElementById("toast‑container");
+    const div = document.createElement("div");
+    div.className = "toast " + (type==="success"?"bg‑emerald‑600":"bg‑rose‑600");
+    div.innerText = msg;
+    container.appendChild(div);
+    setTimeout(()=>div.remove(), 2600);
+}
+
+// CSV导出工具，浏览器下载文件
+function downloadCSV(csvText, filename){
+    const blob = new Blob(["\uFEFF"+csvText], {type:"text/csv;charset=utf‑8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+// 导出单个分组CSV
+function exportSingleGroup(groupId){
+    const groups = load(STORAGE_KEYS.groups);
+    const g = groups.find(x=>x.groupId === groupId);
+    if(!g){ showToast("Group not found","error"); return; }
+    let csv = "GroupID,CourseId,StudentName,StudentId\n";
+    g.members.forEach(m=>{
+        csv += `${g.groupId},${g.courseId},"${m.studentName}","${m.studentId}"\n`;
+    });
+    downloadCSV(csv,`group_${groupId}.csv`);
+    showToast(`Group ${groupId} exported`);
+}
+
+// 导出全部分组
+function exportAllGroupsCSV(){
+    const groups = load(STORAGE_KEYS.groups);
+    if(groups.length===0){ showToast("No group data available","error"); return; }
+    let csv = "GroupID,CourseId,StudentName,StudentId\n";
+    groups.forEach(g=>{
+        g.members.forEach(m=>{
+            csv += `${g.groupId},${g.courseId},"${m.studentName}","${m.studentId}"\n`
+        })
+    })
+    downloadCSV(csv,"all_project_groups.csv");
+    showToast("All groups exported");
+}
+
+// 切换分组展开收起
+function toggleGroupDetail(groupId){
+    const el = document.getElementById("group‑detail‑"+groupId);
+    if(el) el.classList.toggle("open");
+}
+
+function initDB(){
+    Object.values(STORAGE_KEYS).forEach(k=>{
+        if(!localStorage.getItem(k)) localStorage.setItem(k, JSON.stringify([]));
+    })
+}
+function load(key){ return JSON.parse(localStorage.getItem(key)); }
+function save(key, data){ localStorage.setItem(key, JSON.stringify(data)); }
+
+let activeLoginRole = "admin";
+function switchLoginRole(role){
+    activeLoginRole = role;
+    if(role==="admin"){
+        document.getElementById("login‑form‑admin").classList.remove("hidden");
+        document.getElementById("login‑form‑student").classList.add("hidden");
+        document.getElementById("tab‑login‑admin").className="btn‑admin flex‑1";
+        document.getElementById("tab‑login‑student").className="btn‑outline flex‑1";
+    }else{
+        document.getElementById("login‑form‑admin").classList.add("hidden");
+        document.getElementById("login‑form‑student").classList.remove("hidden");
+        document.getElementById("tab‑login‑student").className="btn‑student flex‑1";
+        document.getElementById("tab‑login‑admin").className="btn‑outline flex‑1";
+    }
+}
+
+// 监听角色切换，学生角色显示学号输入框，教师TA隐藏
+document.getElementById("reg‑role").addEventListener("change",function(){
+    const wrap = document.getElementById("reg‑student‑id‑wrap");
+    if(this.value === "student"){
+        wrap.style.display = "block";
+    }else{
+        wrap.style.display = "none";
+    }
+})
+
+// 学生提交自建组队申请
+function submitStudentSelfTeamRequest(){
+    const cu = getCurrentUser();
+    if(!cu) return;
+    const cid = Number(document.getElementById("group‑course‑sel").value);
+    const raw = document.getElementById("teammate‑emails").value.trim();
+    if(!raw) { showToast("Please input teammates email","error"); return; }
+    const teammateEmails = raw.split(',').map(s=>s.trim()).filter(s=>s);
+    const users = load(STORAGE_KEYS.users);
+    const enrolls = load(STORAGE_KEYS.enrollments).filter(e=>e.courseId===cid);
+    const enrolledUserEmails = enrolls.map(e=>{
+        const u = users.find(uu=>uu.name === e.studentName);
+        return u ? u.email : null;
+    }).filter(x=>x);
+
+    // 校验自己已选该课程
+    if(!enrolledUserEmails.includes(cu.email)){
+        showToast("You are not enrolled in this course, cannot submit team request","error");
+        return;
+    }
+    // 校验队友都在该课程
+    const allInCourse = teammateEmails.every(mail=> enrolledUserEmails.includes(mail));
+    if(!allInCourse){
+        showToast("Some teammates are not enrolled in this course","error");
+        return;
+    }
+    const reqList = load(STORAGE_KEYS.selfTeamRequests);
+    reqList.push({
+        reqId:Date.now(),
+        courseId:cid,
+        submitterEmail: cu.email,
+        memberEmails: [cu.email, ...teammateEmails],
+        status:"pending", // pending / approved / rejected
+        createdAt: new Date().toISOString()
+    });
+    save(STORAGE_KEYS.selfTeamRequests, reqList);
+    document.getElementById("teammate‑emails").value="";
+    showToast("Team request submitted, waiting for TA/instructor approval");
+    renderApp();
+}
+
+// admin审批组队申请
+function reviewTeamRequest(reqId, status){
+    let reqList = load(STORAGE_KEYS.selfTeamRequests);
+    const idx = reqList.findIndex(r=>r.reqId === reqId);
+    if(idx === -1) return;
+    reqList[idx].status = status;
+    save(STORAGE_KEYS.selfTeamRequests, reqList);
+    showToast(status==="approved"?"Team request approved":"Team request rejected");
+    renderApp();
+}
+
+function renderTeamRequestList(){
+    const wrap = document.getElementById("team‑request‑list");
+    const cid = Number(document.getElementById("group‑course‑sel").value);
+    const allReq = load(STORAGE_KEYS.selfTeamRequests).filter(r=>r.courseId===cid);
+    const users = load(STORAGE_KEYS.users);
+    if(allReq.length===0){
+        wrap.innerHTML = `<div class="text‑slate‑400">No student team requests for this course.</div>`;
+        return;
+    }
+    wrap.innerHTML = allReq.map(r=>{
+        const submitter = users.find(u=>u.email === r.submitterEmail);
+        const memberNames = r.memberEmails.map(m=>{
+            const uu = users.find(u=>u.email===m);
+            return uu ? uu.name : m;
+        }).join(", ");
+        let badgeHtml = "";
+        if(r.status==="pending") badgeHtml = `<span class="badge‑pending">Pending</span>`;
+        else if(r.status==="approved") badgeHtml = `<span class="badge‑approve">Approved</span>`;
+        else badgeHtml = `<span class="badge‑reject">Rejected</span>`;
+        let btnHtml = "";
+        if(r.status==="pending"){
+            btnHtml = `<button onclick="reviewTeamRequest(${r.reqId},'approved')" class="btn‑sm btn‑student">Approve</button>
+            <button onclick="reviewTeamRequest(${r.reqId},'rejected')" class="btn‑sm btn‑outline ml‑2">Reject</button>`;
+        }
+        return `<div class="bg‑white p‑3 rounded‑lg border mb‑2 flex flex‑wrap justify‑between items‑center gap‑2">
+            <div>Submitter: ${submitter?.name||r.submitterEmail} | Members: ${memberNames} ${badgeHtml}</div>
+            <div>${btnHtml}</div>
+        </div>`
+    }).join('');
+}
+
+// Auth
+function registerUser(){
+    const name = document.getElementById('reg‑name').value.trim();
+    const email = document.getElementById('reg‑email').value.trim();
+    const pwd = document.getElementById('reg‑pwd').value;
+    const role = document.getElementById('reg‑role').value;
+    const studentId = document.getElementById('reg‑student‑id').value.trim();
+
+    if(!name||!email||!pwd){ showToast("请填写姓名、邮箱与密码","error"); return; }
+    // 学生角色强制校验学号
+    if(role === "student" && !studentId){
+        showToast("学生角色必须填写学号","error");
+        return;
+    }
+    const users = load(STORAGE_KEYS.users);
+    if(users.find(u=>u.email===email)){ showToast("该邮箱已经注册账号","error"); return; }
+    users.push({
+        id:Date.now(),
+        name,
+        email,
+        password:pwd,
+        role,
+        studentId: role==="student" ? studentId : null,
+        createdAt:new Date().toISOString()
+    });
+    save(STORAGE_KEYS.users, users);
+    showToast("账号注册成功，请前往登录界面登录");
+    // 清空注册表单
+    document.getElementById('reg‑name').value = '';
+    document.getElementById('reg‑email').value = '';
+    document.getElementById('reg‑pwd').value = '';
+    document.getElementById('reg‑student‑id').value = '';
+}
+
+function loginUser(roleType){
+    let email,pwd;
+    if(roleType==='admin'){
+        email = document.getElementById('login‑admin‑email').value.trim();
+        pwd = document.getElementById('login‑admin‑pwd').value;
+    }else{
+        email = document.getElementById('login‑stu‑email').value.trim();
+        pwd = document.getElementById('login‑stu‑pwd').value;
+    }
+    const users = load(STORAGE_KEYS.users);
+    const user = users.find(u=>u.email===email && u.password===pwd);
+    if(!user){ showToast("邮箱或密码错误，请核对信息","error"); return; }
+    save(STORAGE_KEYS.session, user);
+    showToast(`欢迎，${user.name}`);
+    renderApp();
+}
+
+function logout(){
+    localStorage.removeItem(STORAGE_KEYS.session);
+    // 清空登录输入框，回到登录界面
+    document.getElementById('login‑admin‑email').value = '';
+    document.getElementById('login‑admin‑pwd').value = '';
+    document.getElementById('login‑stu‑email').value = '';
+    document.getElementById('login‑stu‑pwd').value = '';
+    showToast("已退出登录");
+    renderApp();
+}
+function getCurrentUser(){ const s = localStorage.getItem(STORAGE_KEYS.session); return s?JSON.parse(s):null; }
+
+// Course CRUD
+function addCourse(){
+    const code = document.getElementById('course‑code').value.trim();
+    const name = document.getElementById('course‑name').value.trim();
+    const sem = document.getElementById('course‑semester').value.trim();
+    const gs = Number(document.getElementById('course‑groupsize').value);
+    if(!code||!name) { showToast("Fill course code and full name","error"); return; }
+    const courses = load(STORAGE_KEYS.courses);
+    courses.push({id:Date.now(), code, name, semester:sem, maxGroupSize:gs});
+    save(STORAGE_KEYS.courses, courses);
+    clearCourseForm();
+    showToast("Course created");
+    renderApp();
+}
+function clearCourseForm(){
+    document.getElementById('course‑code').value='';
+    document.getElementById('course‑name').value='';
+    document.getElementById('course‑semester').value='';
+    document.getElementById('course‑groupsize').value='4';
+}
+
+// Student enrollment
+function enrollStudent(){
+    const cid = Number(document.getElementById('enroll‑course').value);
+    const sname = document.getElementById('stu‑name').value.trim();
+    const sid = document.getElementById('stu‑id').value.trim();
+    if(!cid||!sname||!sid) { showToast("Complete student information","error"); return; }
+    const enroll = load(STORAGE_KEYS.enrollments);
+    enroll.push({id:Date.now(), courseId:cid, studentName:sname, studentId:sid});
+    save(STORAGE_KEYS.enrollments, enroll);
+    showToast("Student enrolled");
+    renderApp();
+}
+
+// Auto grouping logic：优先已审批的学生自建队伍，剩下随机分配
+function autoGenerateGroups(){
+    const cid = Number(document.getElementById('group‑course‑sel').value);
+    const targetSize = Number(document.getElementById('group‑target‑size').value);
+    const enrolls = load(STORAGE_KEYS.enrollments).filter(e=>e.courseId===cid);
+    const users = load(STORAGE_KEYS.users);
+    if(enrolls.length===0){ showToast("No enrolled students for this course","error"); return; }
+
+    // 获取本课程已批准的组队申请
+    const approvedReqs = load(STORAGE_KEYS.selfTeamRequests).filter(r=>r.courseId===cid && r.status==="approved");
+    const usedStudentIds = new Set();
+    const selfTeamMembersList = [];
+    approvedReqs.forEach(req=>{
+        const members = req.memberEmails.map(mail=>{
+            const u = users.find(uu=>uu.email === mail);
+            const enrollItem = enrolls.find(e=>e.studentName === u.name);
+            return enrollItem;
+        }).filter(x=>x);
+        members.forEach(m=>usedStudentIds.add(m.studentId));
+        selfTeamMembersList.push(members);
+    })
+
+    // 剩余未参与自建队伍的学生
+    const restStudents = enrolls.filter(e=> !usedStudentIds.has(e.studentId));
+    // shuffle
+    for(let i=restStudents.length‑1;i>0;i‑‑){
+        const j = Math.floor(Math.random()*(i+1));
+        [restStudents[i], restStudents[j]] = [restStudents[j], restStudents[i]];
+    }
+
+    const groupsOut = [];
+    let gidBase = Date.now();
+    // 先把审批通过的自建队伍作为小组
+    selfTeamMembersList.forEach(memArr=>{
+        groupsOut.push({
+            groupId: gidBase++,
+            courseId: cid,
+            members: [...memArr],
+            isSelfSelected:true,
+            createdAt: new Date().toISOString()
+        })
+    })
+    // 剩余学生切分随机组
+    let idx = 0;
+    while(idx < restStudents.length){
+        const slice = restStudents.slice(idx, idx+targetSize);
+        groupsOut.push({
+            groupId: gidBase++,
+            courseId: cid,
+            members: slice,
+            isSelfSelected:false,
+            createdAt: new Date().toISOString()
+        });
+        idx += targetSize;
+    }
+
+    const allGroups = load(STORAGE_KEYS.groups);
+    const filtered = allGroups.filter(g=>g.courseId!==cid);
+    save(STORAGE_KEYS.groups, [...filtered, ...groupsOut]);
+    showToast(`Generated ${groupsOut.length} groups: ${selfTeamMembersList.length} approved self‑selected, rest random assigned`);
+    renderApp();
+}
+
+// Q&A
+function postQA(){
+    const cid = Number(document.getElementById('qa‑course‑sel').value);
+    const title = document.getElementById('qa‑title').value.trim();
+    const content = document.getElementById('qa‑content').value.trim();
+    const cu = getCurrentUser();
+    if(!cid||!title||!content) { showToast("Complete question title and content","error"); return; }
+    const qaList = load(STORAGE_KEYS.qa);
+    qaList.push({
+        id:Date.now(), courseId:cid, title, content,
+        authorName: cu.name, authorRole: cu.role, replies:[],
+        timestamp: new Date().toISOString()
+    });
+    save(STORAGE_KEYS.qa, qaList);
+    showToast("Question posted");
+    renderApp();
+}
+
+// Project record
+function saveProjectRecord(){
+    const gid = Number(document.getElementById('proj‑group‑sel').value);
+    const ptitle = document.getElementById('proj‑title').value.trim();
+    const pdesc = document.getElementById('proj‑desc').value.trim();
+    const repo = document.getElementById('proj‑repo').value.trim();
+    if(!gid||!ptitle) { showToast("Fill project title","error"); return; }
+    const projs = load(STORAGE_KEYS.projects);
+    projs.push({id:Date.now(), groupId:gid, title:ptitle, description:pdesc, repoUrl:repo, createdAt:new Date().toISOString()});
+    save(STORAGE_KEYS.projects, projs);
+    showToast("Project record saved");
+    renderApp();
+}
+
+// Tab navigation
+document.querySelectorAll('.tab‑btn').forEach(btn=>{
+    btn.onclick = function(){
+        const tab = this.dataset.tab;
+        document.querySelectorAll('.tab‑btn').forEach(b=>b.classList.remove('tab‑active'));
+        this.classList.add('tab‑active');
+        document.querySelectorAll('.view‑panel').forEach(p=>p.classList.add('hidden'));
+        document.querySelector(`[data‑view="${tab}"]`).classList.remove('hidden');
+    }
+})
+
+function getRoleBadgeHtml(role){
+    if(role==="instructor") return `<span class="role‑badge bg‑admin">Instructor</span>`;
+    if(role==="ta") return `<span class="role‑badge bg‑sky‑500">TA</span>`;
+    return `<span class="role‑badge bg‑student">Student</span>`;
+}
+
+// Main render entry
+function renderApp(){
+    initDB();
+    const user = getCurrentUser();
+    const authView = document.getElementById('auth‑view');
+    const appViews = document.getElementById('app‑views');
+    const nav = document.getElementById('main‑nav');
+    const authArea = document.getElementById('auth‑area');
+    if(!user){
+        authView.classList.remove('hidden');
+        appViews.classList.add('hidden');
+        nav.classList.add('hidden');
+        authArea.innerHTML = '';
+        return;
+    }
+    authView.classList.add('hidden');
+    appViews.classList.remove('hidden');
+    nav.classList.remove('hidden');
+    authArea.innerHTML = `<div class="flex items‑center gap‑4">
+        <div class="flex flex‑col items‑end">
+            <span class="font‑medium">${user.name}</span>
+            ${getRoleBadgeHtml(user.role)}
+        </div>
+        <button onclick="logout()" class="btn‑outline text‑sm">Logout</button>
+    </div>`;
+
+    // 权限控制
+    const isStudent = user.role === "student";
+    document.getElementById("course‑create‑wrap").style.display = isStudent ? "none" : "block";
+    document.getElementById("enroll‑wrap").style.display = isStudent ? "none" : "block";
+
+    // 学生只能看到提交组队表单；管理员看到审核列表
+    document.getElementById("student‑selfteam‑submit").style.display = isStudent ? "block":"none";
+    document.getElementById("admin‑team‑manage").style.display = isStudent ? "none":"block";
+
+    // Dashboard role hint
+    const hintEl = document.getElementById("dashboard‑role‑hint");
+    if(isStudent){
+        hintEl.innerText = "Student view: register with email & password, submit self‑team request, view groups and post Q&A. Course creation & group generation are restricted to Instructor / TA.";
+    }else{
+        hintEl.innerText = "Administrator view: you can create courses, enroll students, review student self‑team requests, auto‑generate groups, manage Q&A and collect project information.";
+    }
+
+    // Dashboard stats
+    const courses = load(STORAGE_KEYS.courses);
+    const enrolls = load(STORAGE_KEYS.enrollments);
+    const groups = load(STORAGE_KEYS.groups);
+    const qaList = load(STORAGE_KEYS.qa);
+    document.getElementById('stat‑courses').innerText = courses.length;
+    document.getElementById('stat‑students').innerText = enrolls.length;
+    document.getElementById('stat‑groups').innerText = groups.length;
+    document.getElementById('stat‑qa').innerText = qaList.length;
+
+    // Course list render
+    const courseListEl = document.getElementById('course‑list');
+    if(courses.length===0){
+        courseListEl.innerHTML = `<div class="empty‑tip"><i class="fa fa‑book‑o text‑xl mb‑2 block"></i>No courses created yet.</div>`;
+    }else{
+        courseListEl.innerHTML = courses.map(c=>`
+        <div class="bg‑white p‑5 rounded‑2xl card‑shadow mb‑4">
+            <div class="text‑lg font‑semibold">${c.code} — ${c.name}</div>
+            <div class="text‑sm text‑slate‑500 mt‑1">Semester: ${c.semester||'‑'} | Default max group size: ${c.maxGroupSize}</div>
+        </div>`).join('');
+    }
+
+    // fill select dropdowns
+    const optHtml = (arr,valKey,labelKey)=>arr.map(x=>`<option value="${x[valKey]}">${x[labelKey]}</option>`).join('');
+    document.getElementById('enroll‑course').innerHTML = optHtml(courses,'id','name');
+    document.getElementById('group‑course‑sel').innerHTML = optHtml(courses,'id','name');
+    document.getElementById('qa‑course‑sel').innerHTML = optHtml(courses,'id','name');
+
+    renderTeamRequestList();
+
+    // Student roster
+    const rosterEl = document.getElementById('student‑roster');
+    rosterEl.innerHTML = `<h3 class="font‑semibold text‑lg mb‑4">Enrolled Student List</h3>`;
+    if(enrolls.length===0){
+        rosterEl.innerHTML += `<div class="empty‑tip"><i class="fa fa‑users‑o text‑xl mb‑2 block"></i>No enrolled students.</div>`;
+    }else{
+        rosterEl.innerHTML += enrolls.map(e=>{
+            const c = courses.find(x=>x.id===e.courseId);
+            return `<div class="bg‑white p‑5 rounded‑2xl card‑shadow mb‑3">
+                <div class="font‑medium">${e.studentName}</div>
+                <div class="text‑sm text‑slate‑500 mt‑1">Student ID: ${e.studentId} | Course: ${c?.code||'‑'}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // Group result render
+    const groupResEl = document.getElementById('group‑result');
+    groupResEl.innerHTML = `<h3 class="font‑semibold text‑lg mb‑4">Generated Project Groups</h3>`;
+    if(groups.length===0){
+        groupResEl.innerHTML += `<div class="empty‑tip"><i class="fa fa‑object‑group text‑xl mb‑2 block"></i>No groups generated.</div>`;
+    }else{
+        groups.forEach(g=>{
+            const c = courses.find(x=>x.id===g.courseId);
+            const tagHtml = g.isSelfSelected ? `<span class="ml‑2 bg‑emerald‑100 text‑emerald‑700 text‑xs px‑2 py‑0.5 rounded">Approved Self‑selected Team</span>`:"";
+            groupResEl.innerHTML += `
+            <div class="bg‑white p‑5 rounded‑2xl card‑shadow mb‑4">
+                <div class="flex justify‑between items‑center flex‑wrap gap‑2">
+                    <div class="font‑semibold">Group ${g.groupId} | Course: ${c?.code||'Unknown'} ${tagHtml}</div>
+                    <div class="flex gap‑2">
+                        <button onclick="toggleGroupDetail(${g.groupId})" class="btn‑outline btn‑sm">
+                            <i class="fa fa‑angle‑down"></i> View Details
+                        </button>
+                        <button onclick="exportSingleGroup(${g.groupId})" class="btn‑outline btn‑sm">
+                            <i class="fa fa‑download"></i> Export Group
+                        </button>
+                    </div>
+                </div>
+                <div id="group‑detail‑${g.groupId}" class="group‑detail mt‑3">
+                    <table class="w‑full text‑sm border‑collapse">
+                        <thead>
+                            <tr class="bg‑slate‑100">
+                                <th class="border px‑3 py‑2 text‑left">Student Name</th>
+                                <th class="border px‑3 py‑2 text‑left">Student ID</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${g.members.map(m=>`
+                            <tr>
+                                <td class="border px‑3 py‑2">${m.studentName}</td>
+                                <td class="border px‑3 py‑2">${m.studentId}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>`
+        });
+    }
+
+    // Q&A threads
+    const qaEl = document.getElementById('qa‑thread‑list');
+    if(qaList.length===0){
+        qaEl.innerHTML = `<div class="empty‑tip"><i class="fa fa‑comments‑o text‑xl mb‑2 block"></i>No Q&A questions yet.</div>`;
+    }else{
+        qaEl.innerHTML = qaList.map(q=>{
+            const c = courses.find(x=>x.id===q.courseId);
+            return `<div class="bg‑white p‑5 rounded‑2xl card‑shadow mb‑4">
+                <div class="font‑semibold text‑lg">${q.title}</div>
+                <div class="flex items‑center gap‑2 mt‑2 flex‑wrap">
+                    <span class="text‑sm text‑slate‑500">${q.authorName}</span>
+                    ${getRoleBadgeHtml(q.authorRole)}
+                    <span class="text‑xs text‑slate‑400">Course ${c?.code||''}</span>
+                </div>
+                <div class="mt‑3 text‑sm text‑slate‑700">${q.content}</div>
+            </div>`
+        }).join('');

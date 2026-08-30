@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeLink - Local Code Repository</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;padding:0}
+body{background:#f4f7fa;padding:24px;max-width:1200px;margin:0 auto;color:#1a202c}
+header{margin-bottom:28px}
+h1{font-size:28px;color:#2b6cb0;margin-bottom:6px}
+.subtitle{color:#4a5568;font-size:15px}
+.card{background:#ffffff;border-radius:10px;padding:20px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+label{display:block;margin:12px 0 6px;font-weight:500;font-size:14px}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid #cbd5e0;border-radius:6px;font-size:14px}
+textarea{min-height:140px;resize:vertical;font-family:Consolas,Monaco,monospace}
+button{padding:10px 16px;border:none;border-radius:6px;cursor:pointer;font-size:14px;margin:4px}
+.btn-primary{background:#2b6cb0;color:white}
+.btn-danger{background:#c53030;color:white}
+.btn-secondary{background:#718096;color:white}
+.item-card{border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:14px;background:#fff}
+.meta-row{font-size:13px;color:#718096;margin:6px 0}
+.tag-runnable{display:inline-block;background:#38a169;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px}
+.tag-notrunnable{display:inline-block;background:#dd6b20;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px}
+pre{background:#1a202c;color:#e2e8f0;padding:14px;border-radius:6px;overflow:auto;max-height:320px;font-size:13px}
+.hidden{display:none}
+.download-log{font-size:12px;color:#6b7280;margin-top:8px;background:#f7fafc;padding:8px;border-radius:4px}
+.file‑upload‑wrap{margin:8px 0}
+a.github‑link{color:#2b6cb0;text-decoration:none}
+a.github‑link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<header>
+    <h1>CodeLink</h1>
+    <div class="subtitle">Local‑browser code repository | All data stored in localStorage, NO server required</div>
+</header>
+
+<div class="grid">
+    <div class="card">
+        <h3 id="form-title">Upload New Code Project</h3>
+        <form id="codeForm">
+            <input type="hidden" id="editId">
+            <label>Project Name</label>
+            <input type="text" id="projName" required placeholder="e.g. Matrix Solver Demo">
+
+            <label>Uploader / Author</label>
+            <input type="text" id="author" required placeholder="Your name">
+
+            <label>GitHub Repository Link (optional)</label>
+            <input type="url" id="githubUrl" placeholder="https://github.com/username/repo">
+
+            <label>Code Description</label>
+            <textarea id="description" placeholder="Briefly describe what this code does"></textarea>
+
+            <label>Is this code runnable?</label>
+            <select id="isRunnable">
+                <option value="true">Yes — Runnable</option>
+                <option value="false">No — Not runnable</option>
+            </select>
+
+            <label>Code Content</label>
+            <div class="file‑upload‑wrap">
+                <input type="file" id="codeFileInput" accept=".py,.m,.f,.f90,.c,.cpp,.js,.txt,.md">
+                <div style="font-size:12px;color:#718096;margin:4px 0">Select local source‑code file to fill code content area</div>
+            </div>
+            <textarea id="codeContent" required placeholder="Paste your source code here, or load from file above"></textarea>
+
+            <div>
+                <button type="submit" class="btn-primary">Save Code Entry</button>
+                <button type="button" id="resetFormBtn" class="btn-secondary">Reset Form</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Code Library Entries</h3>
+        <div id="codeList"></div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = "codelink_local_db";
+
+// read whole database from local storage
+function loadDatabase(){
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return [];
+    return JSON.parse(raw);
+}
+
+function saveDatabase(db){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
+
+function generateId(){
+    return Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+
+// file upload handler: read local text file into codeContent textarea
+document.getElementById("codeFileInput").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+        document.getElementById("codeContent").value = ev.target.result;
+    };
+    reader.readAsText(file);
+});
+
+// render list view
+function renderList(){
+    const db = loadDatabase();
+    const container = document.getElementById("codeList");
+    container.innerHTML = "";
+    if(db.length===0){
+        container.innerHTML = "<p style='color:#718096'>No code projects stored yet. Add your first code snippet.</p>";
+        return;
+    }
+    db.forEach(item=>{
+        const div = document.createElement("div");
+        div.className = "item-card";
+
+        let githubHtml = "";
+        if(item.githubUrl){
+            githubHtml = `<div class="meta-row">GitHub: <a class="github‑link" target="_blank" href="${escapeHtml(item.githubUrl)}">${escapeHtml(item.githubUrl)}</a></div>`;
+        }
+
+        div.innerHTML = `
+            <h4>${escapeHtml(item.projName)}</h4>
+            <div class="meta-row">
+                Author: ${escapeHtml(item.author)} | Uploaded: ${new Date(item.uploadTime).toLocaleString()}
+            </div>
+            ${githubHtml}
+            <div>
+                ${item.isRunnable
+                    ?'<span class="tag-runnable">Runnable</span>'
+                    :'<span class="tag-notrunnable">Not Runnable</span>'}
+            </div>
+            <div class="meta-row">Download count: ${item.downloadCount||0}</div>
+            <div style="margin:8px 0;font-size:14px">${escapeHtml(item.description||"‑")}</div>
+            <pre>${escapeHtml(item.codeContent.substring(0,350))}${item.codeContent.length>350?"\n…[truncated preview]":""}</pre>
+            <div>
+                <button class="btn-primary view-btn" data-id="${item.id}">View Full</button>
+                <button class="btn-secondary edit-btn" data-id="${item.id}">Edit</button>
+                <button class="btn-danger del-btn" data-id="${item.id}">Delete</button>
+                <button class="btn-primary download-btn" data-id="${item.id}">Trigger Download Record</button>
+            </div>
+            <div class="download-log">
+                Download log (browser‑local):<br/>
+                ${(item.downloadLog||[]).length>0
+                    ?item.downloadLog.map(d=>`${new Date(d.timestamp).toLocaleString()} — ${escapeHtml(d.downloader||"anonymous")}`).join("<br/>")
+                    :"No downloads yet"}
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    // bind button events
+    document.querySelectorAll(".view-btn").forEach(b=>b.onclick=()=>viewItem(b.dataset.id));
+    document.querySelectorAll(".edit-btn").forEach(b=>b.onclick=()=>editItem(b.dataset.id));
+    document.querySelectorAll(".del-btn").forEach(b=>b.onclick=()=>deleteItem(b.dataset.id));
+    document.querySelectorAll(".download-btn").forEach(b=>b.onclick=()=>recordDownload(b.dataset.id));
+}
+
+function escapeHtml(str){
+    if(!str) return "";
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+document.getElementById("codeForm").onsubmit = function(e){
+    e.preventDefault();
+    const editId = document.getElementById("editId").value;
+    const entry = {
+        id: editId||generateId(),
+        projName: document.getElementById("projName").value.trim(),
+        author: document.getElementById("author").value.trim(),
+        githubUrl: document.getElementById("githubUrl").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        isRunnable: document.getElementById("isRunnable").value==="true",
+        codeContent: document.getElementById("codeContent").value.trim(),
+    };
+    const db = loadDatabase();
+    if(editId){
+        // update existing entry
+        const idx = db.findIndex(x=>x.id===editId);
+        if(idx>=0){
+            entry.uploadTime = db[idx].uploadTime;
+            entry.downloadCount = db[idx].downloadCount||0;
+            entry.downloadLog = db[idx].downloadLog||[];
+            entry.lastModified = Date.now();
+            db[idx]=entry;
+        }
+    }else{
+        // new entry
+        entry.uploadTime = Date.now();
+        entry.lastModified = Date.now();
+        entry.downloadCount = 0;
+        entry.downloadLog = [];
+        db.push(entry);
+    }
+    saveDatabase(db);
+    resetForm();
+    renderList();
+};
+
+function resetForm(){
+    document.getElementById("codeForm").reset();
+    document.getElementById("editId").value="";
+    document.getElementById("form-title").textContent="Upload New Code Project";
+}
+document.getElementById("resetFormBtn").onclick = resetForm;
+
+function editItem(id){
+    const db = loadDatabase();
+    const item = db.find(x=>x.id===id);
+    if(!item) return;
+    document.getElementById("editId").value = item.id;
+    document.getElementById("projName").value = item.projName;
+    document.getElementById("author").value = item.author;
+    document.getElementById("githubUrl").value = item.githubUrl||"";
+    document.getElementById("description").value = item.description;
+    document.getElementById("isRunnable").value = String(item.isRunnable);
+    document.getElementById("codeContent").value = item.codeContent;
+    document.getElementById("form-title").textContent = "Update Existing Code Project";
+    window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function deleteItem(id){
+    if(!confirm("Confirm to delete this code entry?")) return;
+    let db = loadDatabase();
+    db = db.filter(x=>x.id!==id);
+    saveDatabase(db);
+    renderList();
+}
+
+function recordDownload(id){
+    const db = loadDatabase();
+    const idx = db.findIndex(x=>x.id===id);
+    if(idx<0) return;
+    db[idx].downloadCount = (db[idx].downloadCount||0)+1;
+    db[idx].downloadLog = db[idx].downloadLog||[];
+    db[idx].downloadLog.push({
+        timestamp: Date.now(),
+        downloader: prompt("Enter downloader name (local log only):","anonymous")||"anonymous"
+    });
+    saveDatabase(db);
+    renderList();
+}
+
+function viewItem(id){
+    const db = loadDatabase();
+    const item = db.find(x=>x.id===id);
+    if(!item) return;
+    const ghText = item.githubUrl ? `GitHub Repo: ${item.githubUrl}` : "GitHub Repo: none";
+    alert(
+`==== CodeLink Full Entry ====
+Project: ${item.projName}
+Author: ${item.author}
+${ghText}
+Upload: ${new Date(item.uploadTime).toLocaleString()}
+Runnable: ${item.isRunnable?"YES":"NO"}
+Description:
+${item.description}
+
+---------- CODE ----------
+${item.codeContent}`
+    );
+}
+
+// initial render
+renderList();
+</script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PosterLink — Local Academic Poster Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script>
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+</script>
+<style>
+*{box-sizing:border-box;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;}
+body{background:#f4f7fa;color:#222;padding:16px;max-width:1400px;margin:0 auto;}
+header{padding:16px 0;border-bottom:1px solid #dde2e8;margin-bottom:20px;}
+h1{font-size:28px;color:#1a365d;}
+.subtitle{color:#555;margin:6px 0 12px;}
+.container{display:grid;grid-template-columns:460px 1fr;gap:24px;}
+.panel{background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:20px;box-shadow:0 1px 4px #00000008;}
+.panel h2{font-size:18px;margin-bottom:16px;color:#2d3748;}
+.form-row{margin-bottom:14px;}
+label{display:block;margin-bottom:5px;font-weight:500;font-size:14px;}
+input,textarea,select{width:100%;padding:9px 11px;border:1px solid #cbd5e0;border-radius:6px;font-size:14px;}
+textarea{min-height:70px;resize:vertical;}
+.btn-group{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;}
+button{padding:9px 14px;border:none;border-radius:6px;background:#2b6cb0;color:#fff;font-size:14px;cursor:pointer;}
+button.secondary{background:#718096;}
+button.success{background:#2f855a;}
+button.warning{background:#c53030;}
+button.pdf-btn{background:#6b46c1;}
+#preview-area{min-height:620px;border:1px dashed #a0aec0;border-radius:8px;padding:20px;background:#fafbfc;overflow:auto;position:relative;}
+small{color:#718096;font-size:12px;}
+.info-note{background:#ebf8ff;border-left:4px solid #3182ce;padding:10px;margin-bottom:16px;border-radius:0 6px 6px 0;font-size:13px;}
+.project-item{padding:8px;border:1px solid #e2e8f0;border-radius:6px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;}
+.template-bg-img{max-width:100%;display:block;}
+.text-overlay{position:absolute;top:0;left:0;width:100%;height:100%;padding:32px;pointer-events:none;}
+.cover-block{background:rgba(255,255,255,0.92);padding:10px 14px;margin:6px 0;border-radius:4px;}
+.bg-lib-item{display:flex;gap:8px;align-items:center;margin:6px 0;padding:6px;border:1px solid #eee;border-radius:6px;}
+.bg-lib-item img{height:48px;width:auto;border:1px solid #ccc;}
+</style>
+</head>
+<body>
+<header>
+    <h1>PosterLink</h1>
+    <div class="subtitle">Local‑First Academic Poster Builder | Local background image library</div>
+    <div class="info-note">
+        Upload templates convert to background image stored in local library. Select any background from library for poster rendering, original template text will not be preserved.
+    </div>
+</header>
+
+<div class="container">
+    <!-- Left Control Panel -->
+    <div class="panel">
+        <h2>1. Background Library</h2>
+        <div class="form-row">
+            <label>Upload Template To Library (HTML / SVG / PDF / JPG / PNG)</label>
+            <input type="file" id="templateFileInput" accept=".html,.svg,.pdf,.jpg,.jpeg,.png"/>
+        </div>
+        <div class="form-row">
+            <label>Select Background From Library</label>
+            <select id="bgSelect">
+                <option value="">-- No background selected --</option>
+            </select>
+        </div>
+        <div class="btn-group">
+            <button id="loadSampleTemplate">Add Sample Template To Library</button>
+            <button class="warning" id="deleteSelectedBg">Delete Selected Background</button>
+        </div>
+        <div id="bgLibraryPreview"></div>
+
+        <h2 style="margin-top:24px;">2. New Poster Metadata Input</h2>
+        <div class="form-row">
+            <label>Presentation Title</label>
+            <input type="text" id="inputTitle" placeholder="Enter new poster title"/>
+        </div>
+        <div class="form-row">
+            <label>Speaker / Report Author</label>
+            <input type="text" id="inputSpeaker" placeholder="Speaker name & affiliation"/>
+        </div>
+        <div class="form-row">
+            <label>Abstract</label>
+            <textarea id="inputAbstract" placeholder="Enter new abstract"></textarea>
+        </div>
+        <div class="form-row">
+            <label>Speaker Biography</label>
+            <textarea id="inputBio" placeholder="Enter new speaker biography"></textarea>
+        </div>
+        <div class="form-row">
+            <label>Invited Host</label>
+            <input type="text" id="inputHost" placeholder="Invited chair / host"/>
+        </div>
+        <div class="form-row">
+            <label>Event Date & Time</label>
+            <input type="text" id="inputDateTime" placeholder="e.g. 2026‑09‑10, 14:00"/>
+        </div>
+        <div class="form-row">
+            <label>Venue / Location</label>
+            <input type="text" id="inputVenue" placeholder="Conference room / venue"/>
+        </div>
+
+        <div class="btn-group">
+            <button id="renderPoster">Render Preview</button>
+            <button class="success" id="saveProject">Save Project Locally</button>
+            <button class="secondary" id="downloadPoster">Download HTML</button>
+            <button class="pdf-btn" id="downloadPdf">Download PDF</button>
+        </div>
+
+        <h2 style="margin-top:24px;">3. Saved Local Projects</h2>
+        <div id="projectList"></div>
+        <div class="btn-group">
+            <button class="warning" id="clearAllProjects">Clear All Local Projects</button>
+        </div>
+    </div>
+
+    <!-- Right Preview Area -->
+    <div class="panel">
+        <h2>Poster Preview Canvas</h2>
+        <div id="preview-area">
+            <small>Poster preview will appear here after selecting background and clicking Render Preview.</small>
+        </div>
+    </div>
+</div>
+
+<script>
+let state = {
+    bgLibrary: [], // {id,name,dataUrl} stored backgrounds
+    currentBgId: "",
+    metadata:{
+        title:"",
+        speaker:"",
+        abstract:"",
+        bio:"",
+        host:"",
+        dateTime:"",
+        venue:""
+    },
+    projects:[]
+};
+
+const $ = s=>document.querySelector(s);
+const templateInput = $("#templateFileInput");
+const previewArea = $("#preview-area");
+const bgSelect = $("#bgSelect");
+const bgLibraryPreview = $("#bgLibraryPreview");
+
+// load background library from localStorage
+function loadBgLibrary(){
+    const raw = localStorage.getItem("posterlink_bg_library");
+    if(raw) state.bgLibrary = JSON.parse(raw);
+    renderBgSelect();
+    renderBgLibraryPreview();
+}
+function saveBgLibrary(){
+    localStorage.setItem("posterlink_bg_library", JSON.stringify(state.bgLibrary));
+    renderBgSelect();
+    renderBgLibraryPreview();
+}
+function renderBgSelect(){
+    bgSelect.innerHTML = `<option value="">-- No background selected --</option>`;
+    state.bgLibrary.forEach(bg=>{
+        const opt = document.createElement("option");
+        opt.value = bg.id;
+        opt.textContent = bg.name;
+        bgSelect.appendChild(opt);
+    });
+}
+function renderBgLibraryPreview(){
+    bgLibraryPreview.innerHTML = "";
+    if(state.bgLibrary.length===0){
+        bgLibraryPreview.innerHTML = "<small>Background library is empty.</small>";
+        return;
+    }
+    state.bgLibrary.forEach(bg=>{
+        const div = document.createElement("div");
+        div.className="bg-lib-item";
+        div.innerHTML = `<img src="${bg.dataUrl}" alt="${bg.name}"><span>${bg.name}</span>`;
+        bgLibraryPreview.appendChild(div);
+    });
+}
+function addBackgroundToLibrary(name, dataUrl){
+    const id = Date.now().toString();
+    state.bgLibrary.push({id,name,dataUrl});
+    saveBgLibrary();
+}
+
+const sampleTemplateHTML = `
+<div style="width:840px;background:#ffffff;padding:40px;font-family:Arial;border:1px solid #aaa;">
+    <h1 style="text-align:center;color:#1a365d;">{{title}}</h1>
+    <p style="text-align:center;font-size:18px;margin:12px 0;">{{speaker}}</p>
+    <p style="text-align:center;color:#444;">Invited by: {{host}} | {{dateTime}} | {{venue}}</p>
+    <hr style="margin:24px 0;">
+    <h3>Abstract</h3>
+    <p>{{abstract}}</p>
+    <hr style="margin:24px 0;">
+    <h3>Speaker Biography</h3>
+    <p>{{bio}}</p>
+</div>`;
+
+$("#loadSampleTemplate").addEventListener("click",async ()=>{
+    const canvas = await convertHtmlToCanvas(sampleTemplateHTML);
+    addBackgroundToLibrary("Sample‑Template", canvas.toDataURL("image/png"));
+    alert("Sample template added to background library.");
+});
+
+templateInput.addEventListener("change",async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const fname = file.name;
+    const fnameLower = fname.toLowerCase();
+    if(fnameLower.endsWith(".html") || fnameLower.endsWith(".svg")){
+        const text = await file.text();
+        const canvas = await convertHtmlToCanvas(text);
+        addBackgroundToLibrary(fname, canvas.toDataURL("image/png"));
+        alert(`"${fname}" converted and added to background library.`);
+    }else if(fnameLower.endsWith(".jpg")||fnameLower.endsWith(".jpeg")||fnameLower.endsWith(".png")){
+        const reader = new FileReader();
+        reader.onload = evt=>{
+            addBackgroundToLibrary(fname, evt.target.result);
+            alert(`"${fname}" added to background library.`);
+        };
+        reader.readAsDataURL(file);
+    }else if(fnameLower.endsWith(".pdf")){
+        const arrayBuf = await file.arrayBuffer();
+        const pdfDoc = await pdfjsLib.getDocument(arrayBuf).promise;
+        const page = await pdfDoc.getPage(1);
+        const scale = 1.5;
+        const viewport = page.getViewport({scale});
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({canvasContext:ctx, viewport:viewport}).promise;
+        addBackgroundToLibrary(fname, canvas.toDataURL("image/png"));
+        alert(`"${fname}" pdf page added to background library.`);
+    }
+    templateInput.value = "";
+});
+
+async function convertHtmlToCanvas(htmlString){
+    const temp = document.createElement("div");
+    temp.style.position = "absolute";
+    temp.style.top = "-9999px";
+    temp.style.left = "-9999px";
+    temp.style.width = "840px";
+    temp.innerHTML = htmlString;
+    document.body.appendChild(temp);
+    const canvas = await html2canvas(temp, { scale:2 });
+    document.body.removeChild(temp);
+    return canvas;
+}
+
+$("#deleteSelectedBg").addEventListener("click",()=>{
+    const selId = bgSelect.value;
+    if(!selId){
+        alert("Select one background first.");
+        return;
+    }
+    if(!confirm("Delete selected background from library?")) return;
+    state.bgLibrary = state.bgLibrary.filter(bg=>bg.id!==selId);
+    saveBgLibrary();
+});
+
+function readFormMetadata(){
+    state.metadata.title = $("#inputTitle").value;
+    state.metadata.speaker = $("#inputSpeaker").value;
+    state.metadata.abstract = $("#inputAbstract").value;
+    state.metadata.bio = $("#inputBio").value;
+    state.metadata.host = $("#inputHost").value;
+    state.metadata.dateTime = $("#inputDateTime").value;
+    state.metadata.venue = $("#inputVenue").value;
+}
+
+$("#renderPoster").addEventListener("click",()=>{
+    readFormMetadata();
+    const selId = bgSelect.value;
+    if(!selId){
+        alert("Select background from library first.");
+        return;
+    }
+    const bgItem = state.bgLibrary.find(b=>b.id===selId);
+    if(!bgItem) return;
+    state.currentBgId = selId;
+    previewArea.innerHTML = `
+    <div style="position:relative;display:inline-block;">
+        <img class="template-bg-img" src="${bgItem.dataUrl}" alt="poster background">
+        <div class="text-overlay">
+            <div class="cover-block"><h2>${state.metadata.title||""}</h2></div>
+            <div class="cover-block"><p>${state.metadata.speaker||""}</p></div>
+            <div class="cover-block"><p>Invited by: ${state.metadata.host||""} | ${state.metadata.dateTime||""} | ${state.metadata.venue||""}</p></div>
+            <div class="cover-block"><h3>Abstract</h3><p>${state.metadata.abstract||""}</p></div>
+            <div class="cover-block"><h3>Speaker Biography</h3><p>${state.metadata.bio||""}</p></div>
+        </div>
+    </div>`;
+});
+
+$("#downloadPoster").addEventListener("click",()=>{
+    readFormMetadata();
+    if(!previewArea.innerHTML || previewArea.innerHTML.includes("Poster preview will appear")){
+        alert("Render poster first before download.");
+        return;
+    }
+    const outputHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${state.metadata.title||"PosterLink Poster"}</title></head><body>${previewArea.innerHTML}</body></html>`;
+    const blob = new Blob([outputHtml],{type:"text/html"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "posterlink-poster.html";
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+$("#downloadPdf").addEventListener("click", async ()=>{
+    readFormMetadata();
+    if(!previewArea.innerHTML || previewArea.innerHTML.includes("Poster preview will appear")){
+        alert("Render poster first before generating PDF.");
+        return;
+    }
+    const opt = {
+        margin: 12,
+        filename: "posterlink-poster.pdf",
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a0', orientation: 'landscape' }
+    };
+    await html2pdf().set(opt).from(previewArea).save();
+});
+
+function loadProjectsFromStorage(){
+    const raw = localStorage.getItem("posterlink_projects");
+    if(raw) state.projects = JSON.parse(raw);
+    renderProjectList();
+}
+
+function saveProjectsToStorage(){
+    localStorage.setItem("posterlink_projects", JSON.stringify(state.projects));
+    renderProjectList();
+}
+
+function renderProjectList(){
+    const container = $("#projectList");
+    container.innerHTML = "";
+    if(state.projects.length===0){
+        container.innerHTML = "<small>No saved local projects yet.</small>";
+        return;
+    }
+    state.projects.forEach((proj,idx)=>{
+        const div = document.createElement("div");
+        div.className="project-item";
+        div.innerHTML = `<span>${proj.meta.title||"Untitled Poster"}</span>
+        <div>
+            <button data-idx="${idx}" class="load-proj">Load</button>
+            <button data-idx="${idx}" class="del-proj">Delete</button>
+        </div>`;
+        container.appendChild(div);
+    });
+    container.querySelectorAll(".load-proj").forEach(btn=>{
+        btn.onclick = ()=>{
+            const i = Number(btn.dataset.idx);
+            const p = state.projects[i];
+            state.currentBgId = p.currentBgId||"";
+            bgSelect.value = state.currentBgId;
+            $("#inputTitle").value=p.meta.title||"";
+            $("#inputSpeaker").value=p.meta.speaker||"";
+            $("#inputAbstract").value=p.meta.abstract||"";
+            $("#inputBio").value=p.meta.bio||"";
+            $("#inputHost").value=p.meta.host||"";
+            $("#inputDateTime").value=p.meta.dateTime||"";
+            $("#inputVenue").value=p.meta.venue||"";
+            alert("Project loaded. Click Render Preview to rebuild poster.");
+        }
+    });
+    container.querySelectorAll(".del-proj").forEach(btn=>{
+        btn.onclick = ()=>{
+            const i = Number(btn.dataset.idx);
+            state.projects.splice(i,1);
+            saveProjectsToStorage();
+        }
+    })
+}
+
+$("#saveProject").addEventListener("click",()=>{
+    readFormMetadata();
+    if(!bgSelect.value){
+        alert("Select background before saving project.");
+        return;
+    }
+    state.projects.push({
+        timestamp:Date.now(),
+        currentBgId: state.currentBgId,
+        meta:{...state.metadata}
+    });
+    saveProjectsToStorage();
+    alert("Project saved into browser local storage.");
+});
+
+$("#clearAllProjects").addEventListener("click",()=>{
+    if(!confirm("Remove ALL locally saved PosterLink projects?")) return;
+    state.projects = [];
+    saveProjectsToStorage();
+});
+
+// init
+loadBgLibrary();
+loadProjectsFromStorage();
+</script>
+</body>
+</html>

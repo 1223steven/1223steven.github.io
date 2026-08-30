@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr.LinkAI — AI‑Doctor Research Platform</title>
+<style>
+*{box-sizing:border-box;font-family:Segoe UI,system-ui,sans-serif;margin:0;padding:0;}
+body{background:#0f172a;color:#e2e8f0;padding:16px;max-width:1400px;margin:0 auto;}
+header{margin-bottom:20px;border-bottom:1px solid #334155;padding-bottom:12px;}
+h1{color:#38bdf8;font-size:24px;}
+.subtitle{color:#94a3b8;font-size:14px;margin-top:4px;}
+.container{display:grid;grid-template-columns:360px 1fr;gap:20px;}
+.panel{background:#1e293b;border-radius:10px;padding:16px;border:1px solid #334155;}
+h2{font-size:17px;margin-bottom:12px;color:#cbd5e1;}
+input,textarea,select{width:100%;background:#0f172a;border:1px solid #475569;color:#f1f5f9;padding:9px 11px;border-radius:6px;margin:6px 0;font-size:14px;}
+button{background:#2563eb;color:white;border:none;padding:9px 14px;border-radius:6px;margin:4px;font-size:14px;cursor:pointer;}
+button.secondary{background:#475569;}
+button.danger{background:#b91c1c;}
+button.success{background:#0369a1;}
+.agent-card{background:#334155;border-radius:8px;padding:12px;margin:8px 0;cursor:pointer;}
+.agent-card.active{border:1px solid #38bdf8;}
+.agent-title{font-weight:bold;margin-bottom:4px;}
+.agent-topic{font-size:13px;color:#94a3b8;}
+.research-stage{display:inline-block;font-size:12px;padding:2px 7px;border-radius:12px;background:#1e40af;margin-top:6px;}
+.log-area{background:#0b1220;padding:12px;border-radius:8px;height:300px;overflow-y:auto;margin-top:10px;font-family:monospace;font-size:13px;white-space:pre-wrap;}
+.stats-row{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap;}
+.stat-box{background:#334155;padding:10px;border-radius:7px;min-width:110px;text-align:center;}
+small{color:#94a3b8;}
+.api-config-block{background:#273449;padding:12px;border-radius:8px;margin:8px 0;}
+.spinner{color:#38bdf8;}
+</style>
+</head>
+<body>
+<header>
+<h1>Dr.LinkAI</h1>
+<div class="subtitle">Multi AI‑Doctor Research Workbench | Connect ChatGPT / DeepSeek | All data stored locally in browser</div>
+</header>
+
+<div class="panel api-config-block">
+<h2>🔑 Global LLM API Configuration (Local‑saved)</h2>
+<input id="openaiApiKey" placeholder="OpenAI / ChatGPT API Key">
+<input id="deepseekApiKey" placeholder="DeepSeek API Key">
+<small>Keys stored only in browser localStorage, never uploaded elsewhere.</small>
+<button class="success" onclick="saveApiConfig()">Save API Config</button>
+</div>
+
+<div class="container">
+<!-- Left sidebar: AI‑Doctor Agent List -->
+<div class="panel">
+<h2>🤖 AI‑Doctors (Research Agents)</h2>
+<div>
+<input id="agentNameInput" placeholder="AI‑Doctor name e.g. Dr.QuantumPhys">
+<input id="agentTopicInput" placeholder="Research topic">
+<select id="agentLLMBackend">
+<option value="openai">ChatGPT (OpenAI)</option>
+<option value="deepseek">DeepSeek</option>
+</select>
+<select id="initStageSelect">
+<option value="hypothesis">1. Hypothesis Formulation</option>
+<option value="literature">2. Literature Survey</option>
+<option value="experiment">3. Experimental Design</option>
+<option value="simulation">4. Simulation & Computation</option>
+<option value="analysis">5. Result Analysis</option>
+<option value="manuscript">6. Manuscript Drafting</option>
+<option value="review">7. Peer‑Review Simulation</option>
+</select>
+<button onclick="createAIDoctor()">Create New AI‑Doctor</button>
+<button class="secondary" onclick="exportLocalData()">Export JSON Backup</button>
+<button class="danger" onclick="clearAllLocal()">Clear All Local Data</button>
+</div>
+<div id="agentListWrapper"></div>
+</div>
+
+<!-- Right main panel: selected AI‑Doctor detail -->
+<div class="panel">
+<h2>📑 Selected AI‑Doctor Workspace</h2>
+<div id="noAgentHint">Select or create an AI‑Doctor agent to start research work.</div>
+<div id="agentDetailView" style="display:none;">
+<div class="stats-row">
+<div class="stat-box">
+<div id="detailAgentName">-</div>
+<small>AI‑Doctor</small>
+</div>
+<div class="stat-box">
+<div id="detailTopic">-</div>
+<small>Research Topic</small>
+</div>
+<div class="stat-box">
+<div id="detailStage">-</div>
+<small>Current Research Stage</small>
+</div>
+<div class="stat-box">
+<div id="detailLLMBackend">-</div>
+<small>Linked LLM</small>
+</div>
+</div>
+
+<h3 style="margin:8px 0;font-size:15px;">Stage & Task</h3>
+<select id="stageSwitch">
+<option value="hypothesis">1. Hypothesis Formulation</option>
+<option value="literature">2. Literature Survey</option>
+<option value="experiment">3. Experimental Design</option>
+<option value="simulation">4. Simulation & Computation</option>
+<option value="analysis">5. Result Analysis</option>
+<option value="manuscript">6. Manuscript Drafting</option>
+<option value="review">7. Peer‑Review Simulation</option>
+</select>
+<textarea id="stageNoteInput" placeholder="Task instruction for this research stage..."></textarea>
+<button class="success" id="runAgentBtn" onclick="runAgentLLMTask()">Run LLM Research Task</button>
+<button onclick="appendAgentNote()">Save Manual Note</button>
+<button class="danger" onclick="deleteSelectedAgent()">Delete This AI‑Doctor</button>
+
+<h3 style="margin:10px 0 6px;">Research Log</h3>
+<div class="log-area" id="researchLogBox"></div>
+</div>
+</div>
+</div>
+
+<script>
+// Data model
+let aiDoctors = [];
+let selectedAgentId = null;
+let apiConfig = {openaiKey:"", deepseekKey:""};
+const STAGE_LABELS = {
+    hypothesis:"Hypothesis Formulation",
+    literature:"Literature Survey",
+    experiment:"Experimental Design",
+    simulation:"Simulation & Computation",
+    analysis:"Result Analysis",
+    manuscript:"Manuscript Drafting",
+    review:"Peer‑Review Simulation"
+};
+const LLM_LABELS = {openai:"ChatGPT (OpenAI)", deepseek:"DeepSeek"};
+
+// Load local storage
+function loadFromStorage(){
+    const rawAgents = localStorage.getItem("drlinkai_aidoctors");
+    const rawApi = localStorage.getItem("drlinkai_apiconfig");
+    if(rawAgents) aiDoctors = JSON.parse(rawAgents);
+    if(rawApi) apiConfig = JSON.parse(rawApi);
+    document.getElementById("openaiApiKey").value = apiConfig.openaiKey||"";
+    document.getElementById("deepseekApiKey").value = apiConfig.deepseekKey||"";
+    renderAgentList();
+}
+function saveToStorage(){
+    localStorage.setItem("drlinkai_aidoctors", JSON.stringify(aiDoctors));
+    localStorage.setItem("drlinkai_apiconfig", JSON.stringify(apiConfig));
+}
+function saveApiConfig(){
+    apiConfig.openaiKey = document.getElementById("openaiApiKey").value.trim();
+    apiConfig.deepseekKey = document.getElementById("deepseekApiKey").value.trim();
+    saveToStorage();
+    alert("API keys saved locally.");
+}
+
+function uuid(){
+    return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
+}
+
+function createAIDoctor(){
+    const name = document.getElementById("agentNameInput").value.trim();
+    const topic = document.getElementById("agentTopicInput").value.trim();
+    const llmBackend = document.getElementById("agentLLMBackend").value;
+    const stage = document.getElementById("initStageSelect").value;
+    if(!name || !topic){alert("Fill agent name and research topic");return;}
+    const newAgent = {
+        id:uuid(),
+        name:name,
+        topic:topic,
+        llmBackend: llmBackend,
+        currentStage:stage,
+        createdAt:new Date().toISOString(),
+        log:[{t:new Date().toISOString(), stage:stage, content:"Agent initialized."}]
+    };
+    aiDoctors.push(newAgent);
+    saveToStorage();
+    renderAgentList();
+    document.getElementById("agentNameInput").value="";
+    document.getElementById("agentTopicInput").value="";
+    selectedAgentId = newAgent.id;
+    renderAgentDetail();
+}
+
+function renderAgentList(){
+    const wrapper = document.getElementById("agentListWrapper");
+    wrapper.innerHTML = "";
+    aiDoctors.forEach(agent=>{
+        const div = document.createElement("div");
+        div.className = "agent-card"+(selectedAgentId===agent.id?" active":"");
+        div.onclick = ()=>{selectedAgentId=agent.id;renderAgentDetail();renderAgentList();};
+        div.innerHTML = `
+        <div class="agent-title">${agent.name}</div>
+        <div class="agent-topic">${agent.topic}</div>
+        <div><small>LLM: ${LLM_LABELS[agent.llmBackend]}</small></div>
+        <span class="research-stage">${STAGE_LABELS[agent.currentStage]}</span>
+        `;
+        wrapper.appendChild(div);
+    });
+}
+
+function renderAgentDetail(){
+    const hint = document.getElementById("noAgentHint");
+    const detailView = document.getElementById("agentDetailView");
+    if(!selectedAgentId){
+        hint.style.display="block";
+        detailView.style.display="none";
+        return;
+    }
+    hint.style.display="none";
+    detailView.style.display="block";
+    const agent = aiDoctors.find(x=>x.id===selectedAgentId);
+    if(!agent) return;
+    document.getElementById("detailAgentName").innerText = agent.name;
+    document.getElementById("detailTopic").innerText = agent.topic;
+    document.getElementById("detailStage").innerText = STAGE_LABELS[agent.currentStage];
+    document.getElementById("detailLLMBackend").innerText = LLM_LABELS[agent.llmBackend];
+    document.getElementById("stageSwitch").value = agent.currentStage;
+    const logBox = document.getElementById("researchLogBox");
+    logBox.innerText = agent.log.map(entry=>{
+        const d = new Date(entry.t).toLocaleString();
+        return `[${d}] | ${STAGE_LABELS[entry.stage]}\n${entry.content}\n`;
+    }).join("-".repeat(60)+"\n");
+}
+
+async function runAgentLLMTask(){
+    const agent = aiDoctors.find(x=>x.id===selectedAgentId);
+    if(!agent) return;
+    const userPrompt = document.getElementById("stageNoteInput").value.trim();
+    const newStage = document.getElementById("stageSwitch").value;
+    agent.currentStage = newStage;
+    if(!userPrompt){alert("Please input task instruction");return;}
+
+    // Build system prompt for AI‑Doctor according to research stage
+    const systemPrompt = `
+You are ${agent.name}, an AI‑Doctor researcher.
+Research topic: ${agent.topic}.
+Current research stage: ${STAGE_LABELS[newStage]}.
+Complete this scientific research task with rigorous academic output.
+`.trim();
+
+    let apiUrl, apiKey;
+    if(agent.llmBackend === "openai"){
+        apiUrl = "https://api.openai.com/v1/chat/completions";
+        apiKey = apiConfig.openaiKey;
+    }else if(agent.llmBackend === "deepseek"){
+        apiUrl = "https://api.deepseek.com/v1/chat/completions";
+        apiKey = apiConfig.deepseekKey;
+    }
+    if(!apiKey){alert("Please set corresponding API key first.");return;}
+
+    const btn = document.getElementById("runAgentBtn");
+    btn.disabled = true;
+    btn.innerText = "Running...";
+    try{
+        const resp = await fetch(apiUrl,{
+            method:"POST",
+            headers:{
+                "Content‑Type":"application/json",
+                "Authorization":`Bearer ${apiKey}`
+            },
+            body:JSON.stringify({
+                model: agent.llmBackend==="openai"?"gpt‑4o‑mini":"deepseek‑chat",
+                messages:[
+                    {"role":"system","content":systemPrompt},
+                    {"role":"user","content":userPrompt}
+                ],
+                temperature:0.3
+            })
+        });
+        const data = await resp.json();
+        let resultText;
+        if(data.error){
+            resultText = `API ERROR: ${JSON.stringify(data.error)}`;
+        }else{
+            resultText = data.choices[0].message.content;
+        }
+        agent.log.push({
+            t:new Date().toISOString(),
+            stage:newStage,
+            content:`=== USER TASK ===\n${userPrompt}\n=== AI‑Doctor Output ===\n${resultText}`
+        });
+        saveToStorage();
+        renderAgentList();
+        renderAgentDetail();
+        document.getElementById("stageNoteInput").value="";
+    }catch(err){
+        agent.log.push({
+            t:new Date().toISOString(),
+            stage:newStage,
+            content:`Network exception: ${err.message}`
+        });
+        saveToStorage();
+        renderAgentDetail();
+    }finally{
+        btn.disabled = false;
+        btn.innerText = "Run LLM Research Task";
+    }
+}
+
+function appendAgentNote(){
+    const agent = aiDoctors.find(x=>x.id===selectedAgentId);
+    if(!agent) return;
+    const note = document.getElementById("stageNoteInput").value.trim();
+    const newStage = document.getElementById("stageSwitch").value;
+    agent.currentStage = newStage;
+    agent.log.push({
+        t:new Date().toISOString(),
+        stage:newStage,
+        content:note||"(No note entered)"
+    });
+    saveToStorage();
+    renderAgentList();
+    renderAgentDetail();
+    document.getElementById("stageNoteInput").value="";
+}
+
+function deleteSelectedAgent(){
+    if(!selectedAgentId) return;
+    if(!confirm("Delete this AI‑Doctor and all its research log?")) return;
+    aiDoctors = aiDoctors.filter(x=>x.id!==selectedAgentId);
+    saveToStorage();
+    selectedAgentId=null;
+    renderAgentList();
+    renderAgentDetail();
+}
+
+function exportLocalData(){
+    const blob = new Blob([JSON.stringify({aiDoctors,apiConfig},null,2)],{type:"application/json"});
+    const a = document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="drlinkai_full_backup.json";
+    a.click();
+}
+
+function clearAllLocal(){
+    if(!confirm("Delete ALL local data including API keys and agents, cannot undo?")) return;
+    aiDoctors=[];selectedAgentId=null;apiConfig={openaiKey:"",deepseekKey:""};
+    saveToStorage();
+    document.getElementById("openaiApiKey").value="";
+    document.getElementById("deepseekApiKey").value="";
+    renderAgentList();
+    renderAgentDetail();
+}
+
+window.onload = loadFromStorage;
+</script>
+</body>
+</html>

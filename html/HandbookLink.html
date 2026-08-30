@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandbookLink | Conference Handbook Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+        }
+
+        .pdf-preview-area {
+            background: #ffffff;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+            transition: background 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            transition: background 0.2s ease;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .talk-item {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .talk-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .input-field {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .preview-page {
+            background: #fffefc;
+            background-image: linear-gradient(to bottom, #fffefc, #fffdf8);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen text-slate-800">
+
+    <!-- Top Navigation -->
+    <nav class="no-print bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-700 to-teal-600 bg-clip-text text-transparent">
+                    HandbookLink
+                </h1>
+                <p class="text-sm text-slate-500">Local-First Academic Conference Handbook Platform</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="badge text-xs px-3 py-1 rounded-full font-medium">
+                    All data saved locally
+                </span>
+                <button onclick="exportHandbookPDF()" class="btn-primary text-white text-sm px-4 py-2 rounded-lg font-medium">
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+
+        <!-- Intro Banner -->
+        <section class="no-print section-card p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-semibold mb-1">Build your conference handbook in minutes</h2>
+                    <p class="text-slate-600 text-sm">
+                        Enter conference details, add presentation records, preview the formatted handbook, and export a clean PDF — all directly in your browser.
+                    </p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="renderPreview()" class="btn-secondary text-sm px-4 py-2 rounded-lg font-medium">
+                        Refresh Preview
+                    </button>
+                    <button onclick="clearAllLocalData()" class="btn-danger text-white text-sm px-4 py-2 rounded-lg font-medium">
+                        Clear All Data
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Left Panel: Editor -->
+            <div class="no-print space-y-6">
+
+                <!-- Conference Info -->
+                <div class="section-card p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        Conference Information
+                    </h3>
+                    <div class="space-y-4">
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Conference Title</span>
+                            <input id="confTitle" type="text" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="e.g. 12th International Conference on Computational Mathematics">
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Location / Venue</span>
+                            <input id="confVenue" type="text" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="e.g. Suzhou, China">
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Conference Date</span>
+                            <input id="confDate" type="text" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="e.g. Aug 30 – Sep 02, 2026">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Add Talk -->
+                <div class="section-card p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Add New Presentation
+                    </h3>
+                    <div class="space-y-4">
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Presentation Title</span>
+                            <input id="talkTitle" type="text" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="Enter the title of the presentation">
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Speaker & Affiliation</span>
+                            <input id="talkSpeaker" type="text" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="e.g. Jane Smith, University of Cambridge">
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Abstract</span>
+                            <textarea id="talkAbstract" rows="3" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="Briefly describe the topic, methodology, and key findings"></textarea>
+                        </label>
+                        <label class="block">
+                            <span class="text-sm font-medium text-slate-700">Speaker Biography</span>
+                            <textarea id="talkBio" rows="3" class="input-field w-full border border-slate-300 rounded-lg px-4 py-2.5 mt-1 text-sm" placeholder="Short professional biography and research interests"></textarea>
+                        </label>
+
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="addNewTalk()" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium">
+                                Add Presentation
+                            </button>
+                            <button onclick="resetTalkForm()" class="btn-secondary px-5 py-2.5 rounded-lg text-sm font-medium">
+                                Clear Form
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Talk List -->
+                <div class="section-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Saved Presentations
+                        </h3>
+                        <span id="talkCountBadge" class="badge text-xs px-2.5 py-1 rounded-full font-semibold">0 items</span>
+                    </div>
+
+                    <div id="talkListContainer" class="max-h-80 overflow-y-auto space-y-3 pr-2">
+                        <div class="text-sm text-slate-500 italic py-4">
+                            No presentations yet. Add your first presentation above to start building the handbook.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="section-card p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Generate Handbook
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="renderPreview()" class="btn-secondary px-5 py-2.5 rounded-lg text-sm font-medium">
+                            Refresh Preview
+                        </button>
+                        <button onclick="exportHandbookPDF()" class="btn-success text-white px-5 py-2.5 rounded-lg text-sm font-medium">
+                            Generate & Download PDF
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3">
+                        Your data is stored locally in your browser. Always export a PDF before clearing browser cache or using a different device.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div>
+                <div class="no-print flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold flex items-center gap-2">
+                        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Live Handbook Preview
+                    </h3>
+                    <span class="text-xs text-slate-500">A4 portrait layout</span>
+                </div>
+
+                <div id="previewContainer" class="pdf-preview-area preview-page p-8 text-sm min-h-[1100px]">
+                    <div class="text-center text-slate-400 py-16">
+                        Your handbook preview will appear here after you add conference information and presentations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="no-print border-t border-slate-200 mt-16 py-8 bg-white/60">
+        <div class="container mx-auto px-4 text-center text-sm text-slate-500">
+            <p>HandbookLink — A local-first platform for creating academic conference handbooks.</p>
+            <p class="mt-1">No backend, no server, no account required. Your data stays in your browser.</p>
+        </div>
+    </footer>
+
+<script>
+const STORAGE_KEY = "handbooklink_conference_data_v2";
+
+let conferenceData = {
+    meta: { title: "", venue: "", date: "" },
+    talks: []
+};
+
+window.onload = function () {
+    loadFromLocalStorage();
+    renderTalkList();
+    renderPreview();
+};
+
+function loadFromLocalStorage() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+        conferenceData = JSON.parse(raw);
+        document.getElementById("confTitle").value = conferenceData.meta.title || "";
+        document.getElementById("confVenue").value = conferenceData.meta.venue || "";
+        document.getElementById("confDate").value = conferenceData.meta.date || "";
+    }
+}
+
+function saveToLocalStorage() {
+    conferenceData.meta.title = document.getElementById("confTitle").value.trim();
+    conferenceData.meta.venue = document.getElementById("confVenue").value.trim();
+    conferenceData.meta.date = document.getElementById("confDate").value.trim();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(conferenceData));
+    updateTalkCountBadge();
+}
+
+function resetTalkForm() {
+    document.getElementById("talkTitle").value = "";
+    document.getElementById("talkSpeaker").value = "";
+    document.getElementById("talkAbstract").value = "";
+    document.getElementById("talkBio").value = "";
+}
+
+function addNewTalk() {
+    saveToLocalStorage();
+
+    const title = document.getElementById("talkTitle").value.trim();
+    const speaker = document.getElementById("talkSpeaker").value.trim();
+    const abstract = document.getElementById("talkAbstract").value.trim();
+    const bio = document.getElementById("talkBio").value.trim();
+
+    if (!title || !speaker) {
+        alert("Presentation title and speaker cannot be empty.");
+        return;
+    }
+
+    conferenceData.talks.push({
+        id: Date.now().toString(),
+        title,
+        speaker,
+        abstract,
+        bio
+    });
+
+    saveToLocalStorage();
+    resetTalkForm();
+    renderTalkList();
+    renderPreview();
+    showToast("Presentation added successfully.");
+}
+
+function deleteTalk(talkId) {
+    conferenceData.talks = conferenceData.talks.filter(item => item.id !== talkId);
+    saveToLocalStorage();
+    renderTalkList();
+    renderPreview();
+    showToast("Presentation deleted.");
+}
+
+function renderTalkList() {
+    const container = document.getElementById("talkListContainer");
+    container.innerHTML = "";
+
+    if (conferenceData.talks.length === 0) {
+        container.innerHTML = `
+            <div class="text-sm text-slate-500 italic py-4">
+                No presentations yet. Add your first presentation above to start building the handbook.
+            </div>
+        `;
+        updateTalkCountBadge();
+        return;
+    }
+
+    conferenceData.talks.forEach(tk => {
+        const div = document.createElement("div");
+        div.className = "talk-item border border-slate-200 rounded-lg p-4 bg-white";
+        div.innerHTML = `
+            <div class="flex justify-between items-start gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-sm text-slate-800 leading-snug">${escapeHtml(tk.title)}</div>
+                    <div class="text-xs text-slate-600 mt-1">${escapeHtml(tk.speaker)}</div>
+                    ${tk.abstract ? `
+                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">${escapeHtml(tk.abstract)}</p>
+                    ` : ""}
+                </div>
+                <button onclick="deleteTalk('${tk.id}')" class="text-red-500 hover:text-red-700 text-xs font-medium whitespace-nowrap">
+                    Delete
+                </button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    updateTalkCountBadge();
+}
+
+function updateTalkCountBadge() {
+    document.getElementById("talkCountBadge").textContent = `${conferenceData.talks.length} item${conferenceData.talks.length !== 1 ? "s" : ""}`;
+}
+
+function renderPreview() {
+    saveToLocalStorage();
+
+    const previewDom = document.getElementById("previewContainer");
+    const meta = conferenceData.meta;
+
+    if (!meta.title && conferenceData.talks.length === 0) {
+        previewDom.innerHTML = `
+            <div class="text-center text-slate-400 py-16">
+                Your handbook preview will appear here after you add conference information and presentations.
+            </div>
+        `;
+        return;
+    }
+
+    let html = `
+        <div class="text-center mb-12">
+            <h1 class="text-2xl font-bold text-slate-900 mb-3">${escapeHtml(meta.title || "Conference Handbook")}</h1>
+            <p class="text-base text-slate-700">${escapeHtml(meta.venue || "Venue")}</p>
+            <p class="text-base text-slate-700">${escapeHtml(meta.date || "Date")}</p>
+        </div>
+        <hr class="border-slate-300 my-8">
+    `;
+
+    conferenceData.talks.forEach((tk, index) => {
+        html += `
+        <div class="mb-10">
+            <h3 class="font-bold text-base text-slate-900 mb-2">${index + 1}. ${escapeHtml(tk.title)}</h3>
+            <p class="text-slate-700 mb-3"><strong>Speaker:</strong> ${escapeHtml(tk.speaker)}</p>
+
+            <div class="mb-3">
+                <strong class="text-slate-800">Abstract</strong>
+                <p class="mt-1 text-slate-700 leading-relaxed">${escapeHtml(tk.abstract || "No abstract provided.")}</p>
+            </div>
+
+            <div>
+                <strong class="text-slate-800">Speaker Biography</strong>
+                <p class="mt-1 text-slate-700 leading-relaxed">${escapeHtml(tk.bio || "No biography provided.")}</p>
+            </div>
+        </div>
+        <hr class="border-slate-200 my-6">
+        `;
+    });
+
+    previewDom.innerHTML = html;
+}
+
+function escapeHtml(str) {
+    if (!str) return "";
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function exportHandbookPDF() {
+    saveToLocalStorage();
+
+    const previewEl = document.getElementById("previewContainer");
+
+    const opt = {
+        margin: 12,
+        filename: `HandbookLink-${sanitizeFilename(conferenceData.meta.title || "Conference-Handbook")}.pdf`,
+        image: { type: "jpeg", quality: 0.92 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    };
+
+    html2pdf().set(opt).from(previewEl).save();
+    showToast("PDF download started.");
+}
+
+function sanitizeFilename(name) {
+    return name.replace(/[^a-z0-9A-Z_\-]/g, "-").substring(0, 60);
+}
+
+function clearAllLocalData() {
+    if (window.confirm("Are you sure you want to clear all conference data? This action cannot be undone.")) {
+        localStorage.removeItem(STORAGE_KEY);
+        conferenceData = { meta: { title: "", venue: "", date: "" }, talks: [] };
+        document.getElementById("confTitle").value = "";
+        document.getElementById("confVenue").value = "";
+        document.getElementById("confDate").value = "";
+        resetTalkForm();
+        renderTalkList();
+        renderPreview();
+        showToast("All local data cleared.");
+    }
+}
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "fixed bottom-6 right-6 bg-slate-800 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.3s ease";
+        setTimeout(() => toast.remove(), 300);
+    }, 2200);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SoftwareLink — Local Software Assembly Platform</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, monospace;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  padding: 20px;
+  max-width: 1700px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+header {
+  margin-bottom: 24px;
+  padding-bottom:12px;
+  border-bottom: 1px solid #334155;
+}
+header h1 {
+  color: #38bdf8;
+  font-size: 28px;
+  margin-bottom:6px;
+}
+.desc-note {
+  color:#94a3b8;
+  font-size:14px;
+}
+.main-grid {
+  display: grid;
+  grid-template-columns: 340px 340px 1fr 360px;
+  gap:16px;
+  height: calc(100vh - 140px);
+}
+.panel {
+  background-color:#1e293b;
+  border-radius:12px;
+  border:1px solid #334155;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  padding:18px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.panel h3 {
+  color:#7dd3fc;
+  font-size:17px;
+  padding-bottom:8px;
+  border-bottom:1px solid #334155;
+}
+.btn-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+button {
+  background-color:#0284c7;
+  color:#ffffff;
+  border:none;
+  border-radius:8px;
+  padding:9px 14px;
+  font-size:13px;
+  cursor:pointer;
+  transition: all 0.2s ease;
+}
+button:hover {
+  background-color:#0369a1;
+  transform: translateY(-1px);
+}
+button.secondary {
+  background-color:#475569;
+}
+button.secondary:hover {
+  background-color:#334155;
+}
+select, input[type="file"] {
+  width:100%;
+  background-color:#0f172a;
+  color:#e2e8f0;
+  border:1px solid #475569;
+  border-radius:8px;
+  padding:9px;
+  font-size:13px;
+}
+.list-container {
+  background-color:#0f172a;
+  border-radius:8px;
+  padding:10px;
+  min-height:110px;
+  border:1px solid #334155;
+  flex-grow:1;
+}
+.list-item {
+  list-style-type: none;
+  padding:6px 8px;
+  font-size:13px;
+  color:#cbd5e1;
+  border-bottom:1px solid #1e293b;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.list-item.in-progress {
+  border-left:3px solid #fbbf24;
+}
+.list-item.built {
+  border-left:3px solid #34d399;
+}
+#codeEditor {
+  width:100%;
+  flex-grow:1;
+  background-color:#0f172a;
+  color:#e2e8f0;
+  border:1px solid #475569;
+  border-radius:8px;
+  padding:14px;
+  font-size:13px;
+  font-family:monospace;
+  resize:none;
+}
+#debugConsole {
+  width:100%;
+  flex-grow:1;
+  background-color:#020617;
+  color:#86efac;
+  border:1px solid #334155;
+  border-radius:8px;
+  padding:12px;
+  font-size:12px;
+  font-family:monospace;
+  white-space:pre-wrap;
+  overflow-y:auto;
+}
+.status-tag {
+  font-size:11px;
+  padding:2px 6px;
+  border-radius:4px;
+}
+.tag-inprogress {
+  background-color:rgba(251,191,36,0.15);
+  color:#fbbf24;
+}
+.tag-built {
+  background-color:rgba(52,211,153,0.15);
+  color:#34d399;
+}
+@media(max-width:1400px){
+  .main-grid {
+    grid-template-columns:1fr 1fr;
+    height:auto;
+  }
+  .panel {
+    min-height:320px;
+  }
+}
+@media(max-width:800px){
+  .main-grid {
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+<h1>SoftwareLink</h1>
+<p class="desc-note">Local‑first software assembly platform. All data stays inside your browser. No server, no network upload.</p>
+</header>
+
+<div class="main-grid">
+<!-- Left 1: Software Project List -->
+<div class="panel">
+<h3>Software Projects</h3>
+<div class="btn-row">
+  <button id="newProjectBtn">Create New Project</button>
+  <button class="secondary" id="refreshProjectListBtn">Refresh List</button>
+</div>
+<h4 style="font-size:14px;color:#cbd5e1;">In‑Progress</h4>
+<ul class="list-container" id="inProgressList"></ul>
+<h4 style="font-size:14px;color:#cbd5e1;margin-top:8px;">Built Releases</h4>
+<ul class="list-container" id="builtReleaseList"></ul>
+</div>
+
+<!-- Left 2: Environment & File Manager -->
+<div class="panel">
+<h3>Environment & Source Files</h3>
+<div class="btn-row">
+  <button id="uploadCodeBtn">Upload Source‑Code</button>
+</div>
+<input type="file" id="codeFileInput" multiple hidden>
+
+<div>
+  <label style="font-size:13px;color:#cbd5e1;">Runtime Environment Preset</label>
+  <select id="envPreset">
+    <option value="vanilla-web">Vanilla Web (HTML/CSS/JS)</option>
+    <option value="wasm-node">WebContainer Node.js (WASM)</option>
+    <option value="static-bundle">Static Asset Bundle</option>
+  </select>
+</div>
+
+<div>
+  <label style="font-size:13px;color:#cbd5e1;">Uploaded Source Files</label>
+  <ul class="list-container" id="fileList"></ul>
+</div>
+
+<div class="btn-row">
+  <button id="saveProjectBtn">Save Locally</button>
+  <button class="secondary" id="exportBundleBtn">Export Bundle</button>
+</div>
+</div>
+
+<!-- Middle: Assembly Workspace Editor -->
+<div class="panel">
+<h3>Assembly Workspace</h3>
+<textarea id="codeEditor" placeholder="Edit source code or assembly manifest here..."></textarea>
+<div class="btn-row">
+  <button id="buildSoftwareBtn">Build / Assemble Software</button>
+  <button class="secondary" id="clearWorkspaceBtn">Clear Workspace</button>
+</div>
+</div>
+
+<!-- Right: Debug Console -->
+<div class="panel">
+<h3>Software Debug Console</h3>
+<pre id="debugConsole"></pre>
+<div class="btn-row">
+  <button class="secondary" id="clearConsoleBtn">Clear Console</button>
+</div>
+</div>
+</div>
+
+<script>
+const DB_NAME = "SoftwareLinkDB";
+const STORE_NAME = "projects";
+let db = null;
+let activeProject = {
+  id: null,
+  name:"untitled",
+  status:"in-progress",
+  version:"0.1.0",
+  files:[],
+  env:"vanilla-web",
+  manifest:""
+};
+const debugConsoleEl = document.getElementById("debugConsole");
+const codeEditorEl = document.getElementById("codeEditor");
+const fileListEl = document.getElementById("fileList");
+const inProgressListEl = document.getElementById("inProgressList");
+const builtReleaseListEl = document.getElementById("builtReleaseList");
+
+function logDebug(msg){
+    const timestamp = new Date().toLocaleTimeString();
+    debugConsoleEl.textContent += `[${timestamp}] ${msg}\n`;
+    debugConsoleEl.scrollTop = debugConsoleEl.scrollHeight;
+}
+
+async function openDB(){
+    return new Promise((resolve,reject)=>{
+        const req = indexedDB.open(DB_NAME,1);
+        req.onupgradeneeded = e=>{
+            const d = e.target.result;
+            if(!d.objectStoreNames.contains(STORE_NAME)){
+                d.createObjectStore(STORE_NAME,{keyPath:"id",autoIncrement:true});
+            }
+        };
+        req.onsuccess = e=>{db=e.target.result;resolve(db);};
+        req.onerror = e=>reject(e.target.error);
+    });
+}
+
+async function saveProjectToDB(proj){
+    const tx = db.transaction(STORE_NAME,"readwrite");
+    const store = tx.objectStore(STORE_NAME);
+    await store.put(proj);
+    logDebug(`✅ Project saved locally: ${proj.name} v${proj.version}`);
+    await renderProjectList();
+}
+
+async function getAllProjects(){
+    return new Promise((resolve,reject)=>{
+        const tx = db.transaction(STORE_NAME,"readonly");
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.getAll();
+        req.onsuccess = ()=>resolve(req.result);
+        req.onerror = ()=>reject(req.error);
+    })
+}
+
+async function loadProjectById(projectId){
+    const all = await getAllProjects();
+    const found = all.find(p=>p.id === projectId);
+    if(!found){
+        logDebug(`⚠️ Cannot find target project id:${projectId}`);
+        return;
+    }
+    activeProject = JSON.parse(JSON.stringify(found));
+    codeEditorEl.value = activeProject.manifest || "";
+    document.getElementById("envPreset").value = activeProject.env;
+    refreshFileList();
+    logDebug(`📂 Loaded project: ${activeProject.name} v${activeProject.version}, status:${activeProject.status}`);
+}
+
+async function renderProjectList(){
+    inProgressListEl.innerHTML = "";
+    builtReleaseListEl.innerHTML = "";
+    const allProjects = await getAllProjects();
+    const inProgress = allProjects.filter(p=>p.status === "in-progress");
+    const built = allProjects.filter(p=>p.status === "built");
+
+    if(inProgress.length ===0){
+        inProgressListEl.innerHTML = "<li class='list-item' style='color:#64748b'>No in‑progress projects</li>";
+    }
+    inProgress.forEach(proj=>{
+        const li = document.createElement("li");
+        li.className = "list-item in-progress";
+        li.innerHTML = `<span>${proj.name} <small>v${proj.version}</small></span><span class="status-tag tag-inprogress">In‑Progress</span>`;
+        li.style.cursor="pointer";
+        li.onclick = ()=>loadProjectById(proj.id);
+        inProgressListEl.appendChild(li);
+    });
+
+    if(built.length ===0){
+        builtReleaseListEl.innerHTML = "<li class='list-item' style='color:#64748b'>No built releases</li>";
+    }
+    built.forEach(proj=>{
+        const li = document.createElement("li");
+        li.className = "list-item built";
+        li.innerHTML = `<span>${proj.name} <small>v${proj.version}</small></span><span class="status-tag tag-built">Built</span>`;
+        li.style.cursor="pointer";
+        li.onclick = ()=>loadProjectById(proj.id);
+        builtReleaseListEl.appendChild(li);
+    })
+}
+
+async function exportProjectBundle(proj){
+    const payload = JSON.stringify(proj,null,2);
+    const blob = new Blob([payload],{type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;a.download=`${proj.name}_SoftwareLink_bundle.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    logDebug("📦 Assembled bundle exported to download.");
+}
+
+function refreshFileList(){
+    fileListEl.innerHTML = "";
+    if(activeProject.files.length ===0){
+        fileListEl.innerHTML = "<li class='list-item' style='color:#64748b'>No files uploaded yet</li>";
+        return;
+    }
+    activeProject.files.forEach((f)=>{
+        const li = document.createElement("li");
+        li.className = "list-item";
+        li.textContent = `📄 ${f.name}`;
+        fileListEl.appendChild(li);
+    })
+}
+
+// UI bindings
+document.getElementById("newProjectBtn").onclick = ()=>{
+    activeProject = {
+        id: null,
+        name:"untitled‑"+Date.now(),
+        status:"in-progress",
+        version:"0.1.0",
+        files:[],
+        env:document.getElementById("envPreset").value,
+        manifest:""
+    };
+    codeEditorEl.value = "";
+    refreshFileList();
+    logDebug("🆕 New empty local project created");
+};
+
+document.getElementById("refreshProjectListBtn").onclick = async ()=>{
+    await renderProjectList();
+    logDebug("🔄 Project list refreshed");
+};
+
+document.getElementById("uploadCodeBtn").onclick = ()=>document.getElementById("codeFileInput").click();
+document.getElementById("codeFileInput").onchange = async (ev)=>{
+    const files = Array.from(ev.target.files);
+    for(const f of files){
+        const text = await f.text();
+        activeProject.files.push({name:f.name,content:text,size:f.size});
+        logDebug(`📥 Loaded file: ${f.name}`);
+    }
+    refreshFileList();
+};
+
+document.getElementById("saveProjectBtn").onclick = async ()=>{
+    activeProject.manifest = codeEditorEl.value;
+    activeProject.env = document.getElementById("envPreset").value;
+    await saveProjectToDB(activeProject);
+};
+
+document.getElementById("exportBundleBtn").onclick = async ()=>{
+    activeProject.manifest = codeEditorEl.value;
+    await exportProjectBundle(activeProject);
+};
+
+document.getElementById("buildSoftwareBtn").onclick = async ()=>{
+    activeProject.env = document.getElementById("envPreset").value;
+    activeProject.status = "built";
+    logDebug(`🔨 Starting software assembly, env: ${activeProject.env}`);
+    logDebug(`Total source files: ${activeProject.files.length}`);
+    logDebug("ℹ️ Simulation complete. Real implementation: integrate WebContainer WASM build toolchain.");
+    await saveProjectToDB(activeProject);
+};
+
+document.getElementById("clearConsoleBtn").onclick = ()=>debugConsoleEl.textContent="";
+document.getElementById("clearWorkspaceBtn").onclick = ()=>{
+    codeEditorEl.value="";
+    activeProject.files=[];
+    refreshFileList();
+    logDebug("🗑 Workspace cleared");
+};
+
+(async ()=>{
+    await openDB();
+    await renderProjectList();
+    logDebug("✅ SoftwareLink local database initialized. Ready.");
+})();
+</script>
+</body>
+</html>

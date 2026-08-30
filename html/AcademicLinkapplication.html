@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcademicLink.application</title>
+    <style>
+        :root{
+            --primary:#194072;
+            --secondary:#2c5c97;
+            --light:#f4f7fb;
+            --border:#cbd5e1;
+            --danger:#b91c1c;
+            --success:#15803d;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI, Roboto, Arial, sans-serif;}
+        body{background-color:var(--light);color:#1e293b;line-height:1.6;}
+        header{background:var(--primary);color:white;padding:1rem 2rem;}
+        header h1{font-size:1.6rem;}
+        nav{display:flex;gap:0.25rem;background:white;padding:0 2rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+        nav button{border:none;background:transparent;padding:0.8rem 1rem;font-size:0.95rem;cursor:pointer;border-bottom:3px solid transparent;}
+        nav button.active{border-bottom:3px solid var(--secondary);color:var(--secondary);font-weight:600;}
+        main{max-width:1200px;margin:2rem auto;padding:0 1.2rem;}
+        .page{display:none;}
+        .page.active{display:block;}
+        .card{background:white;border-radius:8px;padding:1.4rem;margin-bottom:1.2rem;border:1px solid var(--border);box-shadow:0 1px 3px #00000012;}
+        h2{margin-bottom:1rem;color:var(--primary);font-size:1.3rem;}
+        h3{margin:0.8rem 0 0.4rem;font-size:1.05rem;}
+        label{display:block;margin-top:0.7rem;font-weight:500;font-size:0.92rem;}
+        input, textarea, select{width:100%;padding:0.65rem 0.75rem;margin-top:0.3rem;border:1px solid var(--border);border-radius:6px;font-size:0.95rem;}
+        .btn-row{margin-top:1rem;display:flex;gap:0.7rem;flex-wrap:wrap;}
+        button.btn{padding:0.6rem 1.1rem;border-radius:6px;border:none;cursor:pointer;font-size:0.92rem;}
+        .btn.primary{background:var(--secondary);color:white;}
+        .btn.danger{background:var(--danger);color:white;}
+        .btn.success{background:var(--success);color:white;}
+        .item-block{border:1px solid var(--border);padding:1rem;border-radius:6px;margin:0.8rem 0;background:#fafbfd;}
+        .meta-text{font-size:0.85rem;color:#475569;margin:0.25rem 0;}
+        footer{margin:3rem 0 1rem;text-align:center;font-size:0.85rem;color:#64748b;}
+    </style>
+</head>
+<body>
+<header>
+    <h1>AcademicLink.application — Research‑to‑Industry Translator</h1>
+</header>
+<nav>
+    <button class="nav-tab active" data‑page="page‑academic">Academic Achievements</button>
+    <button class="nav-tab" data‑page="page‑industrial">Industrialized Outcomes</button>
+    <button class="nav-tab" data‑page="page‑evaluation">Application Evaluation</button>
+    <button class="nav-tab" data‑page="page‑export">Import / Export Data</button>
+</nav>
+<main>
+    <!-- Page 1: Academic Achievements -->
+    <section id="page‑academic" class="page active">
+        <div class="card">
+            <h2>Add New Academic Achievement (Paper / Fundamental Research Output)</h2>
+            <form id="form‑academic">
+                <label>Title of Paper / Research Output</label>
+                <input type="text" id="ac_title" placeholder="Full paper title">
+                <label>DOI / Reference ID</label>
+                <input type="text" id="ac_doi" placeholder="e.g. 10.1016/j.jcp.2026.114231">
+                <label>Authors & Affiliation</label>
+                <input type="text" id="ac_authors" placeholder="Author list">
+                <label>Core Research Innovation</label>
+                <textarea id="ac_innovation" rows="4" placeholder="Describe key theoretical or algorithmic innovation"></textarea>
+                <label>Potential Industrial Directions</label>
+                <textarea id="ac_potential" rows="3" placeholder="What real‑world problems this research may solve"></textarea>
+                <label>Publication Date</label>
+                <input type="date" id="ac_pubdate">
+                <div class="btn-row">
+                    <button class="btn primary" type="submit">Save Academic Record</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Saved Academic Achievements</h2>
+            <div id="list‑academic"></div>
+        </div>
+    </section>
+
+    <!-- Page2: Industrialized Outcomes (Patents, prototypes) -->
+    <section id="page‑industrial" class="page">
+        <div class="card">
+            <h2>Add Industrialized Outcome (Patent, Prototype, Technical Product)</h2>
+            <form id="form‑industrial">
+                <label>Linked Academic Achievement ID</label>
+                <input type="text" id="ind_linkid" placeholder="Copy ID from saved academic entry">
+                <label>Outcome Type</label>
+                <select id="ind_type">
+                    <option value="patent">Invention Patent</option>
+                    <option value="utility">Utility Model Patent</option>
+                    <option value="prototype">Hardware / Software Prototype</option>
+                    <option value="tech‑solution">Technical Solution</option>
+                </select>
+                <label>Title / Patent Name</label>
+                <input type="text" id="ind_title">
+                <label>Patent Number / Prototype Version</label>
+                <input type="text" id="ind_ref">
+                <label>Technical Realization Description</label>
+                <textarea id="ind_desc" rows="4" placeholder="How academic result is transformed into practical deliverable"></textarea>
+                <label>Target Industry Field</label>
+                <input type="text" id="ind_industry" placeholder="e.g. advanced manufacturing, energy storage, computational simulation">
+                <div class="btn-row">
+                    <button class="btn primary" type="submit">Save Industrial Record</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Saved Industrialized Outcomes</h2>
+            <div id="list‑industrial"></div>
+        </div>
+    </section>
+
+    <!-- Page3: Application Evaluation -->
+    <section id="page‑evaluation" class="page">
+        <div class="card">
+            <h2>Add Application Evaluation Record</h2>
+            <form id="form‑eval">
+                <label>Linked Industrial Outcome ID</label>
+                <input type="text" id="eval_linkid" placeholder="Copy ID from industrial outcome entry">
+                <label>Evaluation Scenario</label>
+                <textarea id="eval_scenario" rows="3" placeholder="Real‑world test scenario, pilot environment"></textarea>
+                <label>Performance Metrics (quantitative indexes)</label>
+                <textarea id="eval_metrics" rows="3" placeholder="Efficiency, cost reduction, accuracy, stability etc."></textarea>
+                <label>Risk & Limitations</label>
+                <textarea id="eval_risk" rows="3" placeholder="Existing bottlenecks for large‑scale deployment"></textarea>
+                <label>Technology Readiness Level (TRL‑1‑9)</label>
+                <input type="number" min="1" max="9" value="3" id="eval_trl">
+                <label>Evaluator / Organization</label>
+                <input type="text" id="eval_org">
+                <div class="btn-row">
+                    <button class="btn primary" type="submit">Save Evaluation Record</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <h2>Saved Application Evaluations</h2>
+            <div id="list‑eval"></div>
+        </div>
+    </section>
+
+    <!-- Page4 Import Export -->
+    <section id="page‑export" class="page">
+        <div class="card">
+            <h2>Data Management — Local Backup & Restore</h2>
+            <p>All records are stored inside your browser localStorage. Export JSON for backup or future backend migration.</p>
+            <div class="btn-row">
+                <button class="btn success" id="btn‑export">Export All Data(JSON)</button>
+                <button class="btn primary" id="btn‑importtrigger">Import From JSON File</button>
+                <button class="btn danger" id="btn‑clear">Clear All Local Data</button>
+            </div>
+            <input style="display:none;" type="file" id="file‑import" accept=".json">
+        </div>
+    </section>
+</main>
+<footer>AcademicLink.application | Local‑Only Proof‑of‑Concept Demo | All data stored within browser</footer>
+
+<script>
+// Data keys in localStorage
+const STORAGE_KEYS={
+    academic:"academicLink_academic",
+    industrial:"academicLink_industrial",
+    evaluation:"academicLink_evaluation"
+};
+
+// navigation
+const tabs=document.querySelectorAll(".nav-tab");
+tabs.forEach(tab=>{
+    tab.onclick=()=>{
+        tabs.forEach(t=>t.classList.remove("active"));
+        tab.classList.add("active");
+        const targetPage=tab.getAttribute("data‑page");
+        document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+        document.getElementById(targetPage).classList.add("active");
+    }
+});
+
+// load helper
+function loadArray(key){
+    const raw=localStorage.getItem(key);
+    if(!raw) return [];
+    try{return JSON.parse(raw);}catch{return [];}
+}
+function saveArray(key,arr){
+    localStorage.setItem(key,JSON.stringify(arr));
+}
+function uuid(){
+    return Date.now().toString(36)+Math.random().toString(36).slice(2);
+}
+
+// render lists
+function renderAcademic(){
+    const list=loadArray(STORAGE_KEYS.academic);
+    const container=document.getElementById("list‑academic");
+    container.innerHTML="";
+    if(list.length===0){container.innerHTML="<p>No academic achievement saved yet.</p>";return;}
+    list.forEach(item=>{
+        const div=document.createElement("div");
+        div.className="item-block";
+        div.innerHTML=`
+        <div class="meta-text">Record ID: ${item.id}</div>
+        <h3>${item.ac_title||""}</h3>
+        <div class="meta-text">DOI: ${item.ac_doi||""} | Date: ${item.ac_pubdate||""}</div>
+        <div><b>Innovation:</b> ${item.ac_innovation||""}</div>
+        <div style="margin-top:0.4rem;"><b>Industrial potential:</b> ${item.ac_potential||""}</div>
+        <div class="btn-row"><button class="btn danger del‑ac" data‑id="${item.id}">Delete</button></div>
+        `;
+        container.appendChild(div);
+    });
+    document.querySelectorAll(".del‑ac").forEach(b=>b.onclick=()=>{
+        const id=b.getAttribute("data‑id");
+        let arr=loadArray(STORAGE_KEYS.academic).filter(x=>x.id!==id);
+        saveArray(STORAGE_KEYS.academic,arr);renderAll();
+    })
+}
+
+function renderIndustrial(){
+    const list=loadArray(STORAGE_KEYS.industrial);
+    const container=document.getElementById("list‑industrial");
+    container.innerHTML="";
+    if(list.length===0){container.innerHTML="<p>No industrialized outcome saved yet.</p>";return;}
+    list.forEach(item=>{
+        const div=document.createElement("div");
+        div.className="item-block";
+        div.innerHTML=`
+        <div class="meta-text">Record ID: ${item.id} | Linked Academic ID: ${item.ind_linkid||""}</div>
+        <h3>${item.ind_title||""}</h3>
+        <div class="meta-text">Type: ${item.ind_type||""} | Ref: ${item.ind_ref||""}</div>
+        <div><b>Description:</b> ${item.ind_desc||""}</div>
+        <div style="margin-top:0.4rem;"><b>Target industry:</b> ${item.ind_industry||""}</div>
+        <div class="btn-row"><button class="btn danger del‑ind" data‑id="${item.id}">Delete</button></div>
+        `;
+        container.appendChild(div);
+    });
+    document.querySelectorAll(".del‑ind").forEach(b=>b.onclick=()=>{
+        const id=b.getAttribute("data‑id");
+        let arr=loadArray(STORAGE_KEYS.industrial).filter(x=>x.id!==id);
+        saveArray(STORAGE_KEYS.industrial,arr);renderAll();
+    })
+}
+
+function renderEval(){
+    const list=loadArray(STORAGE_KEYS.evaluation);
+    const container=document.getElementById("list‑eval");
+    container.innerHTML="";
+    if(list.length===0){container.innerHTML="<p>No application evaluation saved yet.</p>";return;}
+    list.forEach(item=>{
+        const div=document.createElement("div");
+        div.className="item-block";
+        div.innerHTML=`
+        <div class="meta-text">Record ID: ${item.id} | Linked Industrial ID: ${item.eval_linkid||""}</div>
+        <h3>Evaluation | TRL: ${item.eval_trl||""}</h3>
+        <div><b>Scenario:</b> ${item.eval_scenario||""}</div>
+        <div style="margin-top:0.3rem;"><b>Metrics:</b> ${item.eval_metrics||""}</div>
+        <div style="margin-top:0.3rem;"><b>Risks:</b> ${item.eval_risk||""}</div>
+        <div class="meta-text">Evaluator: ${item.eval_org||""}</div>
+        <div class="btn-row"><button class="btn danger del‑eval" data‑id="${item.id}">Delete</button></div>
+        `;
+        container.appendChild(div);
+    });
+    document.querySelectorAll(".del‑eval").forEach(b=>b.onclick=()=>{
+        const id=b.getAttribute("data‑id");
+        let arr=loadArray(STORAGE_KEYS.evaluation).filter(x=>x.id!==id);
+        saveArray(STORAGE_KEYS.evaluation,arr);renderAll();
+    })
+}
+
+function renderAll(){renderAcademic();renderIndustrial();renderEval();}
+
+// submit forms
+document.getElementById("form‑academic").onsubmit=e=>{
+    e.preventDefault();
+    const arr=loadArray(STORAGE_KEYS.academic);
+    arr.push({
+        id:uuid(),
+        ac_title:document.getElementById("ac_title").value.trim(),
+        ac_doi:document.getElementById("ac_doi").value.trim(),
+        ac_authors:document.getElementById("ac_authors").value.trim(),
+        ac_innovation:document.getElementById("ac_innovation").value.trim(),
+        ac_potential:document.getElementById("ac_potential").value.trim(),
+        ac_pubdate:document.getElementById("ac_pubdate").value
+    });
+    saveArray(STORAGE_KEYS.academic,arr);
+    document.getElementById("form‑academic").reset();
+    renderAll();
+};
+
+document.getElementById("form‑industrial").onsubmit=e=>{
+    e.preventDefault();
+    const arr=loadArray(STORAGE_KEYS.industrial);
+    arr.push({
+        id:uuid(),
+        ind_linkid:document.getElementById("ind_linkid").value.trim(),
+        ind_type:document.getElementById("ind_type").value,
+        ind_title:document.getElementById("ind_title").value.trim(),
+        ind_ref:document.getElementById("ind_ref").value.trim(),
+        ind_desc:document.getElementById("ind_desc").value.trim(),
+        ind_industry:document.getElementById("ind_industry").value.trim()
+    });
+    saveArray(STORAGE_KEYS.industrial,arr);
+    document.getElementById("form‑industrial").reset();
+    renderAll();
+};
+
+document.getElementById("form‑eval").onsubmit=e=>{
+    e.preventDefault();
+    const arr=loadArray(STORAGE_KEYS.evaluation);
+    arr.push({
+        id:uuid(),
+        eval_linkid:document.getElementById("eval_linkid").value.trim(),
+        eval_scenario:document.getElementById("eval_scenario").value.trim(),
+        eval_metrics:document.getElementById("eval_metrics").value.trim(),
+        eval_risk:document.getElementById("eval_risk").value.trim(),
+        eval_trl:document.getElementById("eval_trl").value,
+        eval_org:document.getElementById("eval_org").value.trim()
+    });
+    saveArray(STORAGE_KEYS.evaluation,arr);
+    document.getElementById("form‑eval").reset();
+    renderAll();
+};
+
+// export import clear
+document.getElementById("btn‑export").onclick=()=>{
+    const payload={
+        academic:loadArray(STORAGE_KEYS.academic),
+        industrial:loadArray(STORAGE_KEYS.industrial),
+        evaluation:loadArray(STORAGE_KEYS.evaluation),
+        exportedAt:new Date().toISOString()
+    };
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="AcademicLink_backup.json";
+    a.click();
+};
+
+document.getElementById("btn‑importtrigger").onclick=()=>document.getElementById("file‑import").click();
+document.getElementById("file‑import").onchange=async function(ev){
+    const f=ev.target.files[0];if(!f)return;
+    const text=await f.text();
+    const data=JSON.parse(text);
+    if(data.academic) saveArray(STORAGE_KEYS.academic,data.academic);
+    if(data.industrial) saveArray(STORAGE_KEYS.industrial,data.industrial);
+    if(data.evaluation) saveArray(STORAGE_KEYS.evaluation,data.evaluation);
+    renderAll();
+    alert("Import completed");
+};
+
+document.getElementById("btn‑clear").onclick=()=>{
+    if(!confirm("Are you sure to erase ALL local records?"))return;
+    localStorage.removeItem(STORAGE_KEYS.academic);
+    localStorage.removeItem(STORAGE_KEYS.industrial);
+    localStorage.removeItem(STORAGE_KEYS.industrial);
+    localStorage.removeItem(STORAGE_KEYS.evaluation);
+    renderAll();
+};
+
+renderAll();
+</script>
+</body>
+</html>

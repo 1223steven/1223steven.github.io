@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ExtensionLink‑Local | Benchmark Project Platform</title>
+<style>
+*{box-sizing:border-box;font-family:system-ui,Segoe UI,Roboto,sans-serif;margin:0;padding:0}
+body{background:#f4f7fa;color:#1a202c;padding:16px;max-width:1400px;margin:0 auto}
+header{margin-bottom:20px}
+h1{font-size:24px;color:#2b3a55}
+.panel{background:#fff;border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid #cbd5e0}
+.row{display:grid;grid-template-columns:320px 1fr;gap:16px}
+@media(max-width:900px){.row{grid-template-columns:1fr}}
+textarea,input,select{width:100%;padding:8px;border:1px solid #a0aec0;border-radius:4px;font-size:14px}
+textarea{min-height:100px;font-family:monospace}
+button{padding:7px 12px;background:#2b6cb0;color:#fff;border:none;border-radius:4px;cursor:pointer;margin:2px}
+button.danger{background:#c53030}
+button.secondary{background:#718096}
+.item{padding:10px;border-bottom:1px solid #e2e8f0;cursor:pointer}
+.item:hover{background:#edf2f7}
+.item.active{background:#bee3f8}
+pre{background:#1a202c;color:#e2e8f0;padding:10px;overflow:auto;border-radius:4px;white-space:pre-wrap}
+small{color:#718096}
+.tabs{display:flex;gap:4px;margin-bottom:12px}
+.tab{padding:8px 14px;background:#e2e8f0;border-radius:4px;cursor:pointer}
+.tab.active{background:#2b6cb0;color:white}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>ExtensionLink‑Local</h1>
+  <small>Local‑Browser Benchmark Project Platform | deal.II &amp; Finite‑Element Suite, all data stored locally, no backend server</small>
+</header>
+
+<div class="panel">
+  <div>
+    <button onclick="createBenchmark()">+ New Benchmark Template</button>
+    <button onclick="exportAll()">Export All(JSON)</button>
+    <button class="secondary" onclick="document.getElementById('importFile').click()">Import JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importAll(event)">
+    <button class="danger" onclick="clearStorage()">Clear Local Storage</button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <h3>Benchmark Problems Set</h3>
+    <div id="benchmarkList"></div>
+  </div>
+
+  <div class="panel">
+    <div class="tabs">
+      <div class="tab active" data‑tab="info" onclick="switchTab('info')">Benchmark Info</div>
+      <div class="tab" data‑tab="cmd" onclick="switchTab('cmd')">Run Commands</div>
+      <div class="tab" data‑tab="debug" onclick="switchTab('debug')">Debug Notebook</div>
+      <div class="tab" data‑tab="instances" onclick="switchTab('instances')">Project Instances</div>
+    </div>
+
+    <div id="tab‑info" class="tab‑content">
+      <label>Title</label>
+      <input id="bm_title" placeholder="e.g. Poisson 2D deal.II benchmark">
+      <label>Software Stack</label>
+      <input id="bm_stack" placeholder="deal.II‑9.5, CMake, PETSc">
+      <label>Tags (comma‑separated)</label>
+      <input id="bm_tags" placeholder="poisson, 2D, finite‑element">
+      <label>Problem Description &amp; Reference Results (markdown‑style text)</label>
+      <textarea id="bm_desc"></textarea>
+      <button onclick="saveBenchmark()">Save Benchmark Template</button>
+      <button onclick="newProjectInstance()">Spawn New Project Instance</button>
+    </div>
+
+    <div id="tab‑cmd" class="tab‑content hidden">
+      <h4>Command Groups (configure / build / run / postprocess / clean)</h4>
+      <label>Configure</label>
+      <textarea id="cmd_configure"># example: cmake -DDEAL_II_DIR=/path ../</textarea>
+      <button onclick="copyText('cmd_configure')">Copy</button>
+
+      <label>Build / Compile</label>
+      <textarea id="cmd_build">make -j8</textarea>
+      <button onclick="copyText('cmd_build')">Copy</button>
+
+      <label>Run Executable</label>
+      <textarea id="cmd_run">./poisson‑2d input.prm</textarea>
+      <button onclick="copyText('cmd_run')">Copy</button>
+
+      <label>Post‑processing</label>
+      <textarea id="cmd_post"></textarea>
+      <button onclick="copyText('cmd_post')">Copy</button>
+
+      <label>Clean</label>
+      <textarea id="cmd_clean">rm -rf CMakeCache.txt CMakeFiles</textarea>
+      <button onclick="copyText('cmd_clean')">Copy</button>
+      <br>
+      <button onclick="saveCommands()">Store Commands for Current Instance</button>
+      <small>Commands belong to project instance, not benchmark template</small>
+    </div>
+
+    <div id="tab‑debug" class="tab‑content hidden">
+      <label>Status</label>
+      <select id="dbg_status">
+        <option>Not started</option>
+        <option>Compiling</option>
+        <option>Running</option>
+        <option>Success</option>
+        <option>Bug‑Reported</option>
+      </select>
+      <label>Debug Log &amp; Observation Notes</label>
+      <textarea id="dbg_notes" placeholder="Paste compile errors, convergence observation, fixes..."></textarea>
+      <button onclick="saveDebug()">Save Debug Record</button>
+    </div>
+
+    <div id="tab‑instances" class="tab‑content hidden">
+      <h4>Working Project Instances derived from this benchmark</h4>
+      <div id="instanceList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "ExtensionLinkDB";
+let state = {benchmarks:[], instances:[]};
+let selectedBmId=null, selectedInstId=null;
+
+// init
+loadDB();
+renderBenchmarkList();
+
+function loadDB(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw) state = JSON.parse(raw);
+}
+function persist(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function renderBenchmarkList(){
+  const el = document.getElementById("benchmarkList");
+  el.innerHTML="";
+  state.benchmarks.forEach(bm=>{
+    const div = document.createElement("div");
+    div.className = "item"+(selectedBmId===bm.id?" active":"");
+    div.innerText = bm.title;
+    div.onclick=()=>{selectedBmId=bm.id;selectedInstId=null;renderBenchmarkList();fillBenchmarkUI();};
+    const delBtn = document.createElement("button");
+    delBtn.className="danger"; delBtn.innerText="Del";
+    delBtn.onclick=(e)=>{e.stopPropagation();deleteBenchmark(bm.id);};
+    div.appendChild(delBtn);
+    el.appendChild(div);
+  })
+}
+
+function createBenchmark(){
+  const newId = "bm‑"+Date.now();
+  state.benchmarks.push({id:newId,title:"New Benchmark",stack:"",tags:"",desc:""});
+  persist(); renderBenchmarkList(); selectedBmId=newId; fillBenchmarkUI();
+}
+
+function deleteBenchmark(bmid){
+  state.benchmarks = state.benchmarks.filter(x=>x.id!==bmid);
+  state.instances = state.instances.filter(x=>x.benchmarkId!==bmid);
+  persist(); selectedBmId=null; renderBenchmarkList(); clearUI();
+}
+
+function fillBenchmarkUI(){
+  if(!selectedBmId) return clearUI();
+  const bm = state.benchmarks.find(x=>x.id===selectedBmId);
+  document.getElementById("bm_title").value=bm.title;
+  document.getElementById("bm_stack").value=bm.stack;
+  document.getElementById("bm_tags").value=bm.tags;
+  document.getElementById("bm_desc").value=bm.desc;
+  fillInstanceTab();
+  // reset instance‑related panels
+  document.getElementById("cmd_configure").value="";
+  document.getElementById("cmd_build").value="";
+  document.getElementById("cmd_run").value="";
+  document.getElementById("cmd_post").value="";
+  document.getElementById("cmd_clean").value="";
+  document.getElementById("dbg_status").value="Not started";
+  document.getElementById("dbg_notes").value="";
+  selectedInstId=null;
+}
+
+function saveBenchmark(){
+  const bm = state.benchmarks.find(x=>x.id===selectedBmId);
+  bm.title = document.getElementById("bm_title").value;
+  bm.stack = document.getElementById("bm_stack").value;
+  bm.tags = document.getElementById("bm_tags").value;
+  bm.desc = document.getElementById("bm_desc").value;
+  persist(); alert("Benchmark template saved"); renderBenchmarkList();
+}
+
+function newProjectInstance(){
+  if(!selectedBmId) return alert("Select benchmark template first");
+  const iid = "inst‑"+Date.now();
+  state.instances.push({
+    id:iid, benchmarkId:selectedBmId,
+    configure:"",build:"",run:"",postprocess:"",clean:"",
+    status:"Not started", notes:""
+  });
+  persist(); fillInstanceTab(); selectedInstId=iid; fillInstanceCommands();
+}
+
+function fillInstanceTab(){
+  const wrap = document.getElementById("instanceList"); wrap.innerHTML="";
+  const related = state.instances.filter(x=>x.benchmarkId===selectedBmId);
+  related.forEach(inst=>{
+    const div = document.createElement("div");
+    div.className="item"+(selectedInstId===inst.id?" active":"");
+    div.innerText = `Instance ${inst.id.slice(-8)} | status: ${inst.status}`;
+    div.onclick=()=>{selectedInstId=inst.id;fillInstanceCommands();fillInstanceTab();};
+    const delBtn = document.createElement("button");
+    delBtn.className="danger"; delBtn.innerText="Del";
+    delBtn.onclick=(e)=>{e.stopPropagation();state.instances=state.instances.filter(x=>x.id!==inst.id);persist();fillInstanceTab();};
+    div.appendChild(delBtn); wrap.appendChild(div);
+  })
+}
+
+function fillInstanceCommands(){
+  if(!selectedInstId) return;
+  const inst = state.instances.find(x=>x.id===selectedInstId);
+  document.getElementById("cmd_configure").value = inst.configure;
+  document.getElementById("cmd_build").value = inst.build;
+  document.getElementById("cmd_run").value = inst.run;
+  document.getElementById("cmd_post").value = inst.postprocess;
+  document.getElementById("cmd_clean").value = inst.clean;
+  document.getElementById("dbg_status").value = inst.status;
+  document.getElementById("dbg_notes").value = inst.notes;
+}
+
+function saveCommands(){
+  if(!selectedInstId) return alert("Select a project instance first");
+  const inst = state.instances.find(x=>x.id===selectedInstId);
+  inst.configure = document.getElementById("cmd_configure").value;
+  inst.build = document.getElementById("cmd_build").value;
+  inst.run = document.getElementById("cmd_run").value;
+  inst.postprocess = document.getElementById("cmd_post").value;
+  inst.clean = document.getElementById("cmd_clean").value;
+  persist(); alert("Commands saved for project instance");
+}
+
+function saveDebug(){
+  if(!selectedInstId) return alert("Select a project instance first");
+  const inst = state.instances.find(x=>x.id===selectedInstId);
+  inst.status = document.getElementById("dbg_status").value;
+  inst.notes = document.getElementById("dbg_notes").value;
+  persist(); alert("Debug notebook saved");
+}
+
+function copyText(id){
+  const t = document.getElementById(id).value;
+  navigator.clipboard.writeText(t).then(()=>alert("Copied to clipboard"));
+}
+
+function switchTab(tabName){
+  document.querySelectorAll(".tab‑content").forEach(el=>el.classList.add("hidden"));
+  document.querySelectorAll(".tab").forEach(el=>el.classList.remove("active"));
+  document.getElementById("tab‑"+tabName).classList.remove("hidden");
+  document.querySelector(`.tab[data‑tab="${tabName}"]`).classList.add("active");
+}
+
+function clearUI(){
+  ["bm_title","bm_stack","bm_tags","bm_desc","cmd_configure","cmd_build","cmd_run","cmd_post","cmd_clean","dbg_notes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("instanceList").innerHTML="";
+}
+
+function exportAll(){
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="ExtensionLink‑database.json";
+  a.click();
+}
+
+function importAll(evt){
+  const f = evt.target.files[0];
+  const reader = new FileReader();
+  reader.onload=(e)=>{
+    state = JSON.parse(e.target.result); persist(); loadDB(); renderBenchmarkList(); alert("Import finished");
+  };
+  reader.readAsText(f);
+}
+
+function clearStorage(){
+  if(!confirm("Erase all local ExtensionLink data?")) return;
+  localStorage.removeItem(STORAGE_KEY); state={benchmarks:[],instances:[]};
+  renderBenchmarkList(); clearUI();
+}
+</script>
+</body>
+</html>
