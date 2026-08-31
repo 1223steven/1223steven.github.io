@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial‑scale=1.0">
+    <title>Interface‑Science Research Platform | Image Library System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font‑awesome@4.7.0/css/font‑awesome.min.css">
+    <script>
+        tailwind.config={
+            theme:{
+                extend:{
+                    colors:{
+                        primary:'#195488',
+                        secondary:'#3474a7',
+                        neutralText:'#1e293b',
+                        hintGray:'#64748b'
+                    },
+                    fontFamily:{sans:["Inter","system‑ui","‑apple‑system","sans‑serif"]}
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities{
+            .sci‑card{box‑shadow:0 1px 12px rgba(25,84,136,0.08);}
+            .sci‑textarea{min‑height:110px; max‑height:200px;}
+            .drop‑area{border:2px dashed #cbd5e1;transition:0.24s ease;}
+            .drop‑area.active{border‑color:#195488;background‑color:#f0f6fb;}
+            .section‑title{@apply text‑base font‑semibold text‑primary mb‑2 flex items‑center gap‑1.5;}
+            .modal‑backdrop{@apply fixed inset‑0 bg‑black/60 z‑50 flex items‑center justify‑center p‑4;}
+        }
+    </style>
+</head>
+<body class="bg‑gray‑50 text‑neutralText">
+<div class="max‑w‑7xl mx‑auto px‑4 py‑7">
+    <header class="mb‑8 text‑center">
+        <h1 class="text‑[clamp(1.6rem,3.2vw,2.4rem)] font‑bold text‑primary">Interface‑Science Research Platform</h1>
+        <p class="text‑hintGray mt‑2">Research Image Library | Record Management, Image Download, Import‑Export Archiving System</p>
+    </header>
+
+    <!-- Global Operation Bar -->
+    <div class="bg‑white rounded‑2xl p‑4 mb‑6 sci‑card flex flex‑wrap gap‑3 items‑center justify‑between">
+        <div class="flex gap‑2 flex‑wrap">
+            <button id="importJsonBtn" class="border border‑primary text‑primary px‑4 py‑2 rounded‑xl hover:bg‑blue‑50 transition">
+                <i class="fa fa‑upload mr‑1"></i>Import JSON
+            </button>
+            <button id="exportAllJsonBtn" class="bg‑primary text‑white px‑4 py‑2 rounded‑xl hover:bg‑primary/92 transition">
+                <i class="fa fa‑download mr‑1"></i>Export All Records(JSON)
+            </button>
+            <button id="exportAllImagesBtn" class="bg‑secondary text‑white px‑4 py‑2 rounded‑xl hover:bg‑secondary/92 transition">
+                <i class="fa fa‑picture‑o mr‑1"></i>Batch‑Image Export Hint
+            </button>
+        </div>
+        <input type="file" id="importFileInput" accept=".json" class="hidden">
+        <div id="systemTip" class="text‑sm text‑hintGray"></div>
+    </div>
+
+    <div class="grid lg:grid‑cols‑3 gap‑6">
+        <!-- Left Form Panel -->
+        <div class="lg:col‑span‑2 bg‑white rounded‑2xl p‑7 sci‑card">
+            <h2 class="text‑xl font‑semibold mb‑6 flex items‑center gap‑2 text‑primary">
+                <i class="fa fa‑file‑edit‑o"></i>New Research Record
+            </h2>
+
+            <!-- Multi‑format Image Upload -->
+            <div class="mb‑7">
+                <label class="block font‑medium mb‑2">Experimental / Simulation Images (png,jpg,jpeg,gif,tiff,bmp, multi‑select & drag‑drop)</label>
+                <div id="dropZone" class="drop‑area rounded‑xl p‑8 text‑center cursor‑pointer">
+                    <i class="fa fa‑cloud‑upload text‑4xl text‑hintGray mb‑2"></i>
+                    <p class="text‑hintGray">Click to select images, or drag‑and‑drop multiple images here</p>
+                    <input id="fileInput" accept="image/png,image/jpg,image/jpeg,image/gif,image/tiff,image/bmp" multiple class="hidden" type="file">
+                </div>
+                <div id="imgPreviewBox" class="mt‑4 flex flex‑wrap gap‑3"></div>
+            </div>
+
+            <div class="grid md:grid‑cols‑2 gap‑4 mb‑6">
+                <div>
+                    <label class="block font‑medium mb‑1.5">Research Title <span class="text‑red‑400">*</span></label>
+                    <input id="title" type="text" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 focus:ring‑2 focus:ring‑primary/30 focus:border‑primary outline‑none transition" placeholder="e.g. Interface Phase‑Field Evolution, Porous‑Interface Mechanical Simulation">
+                </div>
+                <div>
+                    <label class="block font‑medium mb‑1.5">Category Tags (comma‑separated)</label>
+                    <input id="tags" type="text" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 focus:ring‑2 focus:ring‑primary/30 focus:border‑primary outline‑none transition" placeholder="interface,phase‑field,FEM,bio‑mimicry,wettability">
+                </div>
+            </div>
+
+            <div class="space‑y‑5">
+                <div>
+                    <div class="section‑title"><i class="fa fa‑flask"></i>Experiment & Observation Description</div>
+                    <textarea id="expDesc" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 sci‑textarea overflow‑y‑auto outline‑none focus:ring‑2 focus:ring‑primary/30 focus:border‑primary transition" placeholder="Sample preparation, experimental conditions, observed phenomena, measurement techniques"></textarea>
+                </div>
+                <div>
+                    <div class="section‑title"><i class="fa fa‑calculator"></i>Mathematical Modeling</div>
+                    <textarea id="mathModel" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 sci‑textarea overflow‑y‑auto outline‑none focus:ring‑2 focus:ring‑primary/30 focus:border‑primary transition" placeholder="Governing equations, constitutive models, geometric assumptions, initial & boundary conditions"></textarea>
+                </div>
+                <div>
+                    <div class="section‑title"><i class="fa fa‑cogs"></i>Numerical Simulation Settings</div>
+                    <textarea id="numSim" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 sci‑textarea overflow‑y‑auto outline‑none focus:ring‑2 focus:ring‑primary/30 focus:border‑primary transition" placeholder="Numerical schemes, mesh discretization, solver parameters, software environment"></textarea>
+                </div>
+                <div>
+                    <div class="section‑title"><i class="fa fa‑bar‑chart"></i>Simulation‑Experiment Result Analysis</div>
+                    <textarea id="analysis" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 sci‑textarea overflow‑y‑auto outline‑none focus:ring‑2 focus:ring‑primary/30 focus:border‑primary transition" placeholder="Comparative results, error analysis, convergence property, key physical conclusions"></textarea>
+                </div>
+                <div>
+                    <div class="section‑title"><i class="fa fa‑lightbulb‑o"></i>Engineering Application & Outlook</div>
+                    <textarea id="application" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 sci‑textarea overflow‑y‑auto outline‑none focus:ring‑2 focus:ring‑primary/30 focus:border‑primary transition" placeholder="Potential engineering scenarios, existing bottlenecks, future research directions"></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex‑wrap gap‑3 mt‑7">
+                <button id="saveBtn" class="bg‑primary text‑white px‑6 py‑2.5 rounded‑xl hover:bg‑primary/92 active:bg‑primary transition shadow‑sm">
+                    <i class="fa fa‑save mr‑1"></i>Save Record
+                </button>
+                <button id="resetBtn" class="border border‑gray‑300 px‑6 py‑2.5 rounded‑xl hover:bg‑gray‑50 active:bg‑gray‑100 transition">Reset Form</button>
+            </div>
+        </div>
+
+        <!-- Right‑side Image & Record Library -->
+        <div class="bg‑white rounded‑2xl p‑7 sci‑card flex flex‑col h‑[85vh]">
+            <h2 class="text‑xl font‑semibold mb‑4 flex items‑center gap‑2 text‑primary">
+                <i class="fa fa‑image"></i>Research Image & Record Library
+            </h2>
+            <div class="mb‑5">
+                <input id="searchInput" placeholder="Search title / tags" class="w‑full border border‑gray‑300 rounded‑xl px‑3.5 py‑2.5 focus:ring‑2 focus:ring‑primary/30 focus:border‑primary outline‑none transition">
+            </div>
+            <div id="recordContainer" class="overflow‑y‑auto flex‑1 pr‑1.5 space‑y‑4">
+                <div class="text‑hintGray py‑14 text‑center">
+                    <i class="fa fa‑folder‑open‑o text‑3xl mb‑2 opacity‑50"></i>
+                    <p>No research records yet<br>Submit your first record on the left panel</p>
+                </div>
+            </div>
+            <!-- Pagination Control -->
+            <div id="pageWrap" class="mt‑3 pt‑3 border‑t hidden flex gap‑2 justify‑center"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Full‑size Image Preview Modal -->
+<div id="imgModal" class="modal‑backdrop hidden">
+    <div class="relative max‑w‑5xl max‑h‑[90vh]">
+        <button id="closeModal" class="absolute -top‑8 right‑0 text‑white text‑2xl">&times;</button>
+        <img id="modalImg" class="max‑w‑full max‑h‑[85vh] rounded‑xl">
+        <div class="mt‑2 text‑white text‑center">
+            <button id="downloadModalImg" class="bg‑white/20 text‑white px‑4 py‑2 rounded‑xl">
+                <i class="fa fa‑download"></i>Download This Image
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const dropZone=document.getElementById('dropZone');
+const fileInput=document.getElementById('fileInput');
+const imgPreviewBox=document.getElementById('imgPreviewBox');
+let imageList=[];
+
+dropZone.onclick=()=>fileInput.click();
+dropZone.ondragover=e=>{e.preventDefault();dropZone.classList.add('active')};
+dropZone.ondragleave=()=>dropZone.classList.remove('active');
+dropZone.ondrop=e=>{
+    e.preventDefault();dropZone.classList.remove('active');
+    handleFiles(e.dataTransfer.files);
+}
+fileInput.onchange=e=>handleFiles(e.target.files);
+
+function handleFiles(files){
+    for(let f of files){
+        if(!f.type.startsWith('image/')) continue;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+            imageList.push({base64:ev.target.result,name:f.name});
+            renderImagePreview();
+        }
+        reader.readAsDataURL(f);
+    }
+}
+function renderImagePreview(){
+    imgPreviewBox.innerHTML='';
+    imageList.forEach((item,idx)=>{
+        const wrap=document.createElement('div');
+        wrap.className="relative group";
+        wrap.innerHTML=`
+        <img src="${item.base64}" class="w‑20 h‑20 object‑cover rounded‑xl border border‑gray‑200 cursor‑pointer" title="${item.name}">
+        <div class="text‑xs truncate w‑20 mt‑1 text‑hintGray">${item.name}</div>
+        <button data‑i="${idx}" class="del‑img absolute top‑‑1 right‑‑1 bg‑red‑500 text‑white rounded‑full w‑5 h‑5 text‑xs opacity‑80 group‑hover:opacity‑100">×</button>`;
+        imgPreviewBox.appendChild(wrap);
+    })
+    document.querySelectorAll('.del‑img').forEach(b=>b.onclick=function(){
+        const i=Number(this.dataset.i);
+        imageList.splice(i,1);
+        renderImagePreview();
+    })
+}
+
+const STORAGE_KEY="interfaceSciImageDB";
+const PAGE_SIZE=6;
+let currentPage=1;
+let lastFilter="";
+
+function getAllRecords(){
+    const raw=localStorage.getItem(STORAGE_KEY);
+    return raw?JSON.parse(raw):[];
+}
+function saveAll(arr){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(arr));
+}
+function setTip(msg){
+    document.getElementById('systemTip').innerText=msg;
+    setTimeout(()=>document.getElementById('systemTip').innerText='',3000);
+}
+
+// Image Modal Viewer
+const imgModal=document.getElementById('imgModal');
+const modalImg=document.getElementById('modalImg');
+const closeModal=document.getElementById('closeModal');
+const downloadModalImg=document.getElementById('downloadModalImg');
+let currentModalSrc="";
+closeModal.onclick=()=>imgModal.classList.add('hidden');
+imgModal.onclick=e=>{if(e.target===imgModal) imgModal.classList.add('hidden');}
+downloadModalImg.onclick=()=>{
+    if(!currentModalSrc) return;
+    const a=document.createElement('a');
+    a.href=currentModalSrc;
+    a.download="research‑image.png";
+    a.click();
+}
+
+// DOM References
+const saveBtn=document.getElementById('saveBtn');
+const resetBtn=document.getElementById('resetBtn');
+const exportAllJsonBtn=document.getElementById('exportAllJsonBtn');
+const importJsonBtn=document.getElementById('importJsonBtn');
+const importFileInput=document.getElementById('importFileInput');
+const exportAllImagesBtn=document.getElementById('exportAllImagesBtn');
+const recordContainer=document.getElementById('recordContainer');
+const searchInput=document.getElementById('searchInput');
+const pageWrap=document.getElementById('pageWrap');
+
+function renderRecords(filterText="",page=1){
+    lastFilter=filterText;
+    currentPage=page;
+    const data=getAllRecords();
+    let filtered=data;
+    if(filterText.trim()!==''){
+        const kw=filterText.toLowerCase();
+        filtered=data.filter(r=>
+            (r.title||"").toLowerCase().includes(kw)||(r.tags||"").toLowerCase().includes(kw)
+        )
+    }
+    const total=filtered.length;
+    const totalPage=Math.ceil(total/PAGE_SIZE);
+    const start=(page‑1)*PAGE_SIZE;
+    const pageData=filtered.slice(start,start+PAGE_SIZE);
+
+    recordContainer.innerHTML='';
+    if(total===0){
+        recordContainer.innerHTML=`<div class="text‑hintGray py‑14 text‑center">
+            <i class="fa fa‑folder‑open‑o text‑3xl mb‑2 opacity‑50"></i>
+            <p>${filterText?"No matching records found":"No research records yet, submit your first data on left panel"}</p>
+        </div>`;
+        pageWrap.classList.add('hidden');
+        return;
+    }
+    pageWrap.classList.remove('hidden');
+
+    pageData.forEach((rec)=>{
+        const div=document.createElement('div');
+        div.className="border border‑gray‑200 p‑4.5 rounded‑xl bg‑gray‑50/40";
+        let imgsHtml="";
+        if(rec.images&&rec.images.length>0){
+            imgsHtml=rec.images.map((x)=>`
+            <div class="relative">
+                <img data‑img="${x.base64}" src="${x.base64}" class="max‑h‑24 rounded‑lg border cursor‑pointer hover:opacity‑90" title="${x.name||''}">
+                <a href="${x.base64}" download="${x.name||'img'}" class="absolute bottom‑1 right‑1 bg‑black/40 text‑white text‑xs px‑1 rounded">
+                    <i class="fa fa‑download"></i>
+                </a>
+            </div>`).join(' ');
+        }
+        const globalIdx=data.indexOf(rec);
+        div.innerHTML=`
+        <h3 class="font‑bold text‑base mb‑1.5 text‑primary">${rec.title||"Untitled Record"}</h3>
+        <div class="text‑xs text‑secondary mb‑2">${rec.tags||""}</div>
+        <div class="flex flex‑wrap gap‑2 mb‑2.5">${imgsHtml}</div>
+        <div class="text‑sm space‑y‑1.5 text‑gray‑700 max‑h‑44 overflow‑y‑auto pr‑1">
+            <div><span class="font‑medium">Experiment & Observation:</span> ${rec.expDesc||"—"}</div>
+            <div><span class="font‑medium">Mathematical Modeling:</span> ${rec.mathModel||"—"}</div>
+            <div><span class="font‑medium">Numerical Simulation:</span> ${rec.numSim||"—"}</div>
+            <div><span class="font‑medium">Result Analysis:</span> ${rec.analysis||"—"}</div>
+            <div><span class="font‑medium">Application & Outlook:</span> ${rec.application||"—"}</div>
+        </div>
+        <button data‑gidx="${globalIdx}" class="rec‑del mt‑3 text‑red‑500 text‑sm hover:text‑red‑600">Delete This Record</button>
+        `;
+        recordContainer.appendChild(div);
+    })
+
+    // Bind click for image zoom modal
+    document.querySelectorAll('[data‑img]').forEach(img=>{
+        img.onclick=e=>{
+            currentModalSrc=e.target.dataset.img;
+            modalImg.src=currentModalSrc;
+            imgModal.classList.remove('hidden');
+        }
+    })
+
+    // Delete‑record event
+    document.querySelectorAll('.rec‑del').forEach(b=>b.onclick=function(){
+        if(!confirm("Confirm to delete this research record? Local data cannot be recovered.")) return;
+        const gidx=Number(this.dataset.gidx);
+        const arr=getAllRecords();
+        arr.splice(gidx,1);
+        saveAll(arr);
+        renderRecords(lastFilter,1);
+        setTip("Record deleted");
+    })
+
+    // Render pagination buttons
+    pageWrap.innerHTML="";
+    if(totalPage>1){
+        for(let p=1;p<=totalPage;p++){
+            const btn=document.createElement('button');
+            btn.className=`px‑3 py‑1 rounded‑xl text‑sm ${p===page?'bg‑primary text‑white':'border border‑gray‑300 hover:bg‑gray‑100'}`;
+            btn.innerText=p;
+            btn.onclick=()=>renderRecords(lastFilter,p);
+            pageWrap.appendChild(btn);
+        }
+    }
+}
+
+// Save new record
+saveBtn.onclick=()=>{
+    const titleVal=document.getElementById('title').value.trim();
+    if(!titleVal){
+        alert("Please fill in the research title");
+        return;
+    }
+    const record={
+        title:titleVal,
+        tags:document.getElementById('tags').value.trim(),
+        expDesc:document.getElementById('expDesc').value.trim(),
+        mathModel:document.getElementById('mathModel').value.trim(),
+        numSim:document.getElementById('numSim').value.trim(),
+        analysis:document.getElementById('analysis').value.trim(),
+        application:document.getElementById('application').value.trim(),
+        images:[...imageList],
+        timestamp:new Date().toISOString()
+    };
+    const arr=getAllRecords();
+    arr.push(record);
+    saveAll(arr);
+    resetForm();
+    renderRecords(searchInput.value,1);
+    setTip("✅Research record saved successfully");
+}
+
+function resetForm(){
+    document.getElementById('title').value='';
+    document.getElementById('tags').value='';
+    document.getElementById('expDesc').value='';
+    document.getElementById('mathModel').value='';
+    document.getElementById('numSim').value='';
+    document.getElementById('analysis').value='';
+    document.getElementById('application').value='';
+    imageList=[];
+    imgPreviewBox.innerHTML='';
+    fileInput.value=null;
+}
+resetBtn.onclick=resetForm;
+
+// Export full JSON archive
+exportAllJsonBtn.onclick=()=>{
+    const dataStr=JSON.stringify(getAllRecords(),null,2);
+    const blob=new Blob([dataStr],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download="interface‑science‑image‑db.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    setTip("Full‑record JSON exported");
+}
+
+// Import JSON backup
+importJsonBtn.onclick=()=>importFileInput.click();
+importFileInput.onchange=e=>{
+    const f=e.target.files[0];
+    if(!f) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+        try{
+            const imported=JSON.parse(ev.target.result);
+            if(!Array.isArray(imported)) throw new Error();
+            const old=getAllRecords();
+            const merged=[...old,...imported];
+            saveAll(merged);
+            renderRecords(searchInput.value,1);
+            setTip(`✅Import completed, ${imported.length} records added`);
+        }catch(err){
+            alert("JSON parsing failed. Please verify your backup file.");
+        }
+    }
+    reader.readAsText(f);
+}
+
+exportAllImagesBtn.onclick=()=>{
+    alert("Browser security restriction prevents one‑click ZIP bulk download. Download individual images via the download icon or full‑size modal. \nComplete metadata can be saved by exporting JSON file.");
+}
+
+searchInput.oninput=()=>renderRecords(searchInput.value,1);
+window.onload=()=>renderRecords("",1);
+</script>
+</body>
+</html>

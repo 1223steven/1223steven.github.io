@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial‑scale=1.0">
+    <title>ArXiv‑Feed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font‑awesome@4.7.0/css/font‑awesome.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2357d1',
+                        accent: '#6d28d9',
+                        success:'#059669',
+                        danger:'#dc2626',
+                        warning:'#d97706',
+                        info:'#0891b2',
+                        dark: '#1e293b',
+                        panel: '#f1f5f9'
+                    },
+                    fontFamily:{
+                        sans:['Inter','Segoe UI','system‑ui','sans‑serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .panel-shadow {
+                box‑shadow: 0 1px 3px rgba(0,0,0,0.12);
+            }
+            .line‑clamp‑6 {
+                display:‑webkit‑box;
+                ‑webkit‑line‑clamp:6;
+                ‑webkit‑box‑orient:vertical;
+                overflow:hidden;
+            }
+            .btn‑ctrl{
+                @apply px‑2.5 py‑1.5 rounded text‑sm flex items‑center gap‑1.5 transition‑all duration‑150;
+            }
+            .modal‑win{
+                @apply fixed inset‑0 bg‑black/40 z‑50 flex items‑center justify‑center p‑3;
+            }
+            .skeleton{
+                background: linear‑gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);
+                background‑size:200% 100%;
+                animation:skeleton‑anim 1.2s infinite;
+            }
+            @keyframes skeleton‑anim{
+                0%{background‑position:200% 0;}
+                100%{background‑position:‑200% 0;}
+            }
+        }
+    </style>
+</head>
+<body class="bg‑panel text‑slate‑800 font‑sans h‑screen flex flex‑col overflow‑hidden select‑none">
+<!--软件风格顶部标题栏-->
+<header class="bg‑dark text‑white shrink‑0 h‑12 flex items‑center px‑4 gap‑4 panel‑shadow">
+    <div class="flex items‑center gap‑2">
+        <i class="fa fa‑book text‑accent text‑lg"></i>
+        <span class="font‑semibold">ArXiv‑Feed</span>
+    </div>
+    <div class="flex‑1"></div>
+    <div class="flex gap‑2 items‑center">
+        <button id="btn‑refresh‑feed" class="btn‑ctrl bg‑slate‑700 hover:bg‑slate‑600 text‑white">
+            <i class="fa fa‑refresh"></i> Refresh
+        </button>
+        <button id="btn‑library" class="btn‑ctrl bg‑slate‑700 hover:bg‑slate‑600 text‑white">
+            <i class="fa fa‑bookmark‑o"></i> Library
+        </button>
+        <button id="btn‑about‑arxiv" class="btn‑ctrl bg‑slate‑700 hover:bg‑slate‑600 text‑white">
+            <i class="fa fa‑info‑circle"></i> About
+        </button>
+    </div>
+</header>
+
+<div class="flex flex‑1 overflow‑hidden">
+    <!--左侧筛选面板-->
+    <aside class="w‑64 bg‑white shrink‑0 overflow‑y‑auto border‑r border‑slate‑200 p‑4">
+        <h3 class="font‑semibold text‑sm mb‑3 text‑dark">Subject Filter</h3>
+        <div class="space‑y‑2 text‑sm mb‑6">
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="checkbox" value="cs.LG"> cs.LG ML</label>
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="checkbox" value="math.NA"> math.NA Num‑Analysis</label>
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="checkbox" value="physics.comp‑ph"> comp‑ph</label>
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="checkbox" value="cond‑mat"> cond‑mat</label>
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="checkbox" value="q‑bio"> q‑bio</label>
+        </div>
+        <hr class="my‑4">
+        <h3 class="font‑semibold text‑sm mb‑3">Feed Mode</h3>
+        <div class="space‑y‑2 text‑sm mb‑6">
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="radio" name="feed" value="recommend" checked> Recommend</label>
+            <label class="flex items‑center gap‑2 cursor‑pointer"><input type="radio" name="feed" value="newest"> Newest</label>
+        </div>
+        <button id="applyFilterBtn" class="w‑full bg‑primary hover:bg‑primary/90 text‑white py‑2 rounded">Apply</button>
+    </aside>
+
+    <!--主阅读区域-->
+    <main class="flex‑1 overflow‑y‑auto p‑6">
+        <div id="toast‑success" class="fixed top‑16 right‑4 bg‑success text‑white px‑3 py‑2 rounded shadow‑md hidden z‑50 text‑sm"></div>
+        <div id="toast‑info" class="fixed top‑28 right‑4 bg‑info text‑white px‑3 py‑2 rounded shadow‑md hidden z‑50 text‑sm"></div>
+        <div id="toast‑error" class="fixed top‑40 right‑4 bg‑danger text‑white px‑3 py‑2 rounded shadow‑md hidden z‑50 text‑sm"></div>
+
+        <div id="paper‑card" class="bg‑white rounded‑lg p‑6 panel‑shadow max‑w‑4xl">
+            <div id="skeleton‑view" class="hidden">
+                <div class="h‑4 w‑24 skeleton rounded mb‑3"></div>
+                <div class="h‑6 w‑4/5 skeleton rounded mb‑3"></div>
+                <div class="h‑4 w‑3/5 skeleton rounded mb‑4"></div>
+                <div class="h‑3 skeleton rounded mb‑2"></div>
+                <div class="h‑3 skeleton rounded mb‑2"></div>
+                <div class="h‑3 skeleton rounded mb‑6 w‑4/5"></div>
+            </div>
+            <div id="paper‑content">
+                <div class="flex justify‑between items‑start mb‑3 gap‑2 flex‑wrap">
+                    <span id="cat‑tag" class="text‑xs bg‑primary/10 text‑primary px‑2 py‑0.5 rounded‑full">‑</span>
+                    <span id="arxiv‑id" class="text‑xs text‑slate‑500 font‑mono">‑</span>
+                </div>
+                <h2 id="paper‑title" class="text‑xl font‑semibold mb‑3 leading‑tight">Loading arXiv paper…</h2>
+                <div id="paper‑authors" class="text‑sm text‑slate‑600 mb‑4">‑</div>
+                <p id="paper‑abstract" class="text‑sm text‑slate‑700 line‑clamp‑6 mb‑5 leading‑relaxed">
+                    Fetching metadata from export.arxiv.org
+                </p>
+                <!--双链接：Abs摘要页面 + PDF原文-->
+                <div class="flex flex‑wrap gap‑2 mb‑6">
+                    <a id="link‑abs" href="#" target="_blank" class="btn‑ctrl bg‑primary/10 text‑primary hover:bg‑primary/20">
+                        <i class="fa fa‑external‑link"></i> Abstract(摘要页)
+                    </a>
+                    <a id="link‑pdf" href="#" target="_blank" class="btn‑ctrl bg‑accent/10 text‑accent hover:bg‑accent/20">
+                        <i class="fa fa‑file‑pdf‑o"></i> Open PDF(原文)
+                    </a>
+                    <button id="btn‑save" class="btn‑ctrl bg‑warning/10 text‑warning hover:bg‑warning/20">
+                        <i class="fa fa‑bookmark‑o"></i> Save
+                    </button>
+                    <button id="btn‑bibtex" class="btn‑ctrl bg‑info/10 text‑info hover:bg‑info/20">
+                        <i class="fa fa‑copy"></i> BibTeX
+                    </button>
+                    <button id="btn‑like" class="btn‑ctrl bg‑success/10 text‑success hover:bg‑success/20">
+                        <i class="fa fa‑thumbs‑up"></i> Like
+                    </button>
+                    <button id="btn‑dislike" class="btn‑ctrl bg‑danger/10 text‑danger hover:bg‑danger/20">
+                        <i class="fa fa‑thumbs‑down"></i> Dislike
+                    </button>
+                </div>
+                <button id="btn‑next" class="w‑full bg‑accent hover:bg‑accent/90 text‑white py‑2.5 rounded‑lg font‑medium">
+                    Next Paper
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!--About弹窗-->
+<div id="modal‑arxiv" class="modal‑win hidden">
+    <div class="bg‑white rounded‑lg w‑full max‑w‑2xl p‑5 max‑h‑[85vh] overflow‑y‑auto panel‑shadow">
+        <h3 class="text‑lg font‑bold mb‑3">About ArXiv‑Feed</h3>
+        <div class="text‑sm text‑slate‑700 space‑y‑2">
+            <p>Data source: official export.arxiv.org public API.</p>
+            <p>Abstract link: https://arxiv.org/abs/{id}</p>
+            <p>PDF full‑text link: https://arxiv.org/pdf/{id}</p>
+            <p>All papers are real preprints from arXiv repository.</p>
+            <p>Local‑storage library stores papers in browser.</p>
+            <p>Not affiliated with Cornell University arXiv service.</p>
+        </div>
+        <button id="close‑modal‑arxiv" class="mt‑4 w‑full bg‑dark text‑white py‑2 rounded">Close</button>
+    </div>
+</div>
+
+<!--收藏库弹窗，每条记录同时带Abs与PDF按钮-->
+<div id="modal‑library" class="modal‑win hidden">
+    <div class="bg‑white rounded‑lg w‑full max‑w‑3xl p‑5 max‑h‑[85vh] overflow‑y‑auto panel‑shadow">
+        <h3 class="text‑lg font‑bold mb‑4"><i class="fa fa‑bookmark text‑warning"></i> Saved Library</h3>
+        <div id="library‑empty" class="py‑8 text‑center text‑slate‑500">
+            <i class="fa fa‑inbox text‑3xl"></i>
+            <p class="mt‑2">No saved papers yet.</p>
+        </div>
+        <div id="library‑list" class="space‑y‑3"></div>
+        <button id="close‑modal‑library" class="mt‑4 w‑full bg‑dark text‑white py‑2 rounded">Close Library</button>
+    </div>
+</div>
+
+<script>
+const PROXY = "https://api.allorigins.win/raw?url=";
+const ARXIV_API_BASE = "https://export.arxiv.org/api/query";
+
+let paperList = [];
+let currentPaperIndex = 0;
+let loadingFlag = false;
+
+//LocalStorage收藏库
+function getLibrary(){
+    const raw = localStorage.getItem("arxiv_feed_library");
+    return raw ? JSON.parse(raw) : [];
+}
+function saveLibrary(arr){
+    localStorage.setItem("arxiv_feed_library", JSON.stringify(arr));
+}
+function isPaperSaved(arxivId){
+    return getLibrary().some(p=>p.arxivId===arxivId);
+}
+function addToLibrary(paper){
+    const lib = getLibrary();
+    if(!lib.some(x=>x.arxivId===paper.arxivId)){
+        lib.push(paper);
+        saveLibrary(lib);
+    }
+}
+function removeFromLibrary(arxivId){
+    let lib = getLibrary();
+    lib = lib.filter(p=>p.arxivId !== arxivId);
+    saveLibrary(lib);
+}
+function renderLibraryModal(){
+    const lib = getLibrary();
+    const emptyEl = document.getElementById("library‑empty");
+    const listEl = document.getElementById("library‑list");
+    listEl.innerHTML = "";
+    if(lib.length === 0){
+        emptyEl.classList.remove("hidden");
+        return;
+    }
+    emptyEl.classList.add("hidden");
+    lib.forEach(paper=>{
+        const item = document.createElement("div");
+        item.className = "border border‑slate‑200 rounded‑lg p‑3";
+        item.innerHTML = `
+        <div class="flex justify‑between gap‑2">
+            <div>
+                <span class="text‑xs bg‑primary/10 text‑primary px‑2 py‑0.5 rounded‑full">${paper.cat}</span>
+                <div class="font‑medium mt‑1 text‑sm">${paper.title}</div>
+                <div class="text‑xs text‑slate‑500 mt‑0.5">${paper.authors} | ${paper.arxivId}</div>
+            </div>
+        </div>
+        <div class="flex gap‑2 mt‑2">
+            <a href="https://arxiv.org/abs/${paper.arxivId}" target="_blank" class="btn‑ctrl bg‑primary/10 text‑primary">Abs摘要</a>
+            <a href="https://arxiv.org/pdf/${paper.arxivId}" target="_blank" class="btn‑ctrl bg‑accent/10 text‑accent">PDF原文</a>
+            <button data‑aid="${paper.arxivId}" class="lib‑remove btn‑ctrl bg‑danger/10 text‑danger">Remove</button>
+        </div>`;
+        listEl.appendChild(item);
+    });
+    document.querySelectorAll(".lib‑remove").forEach(btn=>{
+        btn.onclick = ()=>{
+            removeFromLibrary(btn.dataset.aid);
+            renderLibraryModal();
+            showInfo("Removed");
+        }
+    })
+}
+
+//Toast提示
+const toastSuccess = document.getElementById("toast‑success");
+const toastInfo = document.getElementById("toast‑info");
+const toastError = document.getElementById("toast‑error");
+function showSuccess(msg){
+    toastSuccess.textContent=msg;toastSuccess.classList.remove("hidden");
+    setTimeout(()=>toastSuccess.classList.add("hidden"),1600);
+}
+function showInfo(msg){
+    toastInfo.textContent=msg;toastInfo.classList.remove("hidden");
+    setTimeout(()=>toastInfo.classList.add("hidden"),1600);
+}
+function showError(msg){
+    toastError.textContent=msg;toastError.classList.remove("hidden");
+    setTimeout(()=>toastError.classList.add("hidden"),2200);
+}
+
+//骨架屏
+function setLoadingUI(isLoading){
+    const skeleton = document.getElementById("skeleton‑view");
+    const content = document.getElementById("paper‑content");
+    if(isLoading){
+        skeleton.classList.remove("hidden");
+        content.classList.add("hidden");
+    }else{
+        skeleton.classList.add("hidden");
+        content.classList.remove("hidden");
+    }
+}
+
+//解析ArXiv Atom XML
+function parseArxivAtom(xmlText){
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText,"text/xml");
+    if(xmlDoc.querySelector("parsererror")) throw new Error("xml parse error");
+    const entries = Array.from(xmlDoc.querySelectorAll("entry"));
+    return entries.map(e=>{
+        const aid = e.querySelector("id").textContent.trim().split("/abs/")[1];
+        return {
+            arxivId: aid,
+            title: e.querySelector("title").textContent.trim().replace(/\n/g," "),
+            authors: Array.from(e.querySelectorAll("author name")).map(n=>n.textContent.trim()).join(", "),
+            abstract: e.querySelector("summary").textContent.trim().replace(/\n/g," "),
+            cat: (e.querySelector("arxiv\\:primary_category")||e.querySelector("primary_category")).getAttribute("term")
+        }
+    })
+}
+
+//批量拉取论文，预缓存12篇
+async function fetchArxivPapers(catExpr = "math.NA OR cs.LG OR physics.comp‑ph"){
+    if(loadingFlag) return;
+    loadingFlag = true;
+    setLoadingUI(true);
+    try{
+        const q = `search_query=cat:${encodeURIComponent(catExpr)}&max_results=12&sortBy=submittedDate&sortOrder=descending`;
+        const resp = await fetch(PROXY + encodeURIComponent(`${ARXIV_API_BASE}?${q}`));
+        if(!resp.ok) throw new Error("http fail");
+        const xml = await resp.text();
+        paperList = parseArxivAtom(xml);
+        currentPaperIndex = 0;
+        if(paperList.length===0){ showError("No papers returned"); return; }
+        renderCurrentPaper();
+    }catch(err){
+        console.error(err);
+        showError("Network / proxy error, cannot fetch arXiv");
+    }finally{
+        setLoadingUI(false);
+        loadingFlag = false;
+    }
+}
+
+//渲染卡片，填充Abs、PDF官方链接
+function renderCurrentPaper(){
+    const p = paperList[currentPaperIndex];
+    const saved = isPaperSaved(p.arxivId);
+    document.getElementById("cat‑tag").innerText = p.cat;
+    document.getElementById("arxiv‑id").innerText = `arXiv:${p.arxivId}`;
+    document.getElementById("paper‑title").innerText = p.title;
+    document.getElementById("paper‑authors").innerText = p.authors;
+    document.getElementById("paper‑abstract").innerText = p.abstract;
+    document.getElementById("link‑abs").href = `https://arxiv.org/abs/${p.arxivId}`;
+    document.getElementById("link‑pdf").href = `https://arxiv.org/pdf/${p.arxivId}`;
+    document.getElementById("btn‑save").innerHTML = saved
+        ? `<i class="fa fa‑bookmark"></i> Saved`
+        : `<i class="fa fa‑bookmark‑o"></i> Save`;
+}
+
+//事件绑定
+const btnNext = document.getElementById("btn‑next");
+const btnSave = document.getElementById("btn‑save");
+const btnBibtex = document.getElementById("btn‑bibtex");
+const btnLike = document.getElementById("btn‑like");
+const btnDislike = document.getElementById("btn‑dislike");
+const btnRefreshFeed = document.getElementById("btn‑refresh‑feed");
+const btnAboutArxiv = document.getElementById("btn‑about‑arxiv");
+const modalArxiv = document.getElementById("modal‑arxiv");
+const closeModalArxiv = document.getElementById("close‑modal‑arxiv");
+const btnLibrary = document.getElementById("btn‑library");
+const modalLibrary = document.getElementById("modal‑library");
+const closeModalLibrary = document.getElementById("close‑modal‑library");
+const applyFilterBtn = document.getElementById("applyFilterBtn");
+
+btnNext.onclick = async ()=>{
+    if(loadingFlag) return;
+    currentPaperIndex +=1;
+    if(currentPaperIndex >= paperList.length){
+        await fetchArxivPapers();
+    }else{
+        renderCurrentPaper();
+    }
+};
+btnRefreshFeed.onclick = async ()=>{await fetchArxivPapers();showInfo("Feed refreshed");};
+btnSave.onclick = ()=>{
+    const p = paperList[currentPaperIndex];
+    isPaperSaved(p.arxivId) ? removeFromLibrary(p.arxivId) : addToLibrary(p);
+    renderCurrentPaper();
+    isPaperSaved(p.arxivId) ? showInfo("Removed") : showSuccess("Saved to library");
+};
+btnBibtex.onclick = async ()=>{
+    const p = paperList[currentPaperIndex];
+    const bib = `@misc{arXiv:${p.arxivId},title={${p.title}},author={${p.authors}},howpublished={arXiv:${p.arxivId}}}`;
+    await navigator.clipboard.writeText(bib);
+    showSuccess("BibTeX copied");
+};
+btnLike.onclick = showSuccess.bind(null,"Like recorded");
+btnDislike.onclick = showInfo.bind(null,"Dislike recorded");
+
+btnAboutArxiv.onclick = ()=>modalArxiv.classList.remove("hidden");
+closeModalArxiv.onclick = ()=>modalArxiv.classList.add("hidden");
+modalArxiv.onclick = e=>{if(e.target===modalArxiv) modalArxiv.classList.add("hidden");};
+
+btnLibrary.onclick = ()=>{renderLibraryModal();modalLibrary.classList.remove("hidden");};
+closeModalLibrary.onclick = ()=>modalLibrary.classList.add("hidden");
+modalLibrary.onclick = e=>{if(e.target===modalLibrary) modalLibrary.classList.add("hidden");};
+
+applyFilterBtn.onclick = async ()=>{ showInfo("Applying filter…"); await fetchArxivPapers(); };
+
+//初始化
+(async ()=>{
+    await fetchArxivPapers();
+    console.log("ArXiv‑Feed software‑style UI loaded, abs+pdf link ready.");
+})();
+</script>
+</body>
+</html>

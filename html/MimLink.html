@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿生材料研究平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#0E7490',
+                        neutral: '#1F2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(22, 93, 255, 0.12);
+            }
+            .textarea-style {
+                min-height: 140px;
+            }
+            .upload-area {
+                border: 2px dashed #cbd5e1;
+                transition: all 0.3s ease;
+            }
+            .upload-area:hover {
+                border-color:#165DFF;
+                background-color:#f0f7ff;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-neutral">
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!--头部标题-->
+    <header class="text-center mb-10">
+        <h1 class="text-[clamp(1.8rem,4vw,2.8rem)] font-bold text-primary mb-2">仿生材料研究共享平台</h1>
+        <p class="text-slate-500 text-lg">上传仿生材料图像，录入材料说明、数学建模、数值模拟与工程应用信息</p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!--左侧录入表单-->
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <h2 class="text-xl font-semibold mb-5 flex items-center">
+                <i class="fa fa-file-text-o text-primary mr-2"></i>材料信息录入
+            </h2>
+
+            <!--图片上传区域-->
+            <div class="mb-6">
+                <label class="block font-medium mb-2">仿生材料图片上传</label>
+                <div id="uploadBox" class="upload-area rounded-lg p-8 text-center cursor-pointer">
+                    <i class="fa fa-cloud-upload text-4xl text-slate-400 mb-3"></i>
+                    <p class="text-slate-500">点击或拖拽图片到此区域上传</p>
+                    <input type="file" id="imgInput" accept="image/*" class="hidden">
+                </div>
+                <div id="previewWrap" class="mt-4 hidden">
+                    <img id="imgPreview" class="max-h-64 rounded-lg border">
+                </div>
+            </div>
+
+            <!--表单字段-->
+            <div class="space-y-5">
+                <div>
+                    <label class="block font-medium mb-1">材料名称</label>
+                    <input type="text" id="matName" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="例如：仿生多孔骨支架材料">
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">材料说明</label>
+                    <textarea id="matDesc" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 textarea-style focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="描述材料仿生来源、微观结构、制备工艺、基础理化性质"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">数学建模</label>
+                    <textarea id="matModel" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 textarea-style focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="几何模型、本构方程、边界条件、控制方程、理论假设等数学建模内容"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">数值模拟</label>
+                    <textarea id="matSim" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 textarea-style focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="数值方法、仿真软件、网格设置、求解器参数、仿真结果与分析"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-medium mb-1">应用落地</label>
+                    <textarea id="matApp" class="w-full border border-slate-300 rounded-lg px-3 py-2.5 textarea-style focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="生物医疗、航空航天、柔性器件、环境工程等实际应用场景、现存挑战、未来展望"></textarea>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button id="submitBtn" class="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-primary/90 transition">
+                        <i class="fa fa-save mr-1"></i>保存记录
+                    </button>
+                    <button id="resetBtn" class="border border-slate-300 px-5 py-2.5 rounded-lg hover:bg-slate-100 transition">重置表单</button>
+                </div>
+            </div>
+        </div>
+
+        <!--右侧已提交记录展示-->
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <h2 class="text-xl font-semibold mb-5 flex items-center">
+                <i class="fa fa-database text-primary mr-2"></i>已录入仿生材料库
+            </h2>
+            <div id="recordList" class="space-y-4 max-h-[750px] overflow-y-auto pr-1">
+                <div class="text-slate-400 text-center py-10">暂无录入数据，请左侧提交材料信息</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 上传交互
+    const uploadBox = document.getElementById('uploadBox');
+    const imgInput = document.getElementById('imgInput');
+    const previewWrap = document.getElementById('previewWrap');
+    const imgPreview = document.getElementById('imgPreview');
+    let imageBase64 = null;
+
+    uploadBox.onclick = ()=> imgInput.click();
+
+    imgInput.onchange = function(e){
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            imageBase64 = ev.target.result;
+            imgPreview.src = imageBase64;
+            previewWrap.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+    }
+
+    //拖拽上传
+    uploadBox.ondragover = e => {e.preventDefault(); uploadBox.classList.add('border-primary','bg-blue-50')};
+    uploadBox.ondragleave = ()=> uploadBox.classList.remove('border-primary','bg-blue-50');
+    uploadBox.ondrop = e => {
+        e.preventDefault();
+        uploadBox.classList.remove('border-primary','bg-blue-50');
+        const file = e.dataTransfer.files[0];
+        if(!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = ev=>{
+            imageBase64 = ev.target.result;
+            imgPreview.src = imageBase64;
+            previewWrap.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const recordList = document.getElementById('recordList');
+
+    //读取本地存储
+    function loadRecords(){
+        const raw = localStorage.getItem('bionicMatData');
+        return raw ? JSON.parse(raw) : [];
+    }
+
+    function renderList(){
+        const arr = loadRecords();
+        if(arr.length ===0){
+            recordList.innerHTML = `<div class="text-slate-400 text-center py-10">暂无录入数据，请左侧提交材料信息</div>`;
+            return;
+        }
+        recordList.innerHTML = '';
+        arr.forEach((item,idx)=>{
+            const div = document.createElement('div');
+            div.className = "border border-slate-200 p-4 rounded-lg";
+            div.innerHTML = `
+                <h3 class="font-bold text-lg mb-2">${item.name || "未命名材料"}</h3>
+                ${item.img ? `<img src="${item.img}" class="max-h-44 rounded mb-3">` : ''}
+                <div class="text-sm space-y-2 text-slate-700">
+                    <div><span class="font-medium">材料说明：</span>${item.desc||"无"}</div>
+                    <div><span class="font-medium">数学建模：</span>${item.model||"无"}</div>
+                    <div><span class="font-medium">数值模拟：</span>${item.sim||"无"}</div>
+                    <div><span class="font-medium">应用落地：</span>${item.app||"无"}</div>
+                </div>
+                <button data-idx="${idx}" class="del-btn mt-3 text-red-500 text-sm">删除本条</button>
+            `;
+            recordList.appendChild(div);
+        })
+        //删除事件
+        document.querySelectorAll('.del-btn').forEach(btn=>{
+            btn.onclick = function(){
+                const i = Number(this.dataset.idx);
+                let data = loadRecords();
+                data.splice(i,1);
+                localStorage.setItem('bionicMatData',JSON.stringify(data));
+                renderList();
+            }
+        })
+    }
+
+    submitBtn.onclick = function(){
+        const name = document.getElementById('matName').value.trim();
+        const desc = document.getElementById('matDesc').value.trim();
+        const model = document.getElementById('matModel').value.trim();
+        const sim = document.getElementById('matSim').value.trim();
+        const app = document.getElementById('matApp').value.trim();
+
+        const rec = {
+            name,
+            desc,
+            model,
+            sim,
+            app,
+            img:imageBase64
+        }
+        let arr = loadRecords();
+        arr.push(rec);
+        localStorage.setItem('bionicMatData',JSON.stringify(arr));
+        resetForm();
+        renderList();
+        alert("仿生材料记录保存成功（浏览器本地存储）");
+    }
+
+    function resetForm(){
+        document.getElementById('matName').value = '';
+        document.getElementById('matDesc').value = '';
+        document.getElementById('matModel').value = '';
+        document.getElementById('matSim').value = '';
+        document.getElementById('matApp').value = '';
+        imgInput.value = null;
+        previewWrap.classList.add('hidden');
+        imageBase64 = null;
+    }
+    resetBtn.onclick = resetForm;
+
+    window.onload = renderList;
+</script>
+</body>
+</html>
