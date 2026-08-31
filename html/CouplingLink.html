@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多相流‑多物理耦合仿真计算平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        dark: '#1D2939',
+                        secondary: '#344054',
+                        lightbg: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-thin::-webkit-scrollbar {
+                width: 6px;
+            }
+            .scrollbar-thin::-webkit-scrollbar-thumb {
+                background-color: #cbd5e1;
+                border-radius: 3px;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(22, 93, 255, 0.08);
+            }
+        }
+    </style>
+</head>
+<body class="bg-lightbg text-dark min-h-screen flex flex-col">
+<!-- 顶部导航栏 -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <i class="fa fa-flask text-primary text-2xl"></i>
+            <h1 class="text-xl font-bold text-primary">多相流‑多物理耦合仿真平台</h1>
+        </div>
+        <nav class="hidden md:flex gap-6 text-sm font-medium">
+            <button data-tab="caseLib" class="nav-btn py-2 text-secondary hover:text-primary transition">科学问题案例</button>
+            <button data-tab="introDoc" class="nav-btn py-2 text-secondary hover:text-primary transition">平台说明</button>
+            <button data-tab="mathModel" class="nav-btn py-2 text-secondary hover:text-primary transition">数学建模</button>
+            <button data-tab="numSim" class="nav-btn py-2 text-secondary hover:text-primary transition">数值模拟</button>
+            <button data-tab="appLand" class="nav-btn py-2 text-secondary hover:text-primary transition">应用落地</button>
+        </nav>
+        <button class="md:hidden text-xl" id="mobileMenuBtn"><i class="fa fa-bars"></i></button>
+    </div>
+    <!--移动端菜单-->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 px-4 py-2 space-y-2">
+        <button data-tab="caseLib" class="nav-btn block w-full text-left py-2">科学问题案例</button>
+        <button data-tab="introDoc" class="nav-btn block w-full text-left py-2">平台说明</button>
+        <button data-tab="mathModel" class="nav-btn block w-full text-left py-2">数学建模</button>
+        <button data-tab="numSim" class="nav-btn block w-full text-left py-2">数值模拟</button>
+        <button data-tab="appLand" class="nav-btn block w-full text-left py-2">应用落地</button>
+    </div>
+</header>
+
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!--左侧输入面板-->
+        <section class="lg:col-span-5 bg-white rounded-xl p-6 card-shadow">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="fa fa-pencil-square-o text-primary"></i>输入仿真科学问题
+            </h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">科学问题描述</label>
+                    <textarea id="problemInput" rows="8" class="w-full border border-gray-300 rounded-lg p-3 text-sm scrollbar-thin focus:outline-primary focus:border-primary" placeholder="例如：气泡在粘性液体中上升，考虑表面张力与重力耦合，求解两相流界面演化；液固相变熔化凝固多物理场耦合仿真；气液固三相反应器流动传热耦合计算..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">流体相1</label>
+                        <select id="phase1" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                            <option value="liquid">液相</option>
+                            <option value="gas">气相</option>
+                            <option value="solid">固相</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">流体相2</label>
+                        <select id="phase2" class="w-full border border-gray-300 rounded-lg p-2 text-sm">
+                            <option value="gas">气相</option>
+                            <option value="liquid">液相</option>
+                            <option value="solid">固相</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">耦合物理场（多选）</label>
+                    <div class="flex flex-wrap gap-2">
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="flow" checked>流体流动
+                        </label>
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="heat">传热
+                        </label>
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="phaseChange">相变
+                        </label>
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="surfaceTension">表面张力
+                        </label>
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="electro">电场
+                        </label>
+                        <label class="inline-flex items-center gap-1 text-sm border px-2 py-1 rounded-md cursor-pointer">
+                            <input type="checkbox" value="magnetic">磁场
+                        </label>
+                    </div>
+                </div>
+                <button id="runSimBtn" class="w-full bg-primary hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition flex items-center justify-center gap-2">
+                    <i class="fa fa-cogs"></i>启动多物理耦合仿真求解
+                </button>
+            </div>
+        </section>
+
+        <!--右侧结果展示面板-->
+        <section class="lg:col-span-7 bg-white rounded-xl p-6 card-shadow">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="fa fa-line-chart text-primary"></i>仿真求解输出结果
+            </h2>
+            <div id="resultPlaceholder" class="py-20 text-center text-gray-400">
+                <i class="fa fa-cloud-upload text-5xl mb-3"></i>
+                <p>输入科学问题，点击启动仿真，此处展示仿真云图/曲线结果</p>
+            </div>
+            <div id="resultContainer" class="hidden">
+                <div class="border rounded-lg p-3 mb-4">
+                    <canvas id="simCanvas" height="320"></canvas>
+                </div>
+                <div class="flex gap-3 mb-4">
+                    <button id="downloadImgBtn" class="px-4 py-2 border border-primary text-primary rounded-lg text-sm hover:bg-blue-50 flex items-center gap-1">
+                        <i class="fa fa-download"></i>下载仿真图片
+                    </button>
+                    <button id="downloadReportBtn" class="px-4 py-2 border border-gray-500 text-gray-600 rounded-lg text-sm hover:bg-gray-50 flex items-center gap-1">
+                        <i class="fa fa-file-text-o"></i>导出仿真报告
+                    </button>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-medium text-sm mb-2">求解摘要信息</h3>
+                    <div id="simSummary" class="text-sm text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 选项卡内容区域 -->
+    <div class="mt-8 bg-white rounded-xl p-6 card-shadow">
+        <div id="tabContent">
+            <!-- 科学问题案例 -->
+            <div id="caseLib" class="tab-panel">
+                <h2 class="text-xl font-semibold mb-4">多相流‑多物理耦合经典科学问题案例库</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例1：气泡在液相中上升（气‑液两相流+表面张力+重力）</h3>
+                        <p class="text-sm text-gray-600 mt-2">研究气泡形变、界面拓扑演化，典型VOF相场模型算例；涉及Navier‑Stokes方程+界面曲率张力模型。</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例2：液‑固熔化凝固相变耦合流动传热</h3>
+                        <p class="text-sm text-gray-600 mt-2">相变潜热、固液界面移动，自然对流，熔化前沿演化；冶金、储能相变材料仿真。</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例3：气‑液‑固三相鼓泡反应器流动传质耦合</h3>
+                        <p class="text-sm text-gray-600 mt-2">气泡动力学、颗粒悬浮、组分输运；化工反应釜多相耦合仿真。</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例4：电场驱动液滴变形运动（电多相流）</h3>
+                        <p class="text-sm text-gray-600 mt-2">电场力与粘性力、表面张力竞争；微流控液滴操控数值模拟。</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例5：颗粒沉降（液‑固两相流）</h3>
+                        <p class="text-sm text-gray-600 mt-2">颗粒流体相互作用，阻力模型，颗粒群运动；泥沙沉降、矿物分离。</p>
+                    </div>
+                    <div class="border rounded-lg p-4 hover:shadow-md transition cursor-pointer case-item">
+                        <h3 class="font-medium">案例6：沸腾相变传热（气‑液两相）</h3>
+                        <p class="text-sm text-gray-600 mt-2">壁面成核、气泡生成脱离，相变传热；锅炉、换热器热工仿真。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--平台说明-->
+            <div id="introDoc" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold mb-4">平台说明文档</h2>
+                <div class="prose max-w-none text-gray-700 text-sm space-y-3">
+                    <p>本平台面向多相流多物理耦合科学计算，支持用户输入科学问题，配置相组分、耦合物理场，完成仿真求解，输出可视化云图与求解摘要，支持图片、报告下载。</p>
+                    <h4 class="font-medium">核心能力</h4>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>输入自然语言描述多相流科学问题，配置相态与耦合物理场</li>
+                        <li>内置多相流经典算例案例库，一键填入输入框</li>
+                        <li>仿真可视化输出，支持结果图片下载、仿真报告导出</li>
+                        <li>配套查阅数学建模、数值离散方法、工程落地应用资料</li>
+                    </ul>
+                    <h4 class="font-medium">适用科学问题范围</h4>
+                    <p>气‑液、液‑固、气‑固、气‑液‑固多相体系；耦合流动、传热、相变、表面张力、电场磁场、组分输运等多物理场。</p>
+                    <h4 class="font-medium">注意事项</h4>
+                    <p>当前前端仅做交互演示；真实大规模多相流仿真需要后端接入求解器（OpenFOAM、COMSOL、Phase‑Field求解器等）。</p>
+                </div>
+            </div>
+
+            <!--数学建模-->
+            <div id="mathModel" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold mb-4">多相流‑多物理耦合数学建模</h2>
+                <div class="text-sm space-y-4 text-gray-700">
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">1.不可压缩Navier‑Stokes控制方程</h4>
+                        <p>连续性：$ \nabla\cdot\boldsymbol u =0 $</p>
+                        <p>动量：$ \rho\left(\dfrac{\partial \boldsymbol u}{\partial t}+\boldsymbol u\cdot\nabla \boldsymbol u\right)=-\nabla p+\nabla\cdot\left[\mu\left(\nabla\boldsymbol u+\nabla\boldsymbol u^T\right)\right]+\boldsymbol f_b+\boldsymbol f_{surf} $</p>
+                        <p>$\boldsymbol f_b$：体积力（重力）；$\boldsymbol f_{surf}$：表面张力源项</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">2.相场/VOF相输运方程</h4>
+                        <p>$ \dfrac{\partial \alpha}{\partial t}+\nabla\cdot(\alpha \boldsymbol u)=0 $，$\alpha$为相体积分数。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">3.传热耦合能量方程</h4>
+                        <p>$ \rho c_p\left(\dfrac{\partial T}{\partial t}+\boldsymbol u\cdot\nabla T\right)=\nabla\cdot(\lambda\nabla T)+S_{phase} $</p>
+                        <p>$S_{phase}$：相变潜热源项</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">4.相变、表面张力、电场磁场耦合源项</h4>
+                        <p>表面张力：CSF模型 $ \boldsymbol f_{surf}=\sigma\kappa\nabla\alpha $；$\kappa$界面曲率；$\sigma$表面张力系数。</p>
+                        <p>相变：固相率演化，潜热源项；电多相流增加Maxwell电场力源项。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--数值模拟-->
+            <div id="numSim" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold mb-4">数值模拟方法</h2>
+                <div class="text-sm space-y-3 text-gray-700">
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">界面捕捉类方法</h4>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li>VOF（Volume‑of‑Fluid）：体积分数追踪界面，适合大形变界面</li>
+                            <li>Phase‑Field相场法：扩散界面，易于耦合多物理场相变</li>
+                            <li>Level‑Set：隐式界面，曲率计算精度高，需要重新初始化</li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">离散与求解器</h4>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li>空间离散：有限体积法FVM（OpenFOAM）、有限元FEM（COMSOL）</li>
+                            <li>时间推进：显式Runge‑Kutta、半隐式、BDF格式</li>
+                            <li>压力速度耦合：PISO、SIMPLE算法；线性求解器：GMRES、PCG</li>
+                        </ul>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">开源仿真工具栈</h4>
+                        <p>OpenFOAM；FEniCS；MFIX；PETSc；Palabos(LBM)；PINN物理信息神经网络多相流求解。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--应用落地-->
+            <div id="appLand" class="tab-panel hidden">
+                <h2 class="text-xl font-semibold mb-4">工程应用落地场景</h2>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">化工反应器</h4>
+                        <p>鼓泡塔、搅拌釜气液固三相流动‑传质‑反应耦合仿真，优化反应器结构。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">能源相变储能</h4>
+                        <p>相变材料熔化凝固，储能罐传热流动多相耦合，提升储能效率。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">热工锅炉沸腾传热</h4>
+                        <p>管内两相沸腾，气泡动力学，预测换热系数与临界热流密度。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">微流控芯片</h4>
+                        <p>电驱动液滴生成、分裂，微尺度多相流，生物芯片仿真。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">冶金铸造</h4>
+                        <p>金属熔体充型、凝固相变，多相流动传热，预测缩孔缺陷。</p>
+                    </div>
+                    <div class="border p-4 rounded-lg">
+                        <h4 class="font-medium">环境与水利</h4>
+                        <p>泥沙沉降、气泡羽流，水体多相输运模拟。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-white border-t mt-10 py-4 text-center text-sm text-gray-500">
+    多相流‑多物理耦合仿真计算演示平台｜前端交互原型，后端需接入CFD求解器完成真实计算
+</footer>
+
+<script>
+//移动端菜单
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+mobileMenuBtn.addEventListener('click',()=>{
+    mobileMenu.classList.toggle('hidden');
+})
+
+//tab切换
+const navBtns = document.querySelectorAll('.nav-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+navBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const tabId = btn.dataset.tab;
+        tabPanels.forEach(p=>p.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+        mobileMenu.classList.add('hidden');
+    })
+})
+
+//案例点击填入输入框
+const caseItems = document.querySelectorAll('.case-item');
+const problemInput = document.getElementById('problemInput');
+caseItems.forEach(item=>{
+    item.addEventListener('click',()=>{
+        const title = item.querySelector('h3').innerText;
+        const desc = item.querySelector('p').innerText;
+        problemInput.value = title + "\n"+desc;
+        window.scrollTo({top:0,behavior:'smooth'})
+    })
+})
+
+//仿真运行按钮
+const runSimBtn = document.getElementById('runSimBtn');
+const resultPlaceholder = document.getElementById('resultPlaceholder');
+const resultContainer = document.getElementById('resultContainer');
+const simSummary = document.getElementById('simSummary');
+let simChart = null;
+
+runSimBtn.addEventListener('click',()=>{
+    const probText = problemInput.value.trim();
+    if(!probText){
+        alert("请输入多相流多物理耦合科学问题");
+        return;
+    }
+    runSimBtn.disabled = true;
+    runSimBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>求解器计算中...';
+
+    setTimeout(()=>{
+        resultPlaceholder.classList.add('hidden');
+        resultContainer.classList.remove('hidden');
+        //模拟仿真摘要
+        simSummary.innerText = `【输入科学问题】
+${probText}
+
+【求解配置】
+相1：${document.getElementById('phase1').options[document.getElementById('phase1').selectedIndex].text}
+相2：${document.getElementById('phase2').options[document.getElementById('phase2').selectedIndex].text}
+
+【求解信息】
+采用相场‑有限体积耦合求解；完成时间步迭代；输出相分布、速度场、温度场结果。
+提示：本页面为前端演示原型，完整仿真需要后端对接OpenFOAM/COMSOL等CFD求解器。`;
+
+        //模拟仿真云图曲线
+        const ctx = document.getElementById('simCanvas').getContext('2d');
+        if(simChart) simChart.destroy();
+        simChart = new Chart(ctx,{
+            type:'line',
+            data:{
+                labels:Array.from({length:20},(_,i)=>i),
+                datasets:[
+                    {label:'相分布特征量',data:Array.from({length:20},()=>Math.random()),borderColor:'#165DFF',fill:true,backgroundColor:'rgba(22,93,255,0.15)',tension:0.3},
+                    {label:'平均速度',data:Array.from({length:20},()=>Math.random()*0.7),borderColor:'#00B42A',tension:0.3}
+                ]
+            },
+            options:{responsive:true,plugins:{title:{display:true,text:"仿真输出特征演化曲线"}}}
+        })
+
+        runSimBtn.disabled = false;
+        runSimBtn.innerHTML = '<i class="fa fa-cogs"></i>启动多物理耦合仿真求解';
+    },1600)
+})
+
+//下载图片
+document.getElementById('downloadImgBtn').addEventListener('click',()=>{
+    const canvas = document.getElementById('simCanvas');
+    const link = document.createElement('a');
+    link.download = "多相流仿真结果.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+})
+
+//导出报告
+document.getElementById('downloadReportBtn').addEventListener('click',()=>{
+    const textContent = "#多相流‑多物理耦合仿真报告\n"+simSummary.innerText;
+    const blob = new Blob([textContent],{type:'text/plain'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = "仿真求解报告.txt";
+    link.click();
+})
+</script>
+</body>
+</html>

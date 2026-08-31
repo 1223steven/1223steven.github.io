@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空经济飞行器‑仿生材料仿真平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        primaryLight: '#E8F0FF',
+                        secondary: '#0E7490',
+                        neutral: '#1F2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(22, 93, 255, 0.12);
+            }
+            .card-hover {
+                transition: all 0.25s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(22, 93, 255, 0.15);
+            }
+            .section-title {
+                @apply text-2xl font-bold text-neutral mb-5 border-l-4 border-primary pl-3;
+            }
+        }
+
+        .drag-over {
+            border-color: #165DFF !important;
+            background: #E8F0FF !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-neutral min-h-screen">
+
+<!-- 顶部导航栏 -->
+<header class="bg-primary text-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+        <div class="text-xl font-bold flex items-center gap-2">
+            <i class="fa fa-plane"></i>
+            <span>低空经济飞行器仿生材料仿真平台</span>
+        </div>
+        <nav class="flex flex-wrap gap-1 md:gap-4 mt-2 md:mt-0 text-sm">
+            <a href="#home" class="px-2 py-1 rounded hover:bg-blue-700 transition">首页</a>
+            <a href="#template" class="px-2 py-1 rounded hover:bg-blue-700 transition">设计模板</a>
+            <a href="#upload" class="px-2 py-1 rounded hover:bg-blue-700 transition">材料上传</a>
+            <a href="#case" class="px-2 py-1 rounded hover:bg-blue-700 transition">案例展示</a>
+            <a href="#intro" class="px-2 py-1 rounded hover:bg-blue-700 transition">材料说明</a>
+            <a href="#math" class="px-2 py-1 rounded hover:bg-blue-700 transition">数学建模</a>
+            <a href="#sim" class="px-2 py-1 rounded hover:bg-blue-700 transition">数值模拟</a>
+            <a href="#apply" class="px-2 py-1 rounded hover:bg-blue-700 transition">应用落地</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 py-8">
+
+    <!-- 首页板块 -->
+    <section id="home" class="mb-12">
+        <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white card-shadow">
+            <h2 class="text-3xl font-bold mb-4">低空经济飞行器‑仿生材料仿真平台</h2>
+            <p class="text-lg opacity-90 max-w-3xl">
+                面向eVTOL、仿生无人机、低空载人飞行器研发，集成仿生材料图像上传、飞行器设计模板、数学建模、数值仿真与工程落地案例，支撑材料‑结构一体化设计与仿真研究。
+            </p>
+            <div class="mt-5 flex flex-wrap gap-3">
+                <span class="px-3 py-1 bg-white/20 rounded-full text-sm">eVTOL</span>
+                <span class="px-3 py-1 bg-white/20 rounded-full text-sm">仿生复合材料</span>
+                <span class="px-3 py-1 bg-white/20 rounded-full text-sm">流固耦合仿真</span>
+                <span class="px-3 py-1 bg-white/20 rounded-full text-sm">结构轻量化</span>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-5 mt-8">
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <i class="fa fa-file-text-o text-primary text-2xl mb-2"></i>
+                <h3 class="font-bold mb-1">设计模板</h3>
+                <p class="text-sm text-gray-600">整理多旋翼、倾转旋翼、扑翼、货运飞行器等常见构型，方便快速建立初始方案。</p>
+            </div>
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <i class="fa fa-upload text-primary text-2xl mb-2"></i>
+                <h3 class="font-bold mb-1">材料图片上传</h3>
+                <p class="text-sm text-gray-600">支持上传仿生材料、显微结构、飞行器部件图片，便于本地预览与信息标注。</p>
+            </div>
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <i class="fa fa-cubes text-primary text-2xl mb-2"></i>
+                <h3 class="font-bold mb-1">建模与仿真</h3>
+                <p class="text-sm text-gray-600">提供数学模型、数值模拟方法和应用落地方向，形成从材料到工程的研究链路。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 飞行器设计模板 -->
+    <section id="template" class="mb-16">
+        <h2 class="section-title">低空经济飞行器常用设计模板</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">多旋翼eVTOL模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>6‑8旋翼分布式电动垂直起降</li>
+                    <li><strong>仿生参考：</strong>蜻蜓翅膀分级轻量化脉序</li>
+                    <li><strong>材料：</strong>碳纤维复合材料、仿生蜂窝夹层</li>
+                    <li><strong>适用：</strong>城市空中交通、载人/短途货运</li>
+                    <li><strong>仿真重点：</strong>振动疲劳、气动‑结构耦合</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">固定翼仿生无人机模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>高升阻比仿生固定翼复合构型</li>
+                    <li><strong>仿生参考：</strong>鸟类羽翼分层羽毛结构</li>
+                    <li><strong>材料：</strong>柔性蒙皮、纤维增强仿生薄膜</li>
+                    <li><strong>适用：</strong>长距离巡检、测绘、环境监测</li>
+                    <li><strong>仿真重点：</strong>气动弹性、大变形柔性结构</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">倾转旋翼载人飞行器模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>倾转旋翼垂直起降 + 高速平飞</li>
+                    <li><strong>仿生参考：</strong>隼类机翼减阻外形</li>
+                    <li><strong>材料：</strong>高比强度仿生多孔复合材料</li>
+                    <li><strong>适用：</strong>城市低空客运通勤</li>
+                    <li><strong>仿真重点：</strong>多工况应力、冲击、噪声</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">微型扑翼飞行器模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>微型扑翼仿生飞行器</li>
+                    <li><strong>仿生参考：</strong>昆虫翅膀翅脉网络</li>
+                    <li><strong>材料：</strong>柔性聚合物、超薄纤维膜</li>
+                    <li><strong>适用：</strong>狭小空间侦察、作业探测</li>
+                    <li><strong>仿真重点：</strong>流固耦合、高频往复疲劳</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">大载荷货运低空飞行器模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>大载荷多旋翼货运机型</li>
+                    <li><strong>仿生参考：</strong>蜂巢夹层抗冲击结构</li>
+                    <li><strong>材料：</strong>仿生蜂窝‑碳纤维复合板材</li>
+                    <li><strong>适用：</strong>物流配送、山地物资投送</li>
+                    <li><strong>仿真重点：</strong>静强度、跌落冲击、轻量化权衡</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">混合翼VTOL飞行器模板</h3>
+                <ul class="text-sm space-y-1.5 text-gray-700">
+                    <li><strong>构型：</strong>垂直起降混合固定翼</li>
+                    <li><strong>仿生参考：</strong>蝙蝠翼膜柔性结构</li>
+                    <li><strong>材料：</strong>可变形仿生复合蒙皮</li>
+                    <li><strong>适用：</strong>大范围巡检、应急救援</li>
+                    <li><strong>仿真重点：</strong>变构型流固耦合、多模态动力学</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 图片上传模块 -->
+    <section id="upload" class="mb-16">
+        <h2 class="section-title">仿生材料图片上传</h2>
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center transition-all">
+                <i class="fa fa-cloud-upload text-5xl text-slate-400 mb-3"></i>
+                <p class="text-gray-600 mb-2">将仿生材料图片拖拽到此区域，或点击下方按钮选择文件</p>
+                <p class="text-xs text-gray-400 mb-4">支持 JPG / PNG，图片仅在浏览器本地预览，不上传服务器</p>
+                <input type="file" id="imgUpload" accept="image/*" class="hidden">
+                <button id="selectFileBtn" class="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
+                    <i class="fa fa-folder-open"></i> 选择图片
+                </button>
+            </div>
+
+            <div id="previewWrap" class="mt-6 hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="font-semibold">图片预览</h4>
+                    <button id="clearPreviewBtn" class="text-sm text-red-500 hover:text-red-600">
+                        <i class="fa fa-trash-o"></i> 清空预览
+                    </button>
+                </div>
+                <div class="border rounded-lg p-4 bg-slate-50">
+                    <img id="previewImg" class="max-h-80 max-w-full mx-auto rounded">
+                </div>
+                <div class="mt-4">
+                    <label class="block font-medium mb-1">材料信息标注</label>
+                    <textarea class="w-full border rounded-lg p-3 text-sm" rows="3" placeholder="例如：蜻蜓翅脉仿生蜂窝复合材料，用于eVTOL机翼结构，重点关注抗弯刚度与轻量化。"></textarea>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 案例展示 -->
+    <section id="case" class="mb-16">
+        <h2 class="section-title">案例展示</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">案例1：蜻蜓翅脉仿生eVTOL机翼</h3>
+                <p class="text-sm text-gray-700">
+                    模仿蜻蜓翅脉的分级网络结构，设计仿生蜂窝夹层机翼。该结构在保持抗弯刚度的同时减轻结构质量，可用于城市载人eVTOL机翼结构设计。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">案例2：鸟类羽毛仿生降噪旋翼</h3>
+                <p class="text-sm text-gray-700">
+                    借鉴鸟类飞羽边缘的梳齿状微观结构，在旋翼桨叶边缘引入仿生锯齿结构，降低旋翼涡噪声，提升城市低空飞行环境适应性。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">案例3：昆虫翅仿生微型扑翼无人机</h3>
+                <p class="text-sm text-gray-700">
+                    复刻昆虫翅脉‑薄膜复合结构，采用柔性高分子与纤维增强材料，实现高频扑动，适用于狭小空间侦察、探测和作业场景。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 card-shadow card-hover">
+                <h3 class="font-bold text-lg text-primary mb-2">案例4：蜂巢仿生货运飞行器机身</h3>
+                <p class="text-sm text-gray-700">
+                    基于蜂巢多孔夹层结构设计碳纤维复合机身壳体，兼顾轻量化、抗冲击和能量吸收能力，可用于低空货运飞行器结构方案。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 材料说明 -->
+    <section id="intro" class="mb-16">
+        <h2 class="section-title">仿生材料说明</h2>
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <ul class="space-y-4 text-gray-700">
+                <li>
+                    <strong>翅脉仿生夹层复合材料：</strong>模仿昆虫翅膀分级脉序，采用蜂窝或格栅芯层结合纤维增强蒙皮，具有较高比刚度，适用于机翼、旋翼支撑结构。
+                </li>
+                <li>
+                    <strong>羽毛仿生降噪功能材料：</strong>通过边缘锯齿、梳齿微观结构实现被动降噪，可用于改善低空飞行器城市噪声水平。
+                </li>
+                <li>
+                    <strong>柔性仿生膜‑纤维复合：</strong>柔性基体结合纤维网络，具有较好的大变形耐受能力，适用于扑翼、变体飞行器可变形蒙皮。
+                </li>
+                <li>
+                    <strong>蜂巢仿生多孔复合材料：</strong>仿生多孔胞元结构兼具轻量化与抗冲击性能，适用于机身壳体、载荷舱和防护结构。
+                </li>
+                <li>
+                    <strong>梯度仿生功能材料：</strong>通过模量梯度分布抑制应力集中，适用于飞行器接头、连接部位和复杂受力区域。
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 数学建模 -->
+    <section id="math" class="mb-16">
+        <h2 class="section-title">数学建模</h2>
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <div class="space-y-6 text-gray-700">
+                <div>
+                    <h4 class="font-bold mb-2">1. 仿生多孔夹层材料均匀化等效本构</h4>
+                    <p>对仿生蜂窝、翅脉格栅等周期胞元进行均匀化分析，可得到等效刚度张量：</p>
+                    \[
+                    \bar{\boldsymbol{\sigma}} = \mathbb{C}^{\text{hom}}: \bar{\boldsymbol{\varepsilon}}
+                    \]
+                    <p class="text-sm text-gray-500 mt-1">其中 \(\mathbb{C}^{\text{hom}}\) 为均匀化等效四阶刚度张量。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">2. 飞行器结构动力学方程</h4>
+                    <p>飞行器结构动力学可表示为：</p>
+                    \[
+                    M\ddot{\boldsymbol u} + C\dot{\boldsymbol u} + K(\boldsymbol u)\boldsymbol u = \boldsymbol F_{\text{aero}} + \boldsymbol F_{\text{motor}}
+                    \]
+                    <p class="text-sm text-gray-500 mt-1">其中 \(M\) 为质量矩阵，\(C\) 为阻尼矩阵，\(K(\boldsymbol u)\) 计入几何非线性，右端为气动载荷与电机激励。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">3. 流固耦合控制方程</h4>
+                    <p>
+                        流体 Navier‑Stokes 方程与固体弹性动力学方程耦合，可用于求解柔性仿生机翼、扑翼和旋翼的气动‑结构耦合响应。
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">4. 仿生构型多目标优化模型</h4>
+                    <p>以轻量化、低噪声、高强度为目标，可建立优化模型：</p>
+                    \[
+                    \min_{\boldsymbol p}
+                    \Big\{
+                    m(\boldsymbol p),\; \mathcal{N}(\boldsymbol p)
+                    \Big\},\quad
+                    \text{s.t.}\quad
+                    \sigma_{\max}(\boldsymbol p)\le [\sigma],\quad S(\boldsymbol p)\ge S_0
+                    \]
+                    <p class="text-sm text-gray-500 mt-1">其中 \(\boldsymbol p\) 为仿生材料几何参数，约束包括强度、刚度等工程限制。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数值模拟 -->
+    <section id="sim" class="mb-16">
+        <h2 class="section-title">数值模拟</h2>
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold mb-3">仿真模块</h4>
+                    <ul class="list-disc pl-5 space-y-1.5 text-gray-700">
+                        <li>材料均匀化有限元：仿生胞元等效刚度计算</li>
+                        <li>结构有限元：应力、变形、模态、疲劳分析</li>
+                        <li>CFD气动仿真：旋翼/机翼升阻力、流场、噪声预测</li>
+                        <li>流固耦合 FSI：柔性仿生机翼大变形仿真</li>
+                        <li>多目标优化：仿生构型参数寻优</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-3">常用工具栈</h4>
+                    <ul class="list-disc pl-5 space-y-1.5 text-gray-700">
+                        <li>FEA：Abaqus、ANSYS、FEniCS</li>
+                        <li>CFD：Fluent、OpenFOAM</li>
+                        <li>Python：FEniCS、PyVista 后处理、Scipy 优化</li>
+                        <li>MATLAB：动力学、模态分析、参数化建模</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 应用落地 -->
+    <section id="apply" class="mb-16">
+        <h2 class="section-title">应用落地</h2>
+        <div class="bg-white rounded-xl p-6 card-shadow">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 text-gray-700">
+                <div>
+                    <h4 class="font-bold mb-2">城市空中交通 UAM‑eVTOL</h4>
+                    <p class="text-sm">仿生轻量化机翼与降噪旋翼，可用于降低整机重量和城市噪声，支撑载人低空通勤场景。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">低空物流货运飞行器</h4>
+                    <p class="text-sm">仿生蜂窝机身结构可提升抗冲击能力，适用于山地、城市末端和复杂环境物资投送。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">巡检测绘无人机</h4>
+                    <p class="text-sm">仿生高升阻比机翼有助于延长续航，可应用于电力、管线、环境监测和测绘任务。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">特种微型仿生飞行器</h4>
+                    <p class="text-sm">扑翼微型飞行器适用于狭小空间救援、侦察和探测任务，具备较强的近场机动能力。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">低空飞行器材料研发</h4>
+                    <p class="text-sm">仿生‑复合材料联合研发，可形成材料设计、结构仿真、试验验证和参数迭代的闭环。</p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-2">仿真‑试验对标平台</h4>
+                    <p class="text-sm">通过上传试验图像与数值模拟结果进行对比，可辅助迭代仿生构型参数和材料方案。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-neutral text-white py-6 mt-10">
+    <div class="container mx-auto px-4 text-center text-sm">
+        <p>低空经济飞行器仿生材料仿真平台｜材料仿真、数学建模、数值模拟研究原型系统</p>
+    </div>
+</footer>
+
+<script>
+// 图片上传预览
+const uploadInput = document.getElementById('imgUpload');
+const dropZone = document.getElementById('dropZone');
+const selectFileBtn = document.getElementById('selectFileBtn');
+const previewWrap = document.getElementById('previewWrap');
+const previewImg = document.getElementById('previewImg');
+const clearPreviewBtn = document.getElementById('clearPreviewBtn');
+
+function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewWrap.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+selectFileBtn.addEventListener('click', () => uploadInput.click());
+
+uploadInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+clearPreviewBtn.addEventListener('click', () => {
+    previewWrap.classList.add('hidden');
+    previewImg.src = '';
+    uploadInput.value = '';
+});
+
+// 平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// 页面加载时渲染公式
+MathJax.typesetPromise();
+</script>
+
+</body>
+</html>

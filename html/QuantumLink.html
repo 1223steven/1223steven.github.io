@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子计算科学仿真平台 | Quantum‑Science‑Sim V2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/element-plus"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f0f4f9;
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .app-container {
+            max-width: 1480px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+        .page-header {
+            background: linear-gradient(135deg, #254b9c, #1c3670);
+            color: white;
+            padding: 24px 32px;
+        }
+        .page-header h2 {
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
+        .page-header p {
+            margin:0;
+            opacity: 0.85;
+            font-size: 14px;
+        }
+        .page-body {
+            padding:24px 32px;
+        }
+        .input-block {
+            margin-bottom:22px;
+        }
+        .tab-content-area {
+            min-height:460px;
+            max-height:520px;
+            overflow-y:auto;
+            padding:4px 0;
+        }
+        .image-wrap {
+            border:1px solid #dee2e9;
+            background:#f8fafc;
+            border-radius:10px;
+            padding:20px;
+            margin:10px 0;
+        }
+        .result-img {
+            max-width:100%;
+            border-radius:6px;
+            display:block;
+        }
+        .code-preview {
+            background:#1e293b;
+            color:#e2e8f0;
+            font-family:Consolas, Menlo, monospace;
+            font-size:13px;
+            padding:16px;
+            border-radius:8px;
+            white-space:pre-wrap;
+            overflow-y:auto;
+            max-height:300px;
+            margin-top:12px;
+        }
+        .case-card-item {
+            margin-bottom:14px;
+        }
+        .btn-row {
+            margin-top:14px;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="app-container">
+    <div class="page-header">
+        <h2>🔬 量子计算科学仿真平台 Quantum‑Science‑Sim V2</h2>
+        <p>输入科学问题 → 数学建模 → 量子算法仿真 → 经典数值基准对比 → 输出对比图与完整分析报告</p>
+    </div>
+    <div class="page-body">
+        <!-- 科学问题输入区 -->
+        <div class="input-block">
+            <el-input
+                v-model="userQuery"
+                type="textarea"
+                :rows="5"
+                placeholder="请输入待求解科学问题：
+示例1：求解H₂分子不同键长下基态能量，VQE量子仿真，对比经典精确对角化
+示例2：一维海森堡自旋链Trotter时间演化仿真，对比经典ODE磁化动力学
+示例3：Max‑Cut最大割图优化问题，QAOA求解，对比经典贪心算法"
+            ></el-input>
+            <div class="btn-row">
+                <el-button type="primary" size="large" :loading="taskLoading" @click="runSimulation">🚀 启动量子仿真求解</el-button>
+                <el-button size="large" @click="loadCase(0)">📂 载入案例：H₂分子VQE势能曲线</el-button>
+                <el-button size="large" @click="exportMarkdownReport">📄 导出Markdown报告</el-button>
+                <el-button size="large" @click="resetAll">🗑️ 重置全部</el-button>
+            </div>
+        </div>
+
+        <!-- 仿真参数配置 -->
+        <el-card title="⚙️仿真参数配置" shadow="hover" style="margin-bottom:22px;">
+            <el-row :gutter="24">
+                <el-col :span="6">
+                    <span>量子比特数：</span>
+                    <el-input-number v-model="params.nQubit" :min="1" :max="28"></el-input-number>
+                </el-col>
+                <el-col :span="6">
+                    <span>模拟器：</span>
+                    <el-select v-model="params.simulator">
+                        <el-option label="Aer理想模拟器" value="aer"></el-option>
+                        <el-option label="NISQ噪声模拟器" value="noise"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="6">
+                    <span>最大迭代步数：</span>
+                    <el-input-number v-model="params.maxIter" :min="10" :max="600"></el-input-number>
+                </el-col>
+                <el-col :span="6">
+                    <span>量子算法：</span>
+                    <el-select v-model="params.algorithm">
+                        <el-option label="VQE变分本征求解" value="vqe"></el-option>
+                        <el-option label="QAOA组合优化" value="qaoa"></el-option>
+                        <el-option label="Trotter时间演化" value="trotter"></el-option>
+                    </el-select>
+                </el-col>
+            </el-row>
+        </el-card>
+
+        <!-- Tab面板 -->
+        <el-tabs v-model="activeTab">
+            <el-tab-pane label="📐数学建模" name="modeling">
+                <div class="tab-content-area">
+                    <el-input v-model="report.modeling" type="textarea" :rows="18"></el-input>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="⚛量子计算求解" name="quantum">
+                <div class="tab-content-area">
+                    <el-input v-model="report.quantumSolve" type="textarea" :rows="18"></el-input>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="📊经典数值模拟" name="classic">
+                <div class="tab-content-area">
+                    <el-input v-model="report.classicSim" type="textarea" :rows="18"></el-input>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="🖼仿真结果对比图" name="visual">
+                <div class="tab-content-area">
+                    <div v-if="imgBase64">
+                        <div class="image-wrap">
+                            <h4 style="margin:0 0 12px 0;">量子仿真 VS 经典基准结果</h4>
+                            <img class="result-img" :src="'data:image/png;base64,' + imgBase64">
+                        </div>
+                        <div class="btn-row">
+                            <el-button @click="downloadImage">💾下载PNG图片</el-button>
+                        </div>
+                        <div class="code-preview">{{report.resultAnalysis}}</div>
+                    </div>
+                    <div v-else>
+                        <el-alert title="等待仿真输出" description="点击启动量子仿真求解，生成量子‑经典对比图像。当前为前端模拟模式，对接后端Qiskit服务生成真实图像。" type="info" show-icon></el-alert>
+                    </div>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="📚案例库" name="cases">
+                <div class="tab-content-area">
+                    <el-card class="case-card-item" v-for="(item,i) in caseList" :key="i" shadow="hover">
+                        <h4 style="margin:0 0 6px 0;">{{item.title}}</h4>
+                        <p style="margin:0 0 10px 0;color:#555;">{{item.desc}}</p>
+                        <el-button size="small" @click="loadCase(i)">载入该案例</el-button>
+                    </el-card>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="🚀应用落地分析" name="deploy">
+                <div class="tab-content-area">
+                    <el-input v-model="report.deployAnalysis" type="textarea" :rows="18"></el-input>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+
+<script>
+const { createApp } = Vue;
+createApp({
+    setup(){
+        const activeTab = Vue.ref("modeling");
+        const userQuery = Vue.ref("");
+        const imgBase64 = Vue.ref("");
+        const taskLoading = Vue.ref(false);
+        const params = Vue.ref({
+            nQubit: 2,
+            simulator: "aer",
+            maxIter: 100,
+            algorithm: "vqe"
+        });
+        const report = Vue.ref({
+            modeling: "",
+            quantumSolve: "",
+            classicSim: "",
+            resultAnalysis: "",
+            deployAnalysis: ""
+        });
+        const caseList = Vue.ref([
+            {
+                title:"案例1：H₂分子VQE势能曲线",
+                desc:"求解H₂分子不同键长下基态能量；Jordan‑Wigner费米子‑比特映射；VQE变分量子本征求解；经典矩阵精确对角化作为真值基准，绘制势能对比曲线。"
+            },
+            {
+                title:"案例2：一维海森堡自旋链Trotter演化",
+                desc:"海森堡哈密顿自旋动力学；Trotter分解构造量子演化线路；量子仿真磁化强度时间演化；经典ODE数值解作为对照基准。"
+            },
+            {
+                title:"案例3：Max‑Cut最大割 QAOA组合优化",
+                desc:"无向图最大割问题；QAOA量子交替算子求解；与经典贪心/近似算法对比；分析量子近似解质量与算法深度的关系。"
+            }
+        ]);
+
+        async function runSimulation(){
+            if(!userQuery.value.trim()){
+                ElementPlus.ElMessage.warning("请输入科学问题描述或者加载预置案例");
+                return;
+            }
+            taskLoading.value = true;
+            ElementPlus.ElMessage.info("提交仿真任务……");
+
+            // ==========真实后端请求（解除注释对接FastAPI/Qiskit后端）==========
+            /*
+            const payload = {
+                query: userQuery.value,
+                cfg: params.value
+            };
+            const resp = await fetch("http://127.0.0.1:8000/api/quantum_solve",{
+                method:"POST",
+                headers:{"Content‑Type":"application/json"},
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            report.value = data.report;
+            imgBase64.value = data.img_base64;
+            activeTab.value = "visual";
+            */
+
+            // =========前端模拟演示逻辑，对接后端后替换上面代码==========
+            report.value.modeling = `# 数学建模
+原始科学问题：
+${userQuery.value}
+
+## 1.系统哈密顿/控制方程
+\\[
+H = \\text{物理模型哈密顿算符}
+\\]
+## 2.希尔伯特空间
+自由度数目：${params.value.nQubit} 比特；希尔伯特空间维度：$2^{${params.value.nQubit}}$
+## 3.算子映射
+费米子‑量子比特映射方案：Jordan‑Wigner / Bravyi‑Kitaev
+## 4.约束与边界条件
+物理参数、边界条件、常数项；
+## 5.问题量子化转换
+将原科学问题转化为量子算法可求解形式，构造代价函数。`;
+
+            report.value.quantumSolve = `# 量子计算求解模块
+选择算法：${params.value.algorithm.toUpperCase()}
+量子比特资源：${params.value.nQubit}
+模拟器环境：${params.value.simulator==='aer'?'Aer理想模拟器':'NISQ噪声模拟器'}
+最大迭代：${params.value.maxIter}
+
+1.初态制备策略
+2.Ansatz变分线路 / Trotter时间演化分解
+3.可观测物理量与期望值测量方案
+4.优化器配置、代价函数定义
+5.量子仿真执行流程。`;
+
+            report.value.classicSim = `# 经典数值模拟基准
+经典求解方法：精确矩阵对角化 / Scipy稀疏本征求解 / ODE时间积分
+1.构建系统矩阵；
+2.经典数值求解得到真值参考解；
+3.记录能量、本征谱、动力学演化序列；
+4.作为基准用于评估量子仿真误差。`;
+
+            report.value.resultAnalysis = `# 仿真结果分析
+量子仿真输出结果；
+经典基准真值；
+绝对误差、相对误差统计；
+迭代收敛行为、残差；
+量子‑经典结果一致性评估；
+偏差来源：变分线路表达能力、模拟器噪声、迭代收敛精度。`;
+
+            report.value.deployAnalysis = `# 应用落地分析
+1.现实应用场景：量子化学、自旋物理、组合优化；
+2.NISQ硬件资源开销：所需比特数、量子门深度；
+3.噪声对仿真精度的影响；
+4.规模扩展瓶颈；
+5.算法改进方向与硬件适配建议。`;
+
+            imgBase64.value = "";
+            activeTab.value = "visual";
+            taskLoading.value = false;
+            ElementPlus.ElMessage.success("仿真任务完成，请查看结果");
+        }
+
+        function loadCase(idx){
+            const item = caseList.value[idx];
+            userQuery.value = item.desc;
+            ElementPlus.ElMessage.success(`已载入：${item.title}`);
+        }
+
+        function resetAll(){
+            userQuery.value = "";
+            imgBase64.value = "";
+            taskLoading.value = false;
+            params.value = {nQubit:2, simulator:"aer", maxIter:100, algorithm:"vqe"};
+            report.value = {modeling:"", quantumSolve:"", classicSim:"", resultAnalysis:"", deployAnalysis:""};
+            activeTab.value = "modeling";
+            ElementPlus.ElMessage.info("全部数据已重置");
+        }
+
+        function downloadImage(){
+            if(!imgBase64.value){
+                ElementPlus.ElMessage.warning("暂无结果图片，请运行仿真任务");
+                return;
+            }
+            const a = document.createElement("a");
+            a.href = "data:image/png;base64," + imgBase64.value;
+            a.download = "quantum‑sim‑output.png";
+            a.click();
+        }
+
+        function exportMarkdownReport(){
+            const mdText = `# 量子计算仿真求解科学问题报告
+## 科学问题
+${userQuery.value}
+
+## 仿真参数
+量子比特：${params.value.nQubit}，模拟器：${params.value.simulator}，算法：${params.value.algorithm}，迭代：${params.value.maxIter}
+
+## 数学建模
+${report.value.modeling}
+
+## 量子计算求解
+${report.value.quantumSolve}
+
+## 经典数值模拟
+${report.value.classicSim}
+
+## 仿真结果分析
+${report.value.resultAnalysis}
+
+## 应用落地分析
+${report.value.deployAnalysis}
+`;
+            const blob = new Blob([mdText], {type:"text/markdown"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "quantum‑sim‑report.md";
+            a.click();
+            URL.revokeObjectURL(url);
+            ElementPlus.ElMessage.success("Markdown报告已导出");
+        }
+
+        return {
+            activeTab, userQuery, imgBase64, taskLoading, params, report, caseList,
+            runSimulation, loadCase, resetAll, downloadImage, exportMarkdownReport
+        }
+    }
+}).use(ElementPlus).mount("#app");
+</script>
+</body>
+</html>

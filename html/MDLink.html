@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分子动力学仿真求解平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        dark: '#1E293B',
+                        cardBg: '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .tab-active {
+                @apply border-b-2 border-primary text-primary font-medium;
+            }
+            .shadow-card {
+                box-shadow: 0 4px 20px rgba(22, 93, 255, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-dark min-h-screen">
+    <!-- 导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa fa-cubes text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-primary">分子动力学仿真求解平台</h1>
+            </div>
+            <nav class="hidden md:flex gap-6 text-sm">
+                <a href="#home" class="hover:text-primary">首页</a>
+                <a href="#case" class="hover:text-primary">仿真案例</a>
+                <a href="#modeling" class="hover:text-primary">数学建模</a>
+                <a href="#simulation" class="hover:text-primary">数值模拟</a>
+                <a href="#application" class="hover:text-primary">应用落地</a>
+                <a href="#doc" class="hover:text-primary">平台说明</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- 输入交互区域 -->
+        <section id="home" class="bg-white rounded-xl p-8 shadow-card mb-10">
+            <h2 class="text-[22px] font-semibold mb-2">分子动力学科学问题求解</h2>
+            <p class="text-slate-500 mb-6">输入你的科学问题，系统调用分子动力学计算引擎生成仿真结果图像，支持结果下载。示例：金属材料高温相变、蛋白质分子折叠、流体界面扩散行为</p>
+            
+            <div class="flex flex-col gap-4">
+                <textarea id="scienceQuestion" rows="4" placeholder="请输入需要求解的分子动力学科学问题..." 
+                    class="w-full border border-slate-300 rounded-lg p-4 focus:outline-none focus:border-primary transition"></textarea>
+                <div class="flex gap-3 flex-wrap">
+                    <button id="runSimBtn" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+                        <i class="fa fa-play-circle"></i> 启动分子动力学仿真计算
+                    </button>
+                    <button id="clearBtn" class="border border-slate-300 px-6 py-3 rounded-lg hover:bg-slate-100 transition">清空输入</button>
+                </div>
+            </div>
+
+            <!-- 仿真结果面板 -->
+            <div id="resultPanel" class="mt-8 hidden">
+                <div class="border border-slate-200 rounded-lg p-6 bg-cardBg">
+                    <h3 class="font-medium text-lg mb-4 flex items-center gap-2">
+                        <i class="fa fa-bar-chart text-primary"></i>仿真计算结果
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-sm text-slate-500 mb-2">仿真结果图像预览</p>
+                            <div class="bg-slate-200 rounded-lg h-72 flex items-center justify-center overflow-hidden">
+                                <img id="simImage" src="" alt="仿真结果图" class="max-h-full max-w-full object-contain">
+                            </div>
+                            <div class="mt-3">
+                                <button id="downloadImg" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
+                                    <i class="fa fa-download"></i> 下载仿真图片
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500 mb-2">仿真计算信息输出</p>
+                            <div id="simLog" class="bg-slate-900 text-green-400 p-4 rounded-lg h-72 overflow-y-auto text-sm font-mono">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab切换：数学建模 | 数值模拟 | 应用落地 -->
+        <div class="mb-10">
+            <div class="flex border-b border-slate-200">
+                <button class="tab-btn tab-active px-5 py-3 text-sm" data-tab="modeling">数学建模</button>
+                <button class="tab-btn px-5 py-3 text-sm text-slate-600" data-tab="simulation">数值模拟</button>
+                <button class="tab-btn px-5 py-3 text-sm text-slate-600" data-tab="application">应用落地</button>
+            </div>
+            <!-- 数学建模面板 -->
+            <div id="modeling" class="tab-content bg-white p-6 rounded-b-xl shadow-card">
+                <h3 class="text-lg font-semibold mb-4">分子动力学数学建模基础</h3>
+                <div class="space-y-4 text-slate-700 text-sm leading-relaxed">
+                    <p>分子动力学核心基于牛顿运动方程描述粒子体系演化：
+                    $$m_i \frac{d^2 \boldsymbol r_i}{dt^2}=-\nabla_i U(\boldsymbol r_1,\boldsymbol r_2,...,\boldsymbol r_N)$$
+                    $m_i$为粒子质量，$\boldsymbol r_i$粒子位置，$U$为体系势能函数。势能包含成对相互作用Lennard‑Jones势、库仑势、键角二面角等分子力场项。</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>力场模型：Lennard‑Jones势、AMBER、OPLS、ReaxFF反应力场</li>
+                        <li>系综模型：NVE微正则系综，NVT正则系综，NPT等压等温系综</li>
+                        <li>边界条件：周期性边界条件PBC，消除有限尺寸效应</li>
+                        <li>控温控压算法：Berendsen、Nose‑Hoover恒温恒压</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 数值模拟面板 -->
+            <div id="simulation" class="tab-content hidden bg-white p-6 rounded-b-xl shadow-card">
+                <h3 class="text-lg font-semibold mb-4">分子动力学数值模拟</h3>
+                <div class="space-y-4 text-slate-700 text-sm leading-relaxed">
+                    <p>运动方程常用有限差分求解算法：Verlet算法、速度Verlet、Leap‑frog蛙跳算法。主流开源求解器 LAMMPS、GROMACS、NAMD。</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>积分器：Velocity‑Verlet，稳定性好，能量守恒，工业最常用</li>
+                        <li>时间步长：一般fs量级，化学键振动体系取0.5‑2 fs</li>
+                        <li>近邻列表：Verlet‑list降低成对相互作用计算复杂度</li>
+                        <li>长程相互作用：Ewald求和，PME粒子网格埃瓦尔德</li>
+                        <li>后处理：径向分布函数RDF、均方位移MSD、速度自相关函数VACF</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 应用落地面板 -->
+            <div id="application" class="tab-content hidden bg-white p-6 rounded-b-xl shadow-card">
+                <h3 class="text-lg font-semibold mb-4">分子动力学应用落地场景</h3>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="border border-slate-200 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">材料科学</h4>
+                        <p class="text-slate-600">金属塑性变形、纳米材料力学、相变、催化剂界面、高分子聚合、摩擦磨损</p>
+                    </div>
+                    <div class="border border-slate-200 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">生物分子</h4>
+                        <p class="text-slate-600">蛋白质折叠、药物‑靶点结合、膜蛋白、核酸DNA/RNA构象动力学</p>
+                    </div>
+                    <div class="border border-slate-200 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">能源化工</h4>
+                        <p class="text-slate-600">电解液输运、电池界面、吸附分离、燃烧反应、超临界流体</p>
+                    </div>
+                    <div class="border border-slate-200 p-4 rounded-lg">
+                        <h4 class="font-medium mb-2">凝聚态物理</h4>
+                        <p class="text-slate-600">扩散系数计算、输运性质、相变动力学、界面润湿行为</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 仿真案例区 -->
+        <section id="case" class="bg-white rounded-xl p-8 shadow-card mb-10">
+            <h2 class="text-xl font-semibold mb-6">典型分子动力学仿真案例库</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="border border-slate-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                    <div class="h-44 bg-slate-100 flex items-center justify-center">
+                        <i class="fa fa-flask text-5xl text-primary opacity-60"></i>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-medium">案例1：氩原子液体扩散</h4>
+                        <p class="text-sm text-slate-500 mt-1">L‑J势，NVT系综，计算均方位移MSD，获取扩散系数</p>
+                        <button class="case-fill mt-3 text-sm text-primary" data-question="采用Lennard‑Jones势模拟液态氩原子体系，计算原子均方位移与扩散系数">填入问题</button>
+                    </div>
+                </div>
+                <div class="border border-slate-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                    <div class="h-44 bg-slate-100 flex items-center justify-center">
+                        <i class="fa fa-dna text-5xl text-primary opacity-60"></i>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-medium">案例2：小分子‑蛋白结合</h4>
+                        <p class="text-sm text-slate-500 mt-1">生物分子体系，OPLS力场，分析配体结合稳定性</p>
+                        <button class="case-fill mt-3 text-sm text-primary" data-question="模拟小分子配体与靶蛋白水溶液体系，分析结合构象稳定性">填入问题</button>
+                    </div>
+                </div>
+                <div class="border border-slate-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                    <div class="h-44 bg-slate-100 flex items-center justify-center">
+                        <i class="fa fa-cogs text-5xl text-primary opacity-60"></i>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-medium">案例3：金属纳米材料拉伸</h4>
+                        <p class="text-sm text-slate-500 mt-1">金属原子体系，EAM嵌入原子势，应力‑应变曲线模拟</p>
+                        <button class="case-fill mt-3 text-sm text-primary" data-question="金属纳米丝单轴拉伸分子动力学模拟，得到应力应变响应">填入问题</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 平台说明 -->
+        <section id="doc" class="bg-white rounded-xl p-8 shadow-card">
+            <h2 class="text-xl font-semibold mb-4">平台使用说明</h2>
+            <div class="text-sm text-slate-700 space-y-3">
+                <p>1. 使用流程：输入科学问题 → 点击启动仿真计算 → 获取仿真图像 → 下载图片。</p>
+                <p>2. 当前版本前端仅做交互演示，真实分子动力学仿真需要后端部署 LAMMPS/GROMACS，完成力场文件生成、任务调度、仿真运行、VMD/OVITO渲染出图。</p>
+                <p>3. 支持问题类型：材料力学行为、扩散输运、相变、生物分子构象、界面行为；尽量明确体系、温度压力、研究目标。</p>
+                <p>4. 模块说明：<b>数学建模</b>介绍MD理论方程、力场、系综；<b>数值模拟</b>介绍积分算法、求解器、后处理；<b>应用落地</b>给出各领域实际科研场景。</p>
+                <p>5. 案例库可以一键填充示例科学问题，快速体验平台交互。</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-12 py-6 text-center text-slate-400 text-sm">
+        <p>分子动力学仿真求解平台｜前端演示版本 · 后端仿真引擎需对接MD计算程序</p>
+    </footer>
+
+    <script>
+        // Tab切换逻辑
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', ()=>{
+                tabBtns.forEach(b=>b.classList.remove('tab-active'));
+                tabContents.forEach(c=>c.classList.add('hidden'));
+                btn.classList.add('tab-active');
+                const target = btn.getAttribute('data-tab');
+                document.getElementById(target).classList.remove('hidden');
+            })
+        })
+
+        // 案例一键填充
+        document.querySelectorAll('.case-fill').forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                document.getElementById('scienceQuestion').value = btn.getAttribute('data-question');
+                window.scrollTo({top:0,behavior:'smooth'})
+            })
+        })
+
+        // 仿真运行按钮（前端模拟效果）
+        const runSimBtn = document.getElementById('runSimBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultPanel = document.getElementById('resultPanel');
+        const simLog = document.getElementById('simLog');
+        const simImage = document.getElementById('simImage');
+        const downloadImg = document.getElementById('downloadImg');
+
+        runSimBtn.addEventListener('click',()=>{
+            const q = document.getElementById('scienceQuestion').value.trim();
+            if(!q){
+                alert("请输入科学问题");
+                return;
+            }
+            resultPanel.classList.remove('hidden');
+            simLog.innerText = "";
+            const logLines = [
+                "[INFO] 接收科学问题："+q,
+                "[INFO] 解析分子动力学任务……",
+                "[INFO] 构建粒子体系、力场参数、系综设置",
+                "[INFO] 初始化速度Verlet积分器，时间步长设置",
+                "[INFO] 开始MD迭代计算……",
+                "[INFO] 完成N步分子动力学演化",
+                "[INFO] 后处理分析，渲染仿真图像",
+                "[SUCCESS] 仿真任务完成，生成结果图片"
+            ];
+            let idx = 0;
+            simImage.src = "https://picsum.photos/id/1025/800/500"; //演示占位图，实际替换OVITO/VMD渲染图
+            function appendLog(){
+                if(idx<logLines.length){
+                    simLog.innerText += logLines[idx]+"\n";
+                    simLog.scrollTop = simLog.scrollHeight;
+                    idx++;
+                    setTimeout(appendLog,400);
+                }
+            }
+            appendLog();
+        })
+
+        clearBtn.addEventListener('click',()=>{
+            document.getElementById('scienceQuestion').value="";
+            resultPanel.classList.add('hidden');
+        })
+
+        // 下载图片模拟
+        downloadImg.addEventListener('click',()=>{
+            const link = document.createElement('a');
+            link.href = simImage.src;
+            link.download = "分子动力学仿真结果.png";
+            link.click();
+        })
+    </script>
+</body>
+</html>

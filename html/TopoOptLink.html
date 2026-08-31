@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopoOpt‑Sim 拓扑优化仿真计算平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        darkbg: '#10141c',
+                        panelbg: '#1e2532',
+                        cardbg: '#272f3f',
+                    },
+                    fontFamily: {
+                        mono: ['Consolas','Monaco','monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-thin::-webkit-scrollbar { width:6px;height:6px; }
+            .scrollbar-thin::-webkit-scrollbar-thumb { background:#4b5563;border-radius:3px; }
+            .nav-item-active { @apply bg-primary/20 border-l-4 border-primary text-white; }
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-gray-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+    <!-- 左侧导航 -->
+    <aside class="w-60 bg-panelbg flex-shrink-0 overflow-y-auto scrollbar-thin">
+        <div class="p-4 border-b border-gray-700">
+            <h1 class="text-xl font-bold text-primary">TopoOpt‑Sim</h1>
+            <p class="text-xs text-gray-400 mt-1">拓扑优化仿真计算平台</p>
+        </div>
+        <nav class="mt-2">
+            <div id="nav-main" class="nav-item-active px-4 py-3 cursor-pointer flex items-center gap-2" data-target="page-main">
+                <i class="fa fa-home w-5"></i> 求解主面板
+            </div>
+            <div id="nav-case" class="px-4 py-3 cursor-pointer flex items-center gap-2 hover:bg-gray-700/40" data-target="page-case">
+                <i class="fa fa-book w-5"></i> 案例模板库
+            </div>
+            <div id="nav-math" class="px-4 py-3 cursor-pointer flex items-center gap-2 hover:bg-gray-700/40" data-target="page-math">
+                <i class="fa fa-calculator w-5"></i> 数学建模
+            </div>
+            <div id="nav-num" class="px-4 py-3 cursor-pointer flex items-center gap-2 hover:bg-gray-700/40" data-target="page-num">
+                <i class="fa fa-cogs w-5"></i> 数值模拟
+            </div>
+            <div id="nav-app" class="px-4 py-3 cursor-pointer flex items-center gap-2 hover:bg-gray-700/40" data-target="page-app">
+                <i class="fa fa-industry w-5"></i> 应用落地
+            </div>
+        </nav>
+        <div class="absolute bottom-3 left-3 text-xs text-gray-500">
+            支持：固体｜流体｜流固耦合｜医学｜热散热器
+        </div>
+    </aside>
+
+    <!-- 主内容区域 -->
+    <main class="flex-1 overflow-y-auto scrollbar-thin p-6">
+        <!-- 求解主面板 -->
+        <section id="page-main" class="">
+            <h2 class="text-2xl font-semibold mb-4">拓扑优化科学问题求解</h2>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <!-- 输入面板 -->
+                <div class="bg-panelbg rounded-lg p-5">
+                    <h3 class="text-lg mb-3 flex items-center gap-2">
+                        <i class="fa fa-pencil-square-o text-primary"></i>科学问题输入
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-1">问题类别</label>
+                            <select id="problem-category" class="w-full bg-cardbg border border-gray-600 rounded px-3 py-2">
+                                <option value="solid">固体力学拓扑优化</option>
+                                <option value="fluid">流体拓扑优化</option>
+                                <option value="fsi">流固耦合拓扑优化</option>
+                                <option value="medical">医学生物结构拓扑优化</option>
+                                <option value="heat">散热器热拓扑优化</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-300 mb-1">科学问题描述</label>
+                            <textarea id="problem-desc" rows="8" class="w-full bg-cardbg border border-gray-600 rounded px-3 py-2 font-mono text-sm" placeholder="例如：设计悬臂梁，体积约束0.3，最小化结构柔度；
+散热器：给定热源，约束体积，最小化平均温度；
+流体：设计微通道，最小化压降；
+流固耦合：水下支撑结构，兼顾刚度与流体阻力；
+医学：人工骨支架，约束孔隙率，匹配弹性模量"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm text-gray-300 mb-1">体积约束</label>
+                                <input type="number" step="0.01" value="0.3" class="w-full bg-cardbg border border-gray-600 rounded px-3 py-2">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-300 mb-1">迭代步数</label>
+                                <input type="number" value="100" class="w-full bg-cardbg border border-gray-600 rounded px-3 py-2">
+                            </div>
+                        </div>
+                        <button id="btn-run" class="w-full bg-primary hover:bg-primary/80 py-2.5 rounded font-medium mt-2">
+                            <i class="fa fa-play mr-1"></i>启动拓扑优化求解
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 结果面板 -->
+                <div class="bg-panelbg rounded-lg p-5">
+                    <h3 class="text-lg mb-3 flex items-center gap-2">
+                        <i class="fa fa-image text-primary"></i>仿真优化结果
+                    </h3>
+                    <div id="result-loading" class="hidden py-10 text-center text-gray-400">
+                        <i class="fa fa-spinner fa-spin text-3xl"></i>
+                        <p class="mt-2">正在进行拓扑优化迭代计算……</p>
+                    </div>
+                    <div id="result-empty" class="py-10 text-center text-gray-400">
+                        <i class="fa fa-file-image-o text-4xl"></i>
+                        <p class="mt-2">提交计算后此处展示拓扑优化结果图</p>
+                    </div>
+                    <div id="result-show" class="hidden">
+                        <div class="bg-cardbg rounded p-3">
+                            <img id="result-img" class="w-full rounded object-contain max-h-72 border border-gray-600" alt="拓扑优化结果">
+                        </div>
+                        <div class="mt-3 text-sm space-y-1 text-gray-300">
+                            <p>目标函数：<span id="res-obj">--</span></p>
+                            <p>实际体积分数：<span id="res-vol">--</span></p>
+                            <p>收敛迭代步：<span id="res-iter">--</span></p>
+                        </div>
+                        <button id="btn-download" class="mt-4 bg-green‑600 hover:bg-green‑500 px-4 py-2 rounded">
+                            <i class="fa fa-download mr-1"></i>下载结果图片
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 案例模板库 -->
+        <section id="page-case" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">拓扑优化案例模板库</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <!-- 固体 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">固体力学｜悬臂梁柔度最小化</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：最小化结构柔度</p>
+                        <p>约束：体积分数=0.3</p>
+                        <p>边界：一端固支，右端集中载荷</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">典型MMA/SIMP拓扑优化</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="solid‑beam">填入求解面板</button>
+                </div>
+                <!-- 散热器热 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">热｜散热器散热拓扑优化</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：最小域内平均温度</p>
+                        <p>约束：体积分数=0.4</p>
+                        <p>边界：底部热源，外边界对流换热</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">热传导拓扑优化</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="heat‑sink">填入求解面板</button>
+                </div>
+                <!-- 流体 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">流体｜微通道压降最小化</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：最小进出口压降</p>
+                        <p>约束：体积分数=0.5</p>
+                        <p>边界：入口速度，出口自由流出</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">流体B‑B拓扑优化</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="fluid‑channel">填入求解面板</button>
+                </div>
+                <!-- 流固耦合 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">流固耦合｜水下支撑结构</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：兼顾结构柔度+流体阻力</p>
+                        <p>约束：体积分数=0.35</p>
+                        <p>边界：来流，结构固支边界</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">流固耦合多目标拓扑优化</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="fsi‑support">填入求解面板</button>
+                </div>
+                <!-- 医学人工骨 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">医学｜人工骨支架拓扑优化</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：匹配人体骨弹性模量</p>
+                        <p>约束：孔隙率≥60%</p>
+                        <p>边界：生理载荷条件</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">生物医学多孔支架设计</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="medical‑bone">填入求解面板</button>
+                </div>
+                <!-- 位移约束结构 -->
+                <div class="bg-panelbg rounded p-4">
+                    <h3 class="font-bold text-primary">固体｜位移约束支架结构</h3>
+                    <div class="text-sm text-gray‑300 mt-2 space-y-1">
+                        <p>目标：最小重量，约束最大位移</p>
+                        <p>约束：最大位移上限，体积上限</p>
+                        <p>边界：多点固支，分布载荷</p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray‑400">约束型拓扑优化</div>
+                    <button class="case-fill mt-3 bg-primary/70 hover:bg-primary px-3 py-1.5 rounded text-sm" data-case="solid‑bracket">填入求解面板</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学建模 -->
+        <section id="page-math" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">拓扑优化数学建模</h2>
+            <div class="bg-panelbg p-5 rounded-lg">
+                <h3 class="text-lg mb-3">通用SIMP拓扑优化标准形式</h3>
+                <div class="font‑mono text‑sm my‑4 bg‑cardbg p‑4 rounded overflow‑x‑auto">
+min<sub>ρ</sub> &nbsp; J(ρ,u(ρ))<br>
+s.t. &nbsp;&nbsp; R(ρ,u)=0 &nbsp;&nbsp;（控制方程残差：弹性/NS方程/热传导）<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ∫ ρ dΩ ≤ V<sub>frac</sub> |Ω|<br>
+&nbsp;&nbsp;&nbsp;&nbsp; 0 ≤ ρ(x) ≤ 1, &nbsp; x∈Ω
+                </div>
+                <div class="mt‑5 space‑y‑4 text‑sm text‑gray‑200">
+                    <div>
+                        <h4 class="text‑primary font‑medium">1.固体力学SIMP</h4>
+                        <p>E(ρ)=ρ<sup>p</sup>E<sub>0</sub>，p为惩罚因子；目标常为柔度最小 J=u<sup>T</sup>K(ρ)u</p>
+                    </div>
+                    <div>
+                        <h4 class="text‑primary font‑medium">2.热传导拓扑优化</h4>
+                        <p>k(ρ)=ρ<sup>p</sup>k<sub>0</sub>，目标：平均温度最小；控制方程泊松热传导方程</p>
+                    </div>
+                    <div>
+                        <h4 class="text‑primary font‑medium">3.流体B‑B拓扑优化</h4>
+                        <p>Darcy‑Stokes插值，流体阻力惩罚；目标进出口压降最小</p>
+                    </div>
+                    <div>
+                        <h4 class="text‑primary font‑medium">4.流固耦合拓扑优化</h4>
+                        <p>多目标：结构柔度 + 流体耗散；耦合Navier‑Stokes与弹性方程</p>
+                    </div>
+                    <div>
+                        <h4 class="text‑primary font‑medium">5.医学多孔支架</h4>
+                        <p>约束孔隙率，弹性模量匹配目标生物组织，多约束拓扑优化</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数值模拟 -->
+        <section id="page-num" class="hidden">
+            <h2 class="text‑2xl font‑semibold mb‑4">数值模拟与求解器</h2>
+            <div class="bg‑panelbg p‑5 rounded‑lg space‑y‑5">
+                <div>
+                    <h3 class="text‑text‑primary text‑lg">核心求解算法</h3>
+                    <ul class="list‑disc pl‑5 mt‑2 text‑sm space‑1 text‑gray‑200">
+                        <li>密度插值模型：SIMP（固体/热）、B‑B模型（流体）</li>
+                        <li>优化器：MMA、OC（最优准则法）、IPOPT</li>
+                        <li>偏微分方程离散：有限元FEM；稳定化有限元用于流体</li>
+                        <li>过滤技术：密度过滤、灵敏度过滤，消除棋盘格现象</li>
+                        <li>线性求解器：PCG、GMRES、多重网格，处理大规模稀疏矩阵</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text‑text‑primary text‑lg">迭代收敛监控指标</h3>
+                    <div class="text‑sm mt‑2">
+                        <p>目标函数收敛、体积约束残差、密度变化L2范数；终止条件：迭代上限或变化小于阈值</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text‑text‑primary text‑lg">开源工具栈参考</h3>
+                    <div class="text‑sm mt‑2 font‑mono text‑gray‑300">
+FEniCS/FEniCS‑x, PyTopOpt, TopOpt‑88, OpenFOAM‑topopt, PETSc
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用落地 -->
+        <section id="page-app" class="hidden">
+            <h2 class="text‑2xl font‑semibold mb‑4">工程与医学应用落地</h2>
+            <div class="grid grid‑cols‑1 md:grid‑cols‑2 gap‑5">
+                <div class="bg‑panelbg p‑4 rounded">
+                    <h3 class="font‑bold text‑primary">机械工业</h3>
+                    <ul class="text‑sm mt‑2 space‑y‑1 text‑gray‑300">
+                        <li>轻量化工程机械支架、航空零部件</li>
+                        <li>散热器、换热器热拓扑优化</li>
+                        <li>流体歧管、微流控芯片流道设计</li>
+                    </ul>
+                </div>
+                <div class="bg‑panelbg p‑4 rounded">
+                    <h3 class="font‑bold text‑primary">生物医学</h3>
+                    <ul class="text‑sm mt‑2 space‑y‑1 text‑gray‑300">
+                        <li>3D打印人工骨多孔支架</li>
+                        <li>植入物刚度匹配，孔隙利于细胞长入</li>
+                        <li>骨科假体、牙科修复结构</li>
+                    </ul>
+                </div>
+                <div class="bg‑panelbg p‑4 rounded">
+                    <h3 class="font‑bold text‑primary">流固耦合场景</h3>
+                    <ul class="text‑sm mt‑2 space‑y‑1 text‑gray‑300">
+                        <li>水下装备支撑、海洋柔性结构</li>
+                        <li>风机叶片内部加强拓扑设计</li>
+                    </ul>
+                </div>
+                <div class="bg‑panelbg p‑4 rounded">
+                    <h3 class="font‑bold text‑primary">落地注意事项</h3>
+                    <ul class="text‑sm mt‑2 space‑y‑1 text‑gray‑300">
+                        <li>拓扑结果需要几何后处理、光滑边界</li>
+                        <li>满足制造约束：最小尺寸、拔模、3D打印壁厚</li>
+                        <li>后验仿真验证应力、温度、流场</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+//页面切换
+const navItems = document.querySelectorAll('[data-target]');
+const pages = document.querySelectorAll('section[id^="page‑"]');
+navItems.forEach(item=>{
+    item.addEventListener('click',()=>{
+        const targetId = item.dataset.target;
+        navItems.forEach(n=>n.classList.remove('nav‑item‑active'));
+        item.classList.add('nav‑item‑active');
+        pages.forEach(p=>p.classList.add('hidden'));
+        document.getElementById(targetId).classList.remove('hidden');
+    })
+})
+
+//案例数据
+const caseDict = {
+    "solid‑beam":{
+        cat:"solid",
+        desc:"固体力学悬臂梁拓扑优化；目标最小化结构柔度；体积约束0.3；几何矩形域，左端固支，右端施加集中向下载荷；SIMP插值，灵敏度过滤。"
+    },
+    "heat‑sink":{
+        cat:"heat",
+        desc:"散热器热拓扑优化；目标最小域内平均温度；体积约束0.4；底部给定热源，外边界对流换热；热传导SIMP模型。"
+    },
+    "fluid‑channel":{
+        cat:"fluid",
+        desc:"流体微通道拓扑优化；目标最小进出口压降；体积约束0.5；入口给定速度边界，出口自由流出；B‑B流体拓扑模型。"
+    },
+    "fsi‑support":{
+        cat:"fsi",
+        desc:"流固耦合水下支撑拓扑优化；多目标：结构柔度与流体耗散加权；体积约束0.35；来流边界，结构一侧固支；耦合NS方程与弹性方程。"
+    },
+    "medical‑bone":{
+        cat:"medical",
+        desc:"医学人工骨支架拓扑优化；目标匹配人体骨弹性模量；约束孔隙率≥60%；施加生理载荷；生成可3D打印多孔生物支架。"
+    },
+    "solid‑bracket":{
+        cat:"solid",
+        desc:"位移约束支架拓扑优化；目标最小化结构重量；约束最大位移上限；多点固支，施加分布载荷；SIMP模型带位移不等式约束。"
+    }
+}
+
+//填入案例
+document.querySelectorAll('.case‑fill').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const key = btn.dataset.case;
+        const c = caseDict[key];
+        document.getElementById('problem‑category').value = c.cat;
+        document.getElementById('problem‑desc').value = c.desc;
+        //切到求解面板
+        pages.forEach(p=>p.classList.add('hidden'));
+        document.getElementById('page‑main').classList.remove('hidden');
+        navItems.forEach(n=>n.classList.remove('nav‑item‑active'));
+        document.getElementById('nav‑main').classList.add('nav‑item‑active');
+    })
+})
+
+//模拟求解按钮
+const btnRun = document.getElementById('btn‑run');
+const loadingEl = document.getElementById('result‑loading');
+const emptyEl = document.getElementById('result‑empty');
+const showEl = document.getElementById('result‑show');
+
+btnRun.addEventListener('click',()=>{
+    loadingEl.classList.remove('hidden');
+    emptyEl.classList.add('hidden');
+    showEl.classList.add('hidden');
+    //模拟计算延迟
+    setTimeout(()=>{
+        loadingEl.classList.add('hidden');
+        showEl.classList.remove('hidden');
+        //占位图，实际后端返回仿真图片替换这里
+        document.getElementById('result‑img').src="https://picsum.photos/id/1/700/450";
+        document.getElementById('res‑obj').textContent="2.124e‑3";
+        document.getElementById('res‑vol').textContent="0.297";
+        document.getElementById('res‑iter').textContent="86";
+    },2200)
+})
+
+//下载模拟
+document.getElementById('btn‑download').addEventListener('click',()=>{
+    alert("实际对接后端：下载拓扑优化仿真结果图片png/svg");
+})
+</script>
+</body>
+</html>

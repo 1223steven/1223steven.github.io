@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微磁计算仿真平台 | Micromagnetic Simulation Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        dark: '#1E293B',
+                        cardBg: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .scrollbar-thin::-webkit-scrollbar { width:6px }
+            .scrollbar-thin::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<!-- 顶部导航 -->
+<header class="bg-dark text-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between">
+        <div class="flex items-center gap-2">
+            <i class="fa fa-magnet text-primary text-2xl"></i>
+            <h1 class="text-xl font-bold">微磁计算仿真平台</h1>
+        </div>
+        <nav class="flex gap-x-6 text-sm">
+            <a href="#sim" class="hover:text-primary transition">仿真求解</a>
+            <a href="#cases" class="hover:text-primary transition">案例库</a>
+            <a href="#math" class="hover:text-primary transition">数学建模</a>
+            <a href="#num" class="hover:text-primary transition">数值模拟</a>
+            <a href="#app" class="hover:text-primary transition">应用落地</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 py-6">
+    <!-- 简介 -->
+    <section class="bg-white rounded-xl shadow p-6 mb-6">
+        <h2 class="text-2xl font-semibold mb-3">平台简介</h2>
+        <p class="text-slate-600 leading-relaxed">
+            本平台面向微磁学科学计算，针对Landau‑Lifshitz‑Gilbert(LLG/MLLG)方程，用户输入科学问题描述，配置磁性材料、外场、网格、求解器参数，完成微磁仿真计算，输出磁化分布云图、动力学演化曲线，支持仿真结果图片下载。
+            内置经典算例，同时提供数学建模理论、数值离散求解方法、工程器件应用相关资料。
+        </p>
+    </section>
+
+    <!-- 仿真求解核心区域 -->
+    <section id="sim" class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- 左侧：问题输入+参数配置 -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <i class="fa fa-pencil-square-o text-primary"></i>科学问题与仿真配置
+            </h3>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-1">描述你的微磁科学问题</label>
+                <textarea id="problemInput" rows="4" class="w-full border border-slate-300 rounded-lg p-3 text-sm" placeholder="例如：研究纳米磁条在外磁场下磁化翻转动力学，观察磁畴壁运动过程"></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">快速加载案例</label>
+                <select id="caseSelect" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                    <option value="">--选择案例填充参数--</option>
+                    <option value="case1">案例1：薄膜磁畴演化</option>
+                    <option value="case2">案例2：磁涡旋动力学</option>
+                    <option value="case3">案例3：纳米柱磁化翻转</option>
+                </select>
+            </div>
+
+            <div class="border-t pt-4 mt-4">
+                <h4 class="font-medium mb-3">微磁仿真参数(LLG方程)</h4>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                        <label class="block text-xs text-slate-500">交换常数 A (J/m)</label>
+                        <input type="number" class="w-full border rounded p-2" value="1.3e-11">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">饱和磁化 Ms (A/m)</label>
+                        <input type="number" class="w-full border rounded p-2" value="8.6e5">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">吉尔伯特阻尼 α</label>
+                        <input type="number" step="0.01" class="w-full border rounded p-2" value="0.02">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">单轴各向异性 K_u</label>
+                        <input type="number" class="w-full border rounded p-2" value="4.0e4">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">外磁场 H (A/m)</label>
+                        <input type="number" class="w-full border rounded p-2" value="0">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500">最大迭代步数</label>
+                        <input type="number" class="w-full border rounded p-2" value="5000">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="block text-xs text-slate-500">求解器</label>
+                    <select class="w-full border rounded p-2 text-sm">
+                        <option>BDF1半隐式 LLG求解</option>
+                        <option>HSS分裂迭代求解</option>
+                        <option>显式Runge‑Kutta</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-6">
+                <button id="runSimBtn" class="bg-primary text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2">
+                    <i class="fa fa-play"></i>启动仿真求解
+                </button>
+                <button class="border border-slate-300 px-4 py-2 rounded-lg hover:bg-slate-50">重置</button>
+            </div>
+        </div>
+
+        <!-- 右侧：仿真结果展示 -->
+        <div class="bg-white rounded-xl shadow p-6">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <i class="fa fa-bar-chart text-primary"></i>仿真结果输出
+            </h3>
+            <div id="resultArea" class="border-2 border-dashed border-slate-300 rounded-lg min-h-[320px] flex flex-col items-center justify-center text-slate-400">
+                <i class="fa fa-image text-4xl mb-2"></i>
+                <p>运行仿真后，磁化云图/动力学曲线将显示在此</p>
+            </div>
+            <div id="resultImgBox" class="hidden">
+                <img id="simResultImg" class="w-full rounded border mb-3" alt="微磁仿真结果">
+                <div class="flex gap-3">
+                    <button id="downloadBtn" class="flex items-center gap-1 bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">
+                        <i class="fa fa-download"></i>下载图片
+                    </button>
+                </div>
+                <div class="mt-4 bg-slate-50 p-3 rounded text-sm">
+                    <p class="font-medium">仿真信息摘要</p>
+                    <div id="simInfo" class="mt-1 text-slate-600"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 案例库 -->
+    <section id="cases" class="bg-white rounded-xl shadow p-6 mb-6">
+        <h3 class="text-xl font-bold mb-4">📚 微磁仿真案例库</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+            <div class="border rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold">案例1：薄膜磁畴演化</h4>
+                <p class="text-sm text-slate-600 mt-2">二维铁磁薄膜，零场下磁畴自发形成与弛豫，观测磁畴壁结构。</p>
+                <div class="mt-3 text-xs text-slate-500">科学问题：薄膜磁化基态构型；输出：磁化分量云图</div>
+                <button class="mt-3 text-primary text-sm">载入该案例</button>
+            </div>
+            <div class="border rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold">案例2：磁涡旋动力学</h4>
+                <p class="text-sm text-slate-600 mt-2">纳米圆盘结构，磁涡旋核进动、翻转动力学模拟。</p>
+                <div class="mt-3 text-xs text-slate-500">科学问题：涡旋核在外场下动力学；输出：序列快照+M‑t曲线</div>
+                <button class="mt-3 text-primary text-sm">载入该案例</button>
+            </div>
+            <div class="border rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold">案例3：纳米柱磁化翻转</h4>
+                <p class="text-sm text-slate-600 mt-2">垂直各向异性纳米柱，外场驱动磁化翻转过程。</p>
+                <div class="mt-3 text-xs text-slate-500">科学问题：矫顽力、翻转时间；输出：磁滞回线、时间演化曲线</div>
+                <button class="mt-3 text-primary text-sm">载入该案例</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数学建模 -->
+    <section id="math" class="bg-white rounded-xl shadow p-6 mb-6">
+        <h3 class="text-xl font-bold mb-4">📐 数学建模</h3>
+        <div class="text-slate-700 space-y-3 text-sm leading-relaxed">
+            <p>微磁学核心控制方程为 Landau‑Lifshitz‑Gilbert(LLG)方程：</p>
+            <div class="bg-slate-50 p-3 rounded font-mono text-xs">
+                $$\frac{\partial \boldsymbol{m}}{\partial t}=-\gamma \boldsymbol{m}\times \boldsymbol{H}_{\text{eff}}+\alpha \boldsymbol{m}\times\frac{\partial \boldsymbol{m}}{\partial t}$$
+            </div>
+            <ul class="list-disc pl-5 space-y-1">
+                <li>$\boldsymbol{m}=\boldsymbol{M}/M_s$：归一化磁化矢量，满足$|\boldsymbol{m}|=1$约束</li>
+                <li>$\gamma$：旋磁比；$\alpha$：吉尔伯特阻尼系数</li>
+                <li>有效场 $\boldsymbol{H}_\text{eff}=-\frac{1}{\mu_0 M_s}\frac{\delta E}{\delta \boldsymbol{m}}$，由总能量变分得到</li>
+            </ul>
+            <p>总自由能量包含：交换能、磁晶各向异性能、退磁能、外场塞曼能。</p>
+            <p>拓展：MLLG方程考虑自旋转移力矩，用于自旋器件仿真。</p>
+        </div>
+    </section>
+
+    <!-- 数值模拟 -->
+    <section id="num" class="bg-white rounded-xl shadow p-6 mb-6">
+        <h3 class="text-xl font-bold mb-4">🔬 数值模拟</h3>
+        <div class="text-sm text-slate-700 space-y-3">
+            <p><b>离散思路：</b>有限差分(FDM)或有限元(FEM)空间离散；时间求解处理$|\boldsymbol{m}|=1$球面约束。</p>
+            <ul class="list-disc pl-5 space-y-1">
+                <li>空间离散：有限差分微磁标准方案(如OOMMF)；有限元适合复杂几何结构</li>
+                <li>时间格式：显式RK；半隐式BDF；HSS/IHSS分裂迭代法处理非Hermitian系统</li>
+                <li>退磁场：卷积FFT快速求解，降低计算复杂度</li>
+                <li>迭代监控：残差收敛、磁化守恒校验、时间步自适应</li>
+            </ul>
+            <p><b>开源参考求解器：</b>OOMMF, MuMax3, Fidimag；科研可耦合PINN做微磁正向/反问题求解。</p>
+        </div>
+    </section>
+
+    <!-- 应用落地 -->
+    <section id="app" class="bg-white rounded-xl shadow p-6 mb-6">
+        <h3 class="text-xl font-bold mb-4">💡 应用落地</h3>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div class="p-3 border rounded">
+                <h4 class="font-medium">自旋存储器件 STT‑MRAM</h4>
+                <p class="text-slate-600 mt-1">纳米磁隧道结磁化翻转仿真，优化写入电流、切换速度，指导器件尺寸设计。</p>
+            </div>
+            <div class="p-3 border rounded">
+                <h4 class="font-medium">自旋逻辑器件</h4>
+                <p class="text-slate-600 mt-1">磁畴壁、磁涡旋动力学，用于自旋逻辑、存算一体芯片设计。</p>
+            </div>
+            <div class="p-3 border rounded">
+                <h4 class="font-medium">自旋波器件</h4>
+                <p class="text-slate-600 mt-1">磁畴结构调控自旋波激发与传播，用于磁子学信号处理。</p>
+            </div>
+            <div class="p-3 border rounded">
+                <h4 class="font-medium">材料磁性能预测</h4>
+                <p class="text-slate-600 mt-1">快速仿真预测矫顽力、磁滞回线，辅助新型磁性材料研发。</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-dark text-white py-4 mt-8">
+    <div class="container mx-auto px-4 text-center text-sm">
+        微磁计算仿真原型平台｜原型前端，真实仿真需对接后端微磁求解器
+    </div>
+</footer>
+
+<script>
+// 模拟仿真运行逻辑
+const runBtn = document.getElementById('runSimBtn');
+const resultArea = document.getElementById('resultArea');
+const resultImgBox = document.getElementById('resultImgBox');
+const simInfoDom = document.getElementById('simInfo');
+const downloadBtn = document.getElementById('downloadBtn');
+const problemInput = document.getElementById('problemInput');
+
+// 模拟图片占位，实际对接后端返回仿真png
+const mockImageUrl = "https://picsum.photos/id/1035/800/450";
+
+runBtn.addEventListener('click', ()=>{
+    resultArea.innerHTML = `<i class="fa fa-spinner fa-spin text-4xl mb-2 text-primary"></i><p>正在求解LLG微磁方程，请稍候...</p>`;
+    setTimeout(()=>{
+        resultArea.classList.add('hidden');
+        resultImgBox.classList.remove('hidden');
+        document.getElementById('simResultImg').src = mockImageUrl;
+        simInfoDom.innerText = `用户问题：${problemInput.value||"未填写"} \n仿真完成，输出磁化分布云图。`;
+    },1500);
+})
+
+downloadBtn.addEventListener('click',()=>{
+    const a = document.createElement('a');
+    a.href = mockImageUrl;
+    a.download = "micromag_simulation_result.png";
+    a.click();
+})
+
+// 案例下拉简单填充
+document.getElementById('caseSelect').addEventListener('change', function(){
+    const val = this.value;
+    if(val==='case1'){
+        problemInput.value = "二维铁磁薄膜零场下磁畴自发演化，获取平衡态磁畴构型";
+    }else if(val==='case2'){
+        problemInput.value = "纳米圆盘磁涡旋在外磁场下涡旋核进动与翻转动力学仿真";
+    }else if(val==='case3'){
+        problemInput.value = "垂直各向异性纳米柱，外场驱动磁化翻转，计算矫顽力与翻转时间";
+    }
+})
+</script>
+</body>
+</html>
